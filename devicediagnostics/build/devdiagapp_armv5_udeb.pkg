@@ -1,0 +1,223 @@
+;
+; Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
+; All rights reserved.
+; This component and the accompanying materials are made available
+; under the terms of "Eclipse Public License v1.0"
+; which accompanies this distribution, and is available
+; at the URL "http://www.eclipse.org/legal/epl-v10.html".
+;
+; Initial Contributors:
+; Nokia Corporation - initial contribution.
+;
+; Contributors:
+;
+; Description:
+;
+
+﻿; ============================================================================
+;  Name        : devdiagapp_armv5.pkg
+;  Part of     : Device Diagnostics / ARMv5 Package file for R&D
+;  Description : Package file for project Device Diagnostics Application
+;  Version     : %version: % << Don't touch! Updated by Synergy at check-out.
+;
+;  Copyright © 2007 Nokia.  All rights reserved.
+;  This material, including documentation and any related computer
+;  programs, is protected by copyright controlled by Nokia.  All
+;  rights are reserved.  Copying, including reproducing, storing,
+;  adapting or translating, any or all of this material requires the
+;  prior written consent of Nokia.  This material also contains
+;  confidential information which may not be disclosed to others
+;  without the prior written consent of Nokia.
+; ============================================================================
+;  Template version: 4.1
+
+;; =============================================================================
+;; GENERAL DATA ================================================================
+;; =============================================================================
+; Languages
+&EN
+;01
+
+; Package header
+#{"Device Diagnostics"},(0x2000E542),1,0,0,TYPE=SA
+;0xE12E55B4
+;0x2000E542
+;Localised Vendor name
+%{"Nokia"}
+
+;Unique Vendor name
+:"Nokia"
+
+; Dependency for S60
+;[0x1028315F],0,0,0,{"Series60ProductID"} 
+[0x101F7961],0,0,0,{"Series60ProductID"}
+;[0x101F6F88], 0, 0, 0, {"Series60ProductID"}
+
+@"cenrep_sis.sisx",(0x10202BE9)
+
+"\epoc32\release\armv5\udeb\DevDiagApp.exe" 								- "c:\sys\bin\DevDiagApp.exe"
+;"\epoc32\data\z\private\10003a3f\apps\DevDiagApp_reg.rsc" 	-"c:\private\10003a3f\apps\DevDiagApp_reg.rsc"
+"\epoc32\data\z\private\10003a3f\apps\DevDiagApp_reg.rsc" 	-"c:\private\10003a3f\import\apps\DevDiagApp_reg.rsc"
+"\epoc32\data\z\resource\apps\DevDiagApp_loc.rsc"						-"c:\resource\apps\DevDiagApp_loc.rsc"
+
+"\epoc32\data\z\resource\apps\DevDiagApp.rsc" 							-"c:\resource\apps\DevDiagApp.rsc"
+"\epoc32\data\z\resource\apps\devdiagapp.mif"               -"c:\resource\apps\devdiagapp.mif"
+"\epoc32\data\z\resource\apps\DevDiagApp.r01" 							-"c:\resource\apps\DevDiagApp.r01"
+;@"..\cenrep_siscomplete\devdiagapp_reg.SIS",(0x10003a3f)
+
+
+;; Diagnostics Framework Files
+;@"..\cenrep_siscomplete\DiagCenRepKeys.SIS",(0x10202BE9)
+;@"..\cenrep_siscomplete\diagresultsdb_cenrep.sisx",(0x10202BE9)
+"\epoc32\release\armv5\udeb\DiagPluginBase.dll"                     -"c:\sys\bin\DiagPluginBase.dll"
+"\epoc32\release\armv5\udeb\DiagResultsDatabase.dll"                -"c:\sys\bin\DiagResultsDatabase.dll"
+"\epoc32\release\armv5\udeb\diagresultsdatabaseserver.exe"          -"c:\sys\bin\diagresultsdatabaseserver.exe"
+"\epoc32\release\armv5\udeb\DiagFramework.dll"                      -"c:\sys\bin\DiagFramework.dll"
+
+;; Top-Level Suite Files (direct include)
+"\epoc32\release\armv5\udeb\devdiagtoplevelsuiteplugin.dll"             -"c:\sys\bin\devdiagtoplevelsuiteplugin.dll"
+"\epoc32\data\z\resource\devdiagtoplevelsuitepluginrsc.rsc"             -"c:\resource\devdiagtoplevelsuitepluginrsc.rsc"
+"\epoc32\data\z\resource\plugins\devdiagtoplevelsuiteplugin.rsc"        -"c:\resource\plugins\devdiagtoplevelsuiteplugin.rsc"
+
+;; Hardware Suite Files (direct include)
+"\epoc32\release\armv5\udeb\devdiaghardwaresuiteplugin.dll"         -"c:\sys\bin\devdiaghardwaresuiteplugin.dll"
+"\epoc32\data\z\resource\devdiaghardwaresuitepluginrsc.rsc"         -"c:\resource\devdiaghardwaresuitepluginrsc.rsc"
+"\epoc32\data\z\resource\plugins\devdiaghardwaresuiteplugin.rsc"    -"c:\resource\plugins\devdiaghardwaresuiteplugin.rsc"
+"\epoc32\data\z\resource\apps\devdiaghardwaresuiteplugin.mif"       -"c:\resource\apps\devdiaghardwaresuiteplugin.mif"
+
+;; Coverage Suite Files (direct include)
+"\epoc32\release\armv5\udeb\devdiagcoveragesuiteplugin.dll"          -"c:\sys\bin\devdiagcoveragesuiteplugin.dll"
+"\epoc32\data\z\resource\devdiagcoveragesuitepluginrsc.rsc"          -"c:\resource\devdiagcoveragesuitepluginrsc.rsc"
+"\epoc32\data\z\resource\plugins\devdiagcoveragesuiteplugin.rsc"     -"c:\resource\plugins\devdiagcoveragesuiteplugin.rsc"
+"\epoc32\data\z\resource\apps\devdiagcoveragesuiteplugin.mif"        -"c:\resource\apps\devdiagcoveragesuiteplugin.mif"
+
+;; Services Suite Files (direct include)
+"\epoc32\release\armv5\udeb\devdiagservicessuiteplugin.dll"          -"c:\sys\bin\devdiagservicessuiteplugin.dll"
+"\epoc32\data\z\resource\devdiagservicessuitepluginrsc.rsc"          -"c:\resource\devdiagservicessuitepluginrsc.rsc"
+"\epoc32\data\z\resource\plugins\devdiagservicessuiteplugin.rsc"     -"c:\resource\plugins\devdiagservicessuiteplugin.rsc"
+"\epoc32\data\z\resource\apps\devdiagservicessuiteplugin.mif"        -"c:\resource\apps\devdiagservicessuiteplugin.mif"
+
+;; Connectivity Suite Files (direct include)
+"\epoc32\release\armv5\udeb\devdiagconnectivitysuiteplugin.dll"        -"c:\sys\bin\devdiagconnectivitysuiteplugin.dll"
+"\epoc32\data\z\resource\devdiagconnectivitysuitepluginrsc.rsc"        -"c:\resource\devdiagconnectivitysuitepluginrsc.rsc"
+"\epoc32\data\z\resource\plugins\devdiagconnectivitysuiteplugin.rsc"   -"c:\resource\plugins\devdiagconnectivitysuiteplugin.rsc"
+"\epoc32\data\z\resource\apps\devdiagconnectivitysuiteplugin.mif"      -"c:\resource\apps\devdiagconnectivitysuiteplugin.mif"
+
+
+
+
+;; Earpiece Plugin (direct include)
+
+"\epoc32\data\z\resource\DevDiagAudioPluginRsc.r01" -"c:\resource\DevDiagAudioPluginRsc.r01"
+;@"..\cenrep_siscomplete\DiagAudioPluginCenrep.SIS",(0x10202BE9)
+
+"\epoc32\release\armv5\udeb\DevDiagAudioPlugin.dll"                    -"c:\sys\bin\DevDiagAudioPlugin.dll"
+"\epoc32\data\z\resource\DevDiagAudioPluginRsc.rsc"                    -"c:\resource\DevDiagAudioPluginRsc.rsc"
+"\epoc32\data\z\resource\plugins\DevDiagAudioPlugin.rsc"               -"c:\resource\plugins\DevDiagAudioPlugin.rsc"
+
+
+
+;; Charger Plugin (direct include)
+"\epoc32\data\z\resource\DevDiagBatteryChargerCableTestPluginRsc.r01" -"c:\resource\DevDiagBatteryChargerCableTestPluginRsc.r01"
+
+"\epoc32\release\armv5\udeb\DevDiagBatteryChargerCableTestPlugin.dll"          -"c:\sys\bin\DevDiagBatteryChargerCableTestPlugin.dll"
+"\epoc32\data\z\resource\DevDiagBatteryChargerCableTestPluginRsc.rsc"          -"c:\resource\DevDiagBatteryChargerCableTestPluginRsc.rsc"
+"\epoc32\data\z\resource\plugins\DevDiagBatteryChargerCableTestPlugin.rsc"     -"c:\resource\plugins\DevDiagBatteryChargerCableTestPlugin.rsc"
+
+
+;; Browser Plugin (direct include)
+"\epoc32\data\z\resource\devdiagbrowserpluginrsc.r01" -"c:\resource\devdiagbrowserpluginrsc.r01"
+;@"..\cenrep_siscomplete\diagbrowserplugin_cenrep.sisx",(0x10202BE9)
+
+"\epoc32\release\armv5\udeb\devdiagbrowserplugin.dll"                  -"c:\sys\bin\devdiagbrowserplugin.dll"
+"\epoc32\data\Z\resource\devdiagbrowserpluginrsc.rsc"                  -"c:\resource\devdiagbrowserpluginrsc.rsc"
+"\epoc32\data\Z\resource\plugins\devdiagbrowserplugin.rsc"             -"c:\resource\plugins\devdiagbrowserplugin.rsc"
+
+
+;; Data Plugin (direct include)
+"\epoc32\data\z\resource\DevDiagDataNetworkTestPluginRsc.r01" -"c:\resource\DevDiagDataNetworkTestPluginRsc.r01"
+;@"..\cenrep_siscomplete\DiagDataNetworkPluginCenrep.SIS",(0x10202BE9)
+
+"\epoc32\release\armv5\udeb\DevDiagDataNetworkTestPlugin.dll"         -"c:\sys\bin\DevDiagDataNetworkTestPlugin.dll"
+"\epoc32\data\z\resource\DevDiagDataNetworkTestPluginRsc.rsc"         -"c:\resource\DevDiagDataNetworkTestPluginRsc.rsc"
+"\epoc32\data\z\resource\plugins\DevDiagDataNetworkTestPlugin.rsc"    -"c:\resource\plugins\DevDiagDataNetworkTestPlugin.rsc"
+
+
+
+;; External Media Card Plugin (direct include)
+"\epoc32\data\z\resource\DevDiagExternalMediaCardPluginRsc.r01" -"c:\resource\DevDiagExternalMediaCardPluginRsc.r01"
+
+"\epoc32\release\armv5\udeb\DevDiagExternalMediaCardPlugin.dll"         -"c:\sys\bin\DevDiagExternalMediaCardPlugin.dll"
+"\epoc32\data\Z\resource\DevDiagExternalMediaCardPluginRsc.rsc"         -"c:\resource\DevDiagExternalMediaCardPluginRsc.rsc"
+"\epoc32\data\Z\resource\plugins\DevDiagExternalMediaCardPlugin.rsc"    -"c:\resource\plugins\DevDiagExternalMediaCardPlugin.rsc"
+
+
+;; Headset Plugin (direct include)
+"\epoc32\data\z\resource\DevDiagHeadsetCableTestPluginRsc.r01" -"c:\resource\DevDiagHeadsetCableTestPluginRsc.r01"
+
+"\epoc32\release\armv5\udeb\DevDiagHeadsetCableTestPlugin.dll"        -"c:\sys\bin\DevDiagHeadsetCableTestPlugin.dll"
+"\epoc32\data\z\resource\DevDiagHeadsetCableTestPluginRsc.rsc"        -"c:\resource\DevDiagHeadsetCableTestPluginRsc.rsc"
+"\epoc32\data\z\resource\plugins\DevDiagHeadsetCableTestPlugin.rsc"   -"c:\resource\plugins\DevDiagHeadsetCableTestPlugin.rsc"
+
+
+;; Internal Memory Plugin (direct include)
+"\epoc32\release\armv5\udeb\DevDiagInternalMemoryPlugin.dll"           -"c:\sys\bin\devdiaginternalmemoryplugin.dll"
+"\epoc32\data\z\resource\DevDiagInternalMemoryPluginRsc.rsc"           -"c:\resource\devdiaginternalmemorypluginrsc.rsc"
+"\epoc32\data\z\resource\plugins\DevDiagInternalMemoryPlugin.rsc"      -"c:\resource\plugins\devdiaginternalmemoryplugin.rsc"
+
+
+;; Network Coverage Plugin (direct include)
+"\epoc32\data\z\resource\DevDiagNetCoveragePluginRsc.r01" -"c:\resource\DevDiagNetCoveragePluginRsc.r01"
+;@"..\cenrep_siscomplete\DiagNetCoverageCRKeys.SIS",(0x10202BE9)
+
+"\epoc32\release\armv5\udeb\DevDiagNetCoveragePlugin.dll"              -"c:\sys\bin\DevDiagNetCoveragePlugin.dll"
+"\epoc32\data\Z\resource\DevDiagNetCoveragePluginRsc.rsc"              -"c:\resource\DevDiagNetCoveragePluginRsc.rsc"
+"\epoc32\data\Z\resource\plugins\DevDiagNetCoveragePlugin.rsc"         -"c:\resource\plugins\DevDiagNetCoveragePlugin.rsc"
+
+
+;; Speaker Plugin (direct include)
+"\epoc32\data\z\resource\DevDiagSpeakerPluginRsc.r01" -"c:\resource\DevDiagSpeakerPluginRsc.r01"
+;@"..\cenrep_siscomplete\DiagSpeakerPluginCenrep.SIS",(0x10202BE9)
+
+"\epoc32\release\armv5\udeb\DevDiagSpeakerPlugin.dll"                  -"c:\sys\bin\DevDiagSpeakerPlugin.dll"
+"\epoc32\data\z\resource\DevDiagSpeakerPluginRsc.rsc"                  -"c:\resource\DevDiagSpeakerPluginRsc.rsc"
+"\epoc32\data\z\resource\plugins\DevDiagSpeakerPlugin.rsc"             -"c:\resource\plugins\DevDiagSpeakerPlugin.rsc"
+
+
+;; Vibrate Plugin (direct include)
+"\epoc32\data\z\resource\DevDiagVibratePluginRsc.r01" -"c:\resource\DevDiagVibratePluginRsc.r01"
+
+;@"..\cenrep_siscomplete\DiagVibrateCRKeys.SIS",(0x10202BE9)
+
+"\epoc32\release\armv5\udeb\DevDiagVibratePlugin.dll"                  -"c:\sys\bin\DevDiagVibratePlugin.dll"
+"\epoc32\data\Z\resource\DevDiagVibratePluginRsc.rsc"                  -"c:\resource\DevDiagVibratePluginRsc.rsc"
+"\epoc32\data\Z\resource\plugins\DevDiagVibratePlugin.rsc"             -"c:\resource\plugins\DevDiagVibratePlugin.rsc"
+
+
+"\epoc32\data\z\resource\DevDiagUSBCableTestPluginRsc.r01" -"c:\resource\DevDiagUSBCableTestPluginRsc.r01"
+
+"\epoc32\release\armv5\udeb\DevDiagUSBCableTestPlugin.dll"                  -"c:\sys\bin\DevDiagUSBCableTestPlugin.dll"
+"\epoc32\data\Z\resource\DevDiagUsbCableTestPluginRsc.rsc"                  -"c:\resource\DevDiagUsbCableTestPluginRsc.rsc"
+"\epoc32\data\Z\resource\plugins\DevDiagUSBCableTestPlugin.rsc"             -"c:\resource\plugins\DevDiagUSBCableTestPlugin.rsc"
+
+
+;; Bluetooth Plugin (direct include)
+;"\epoc32\data\z\resource\DevDiagBluetoothPluginRsc.r01" -"c:\resource\DevDiagBluetoothPluginRsc.r01"
+
+;@"..\cenrep_siscomplete\DiagBluetoothCRKeys.SIS",(0x10202BE9)
+
+;"\epoc32\release\armv5\udeb\DevDiagBluetoothPlugin.dll"                  -"c:\sys\bin\DevDiagBluetoothPlugin.dll"
+;"\epoc32\data\Z\resource\DevDiagBluetoothPluginRsc.rsc"                  -"c:\resource\DevDiagBluetoothPluginRsc.rsc"
+;"\epoc32\data\Z\resource\plugins\DevDiagBluetoothPlugin.rsc"             -"c:\resource\plugins\DevDiagBluetoothPlugin.rsc"
+
+
+
+
+
+
+
+
+
+
+
+

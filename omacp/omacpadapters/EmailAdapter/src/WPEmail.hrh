@@ -1,0 +1,72 @@
+/*
+* Copyright (c) 2002 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: 
+*     This file contains declarations for constants.
+*     The file can be included in C++ or resource file.
+*     
+*
+*/
+
+
+#ifndef WPEMAIL_HRH
+#define WPEMAIL_HRH
+
+// CONSTANTS
+#if ( defined (__WINS__) || defined (__WINSCW) ) // this different on hw
+    _LIT( KAdapterName, "WPEmailAdapterResource" );
+#else
+    _LIT( KAdapterName, "WPEmailAdapter" );
+#endif
+
+
+// secure settin string
+_LIT(KSecureString, "STARTTLS");
+// supports these ports
+_LIT( KEmailSettingPortSMTP, "25" );
+_LIT( KEmailSettingPortIMAP, "143" );
+_LIT( KEmailSettingPortPOP, "110" );
+// SSL/TLS setting strings
+_LIT( KEmailSettingSecurePortSMTP, "465" ); 
+_LIT( KEmailSettingSecurePortPOP, "995" ); 
+_LIT( KEmailSettingSecurePortIMAP, "993" ); 
+
+const TInt KEmailSslWrappedSmtpPort		= 465;
+const TInt KEmailSslWrappedPop3Port		= 995;
+const TInt KEmailSslWrappedImap4Port            = 993;
+
+// maximum lenghts
+const TInt KIacMaxIapLength             = 30;
+const TInt KIacMaxRemMbxUserNameLength  = 50;
+const TInt KIacMaxPasswdLength          = 50;
+const TInt KIacMaxAddressLength         = 100;
+const TInt KIacMaxRecHostLength         = 50;
+const TInt KIacMaxSendHostLength        = 50;
+const TInt KIacMaxRemoteMbxNameLength   = 30;
+
+const TInt KIacFetchHeadersDefaultLimit = 30;
+const TInt KSettingsNameMaxLength       = 30;
+
+//Min and Max values
+const TUint KEmailPortMinValue    = 1;
+const TUint KEmailPortMaxValue    = 65535;
+
+// Default port values
+const TUint KEmailSettingPortValueSMTP = 25;
+const TUint KEmailSettingPortValueIMAP = 143;
+const TUint KEmailSettingPortValuePOP = 110;
+
+#endif // WPEMAIL_HRH
+
+// End of File
+

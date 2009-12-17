@@ -1,0 +1,38 @@
+;
+; Copyright (c) 2006-2006 Nokia Corporation and/or its subsidiary(-ies).
+; All rights reserved.
+; This component and the accompanying materials are made available
+; under the terms of "Eclipse Public License v1.0"
+; which accompanies this distribution, and is available
+; at the URL "http://www.eclipse.org/legal/epl-v10.html".
+;
+; Initial Contributors:
+; Nokia Corporation - initial contribution.
+;
+; Contributors:
+;
+; Description:  Package file for project PnPMS CentralRepositoryInit
+;
+
+; -------- general --------
+
+;Languages
+&EN
+
+; Package header
+#{"ServiceHelp Data"},(0x10202BE9),1,5,2,TYPE=PU
+
+;Localised Vendor name
+%{"Nokia"}
+
+;Unique Vendor name
+:"Nokia"
+
+; Dependency for S60 3.0
+[0x101F7961], 0, 0, 0, {"Series60ProductID"}
+
+; -------- files --------
+
+"\Epoc32\data\Z\private\10202BE9\10204338.txt"						-"!:\Private\10202BE9\10204338.txt"
+"\Epoc32\data\Z\private\10202BE9\1020433A.txt"						-"!:\private\10202be9\1020433A.txt"
+"\Epoc32\data\Z\private\10202BE9\10272D33.txt"						-"!:\private\10202be9\10272D33.txt"

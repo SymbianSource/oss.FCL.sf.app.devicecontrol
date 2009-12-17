@@ -1,0 +1,75 @@
+/*
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Localization strings for Network Coverage Plugin.
+*
+*/
+
+
+//  LOCALISATION STRINGS
+
+// NEW
+
+//d:Voice network test text for results view
+//l:list_single_graphic_heading_pane_t1_cp2
+//w:
+//r: 3.2
+//
+#define qtn_diag_lst_network_coverage    "Network coverage test"
+
+//d:Voice network test text for suite view
+//l:list_single_graphic_pane_t1
+//w:
+//r: 3.2
+//
+//#define qtn_diag_lst_test_voice_network    "Network coverage test" // LVT Change
+
+//d:Voice network test text for starting dialog header
+//l:heading_pane_t1
+//w:
+//r: 3.2
+//
+#define qtn_diag_msg_title_network_coverage   "Network coverage test"
+
+//d:Voice network test descriptiong
+//l:popup_info_list_pane_t1
+//w:
+//r: 3.2
+//
+#define qtn_diag_msg_info_network_coverage   "The following test will check network coverage."
+
+//d:Voice network test text for title pane of suite/result view
+//l:title_pane_t2/opt12
+//w:
+//r: 3.2
+//
+//#define qtn_diag_title_test_voice_network    "Network coverage test" // LVT Change
+
+//d:Failed result text
+//l:popup_info_list_pane_t1
+//r:5.0
+//
+#define qtn_diag_conf_test_failed_network_coverage "Network coverage test"
+
+//d:Message text nw coverage wait
+//l:popup_note_wait_window
+//r:3.2
+//
+#define qtn_diag_msg_testing_network_coverage "Testing network coverage"
+
+#define qtn_diag_softk_skip "Skip"
+
+
+// End of File
+
+

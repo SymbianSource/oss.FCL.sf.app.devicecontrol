@@ -1,0 +1,209 @@
+/*
+* Copyright (c) 2007-2008 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: Implementation of PnPMS components
+ *
+*/
+
+
+#ifdef LANGUAGE_00
+#include "pnpprovisioning_00.loc"
+#endif
+
+#ifdef LANGUAGE_01
+#include "pnpprovisioning_01.loc"
+#endif
+
+#ifdef LANGUAGE_02
+#include "pnpprovisioning_02.loc"
+#endif
+
+#ifdef LANGUAGE_03
+#include "pnpprovisioning_03.loc"
+#endif
+
+#ifdef LANGUAGE_04
+#include "pnpprovisioning_04.loc"
+#endif
+
+#ifdef LANGUAGE_05
+#include "pnpprovisioning_05.loc"
+#endif
+
+#ifdef LANGUAGE_06
+#include "pnpprovisioning_06.loc"
+#endif
+
+#ifdef LANGUAGE_07
+#include "pnpprovisioning_07.loc"
+#endif
+
+#ifdef LANGUAGE_08
+#include "pnpprovisioning_08.loc"
+#endif
+
+#ifdef LANGUAGE_09
+#include "pnpprovisioning_09.loc"
+#endif
+
+#ifdef LANGUAGE_10
+#include "pnpprovisioning_10.loc"
+#endif
+
+#ifdef LANGUAGE_13
+#include "pnpprovisioning_13.loc"
+#endif
+
+#ifdef LANGUAGE_14
+#include "pnpprovisioning_14.loc"
+#endif
+
+#ifdef LANGUAGE_15
+#include "pnpprovisioning_15.loc"
+#endif
+
+#ifdef LANGUAGE_16
+#include "pnpprovisioning_16.loc"
+#endif
+
+#ifdef LANGUAGE_17
+#include "pnpprovisioning_17.loc"
+#endif
+
+#ifdef LANGUAGE_18
+#include "pnpprovisioning_18.loc"
+#endif
+
+#ifdef LANGUAGE_25
+#include "pnpprovisioning_25.loc"
+#endif
+
+#ifdef LANGUAGE_26
+#include "pnpprovisioning_26.loc"
+#endif
+
+#ifdef LANGUAGE_27
+#include "pnpprovisioning_27.loc"
+#endif
+
+#ifdef LANGUAGE_28
+#include "pnpprovisioning_28.loc"
+#endif
+
+#ifdef LANGUAGE_29
+#include "pnpprovisioning_29.loc"
+#endif
+
+#ifdef LANGUAGE_30
+#include "pnpprovisioning_30.loc"
+#endif
+
+#ifdef LANGUAGE_31
+#include "pnpprovisioning_31.loc"
+#endif
+
+#ifdef LANGUAGE_32
+#include "pnpprovisioning_32.loc"
+#endif
+
+#ifdef LANGUAGE_33
+#include "pnpprovisioning_33.loc"
+#endif
+
+#ifdef LANGUAGE_37
+#include "pnpprovisioning_37.loc"
+#endif
+
+#ifdef LANGUAGE_39
+#include "pnpprovisioning_39.loc"
+#endif
+
+#ifdef LANGUAGE_42
+#include "pnpprovisioning_42.loc"
+#endif
+
+#ifdef LANGUAGE_45
+#include "pnpprovisioning_45.loc"
+#endif
+
+#ifdef LANGUAGE_49
+#include "pnpprovisioning_49.loc"
+#endif
+
+#ifdef LANGUAGE_51
+#include "pnpprovisioning_51.loc"
+#endif
+
+#ifdef LANGUAGE_54
+#include "pnpprovisioning_54.loc"
+#endif
+
+#ifdef LANGUAGE_57
+#include "pnpprovisioning_57.loc"
+#endif
+
+#ifdef LANGUAGE_59
+#include "pnpprovisioning_59.loc"
+#endif
+
+#ifdef LANGUAGE_67
+#include "pnpprovisioning_67.loc"
+#endif
+
+#ifdef LANGUAGE_68
+#include "pnpprovisioning_68.loc"
+#endif
+
+#ifdef LANGUAGE_70
+#include "pnpprovisioning_70.loc"
+#endif
+
+#ifdef LANGUAGE_76
+#include "pnpprovisioning_76.loc"
+#endif
+
+#ifdef LANGUAGE_78
+#include "pnpprovisioning_78.loc"
+#endif
+
+#ifdef LANGUAGE_79
+#include "pnpprovisioning_79.loc"
+#endif
+
+#ifdef LANGUAGE_83
+#include "pnpprovisioning_83.loc"
+#endif
+
+#ifdef LANGUAGE_93
+#include "pnpprovisioning_93.loc"
+#endif
+
+#ifdef LANGUAGE_157
+#include "pnpprovisioning_157.loc"
+#endif
+
+#ifdef LANGUAGE_158
+#include "pnpprovisioning_158.loc"
+#endif
+
+#ifdef LANGUAGE_159
+#include "pnpprovisioning_159.loc"
+#endif
+
+#ifdef LANGUAGE_160
+#include "pnpprovisioning_160.loc"
+#endif
+
+#ifdef LANGUAGE_161
+#include "pnpprovisioning_161.loc"
+#endif

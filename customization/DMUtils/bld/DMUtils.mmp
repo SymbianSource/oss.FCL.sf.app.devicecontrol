@@ -1,0 +1,84 @@
+/*
+* Copyright (c) 2002 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: Implementation of customization components
+*
+*/
+
+
+// To get the APP_LAYER_SYSTEMINCLUDE-definition
+#include <platform_paths.hrh>
+
+#define STATIC_DMUTILS_LIB 1
+//#define DYNAMIC_DMUTILS_LIB 1
+
+#ifdef DYNAMIC_DMUTILS_LIB
+#include "defaultcaps.hrh"
+CAPABILITY      CAP_GENERAL_DLL
+#endif
+
+#ifdef DYNAMIC_DMUTILS_LIB
+TARGET          DMUtils.dll
+TARGETTYPE      DLL
+#endif
+
+#ifdef STATIC_DMUTILS_LIB
+TARGET          dmutils.lib
+TARGETTYPE      LIB
+#endif
+
+
+APP_LAYER_SYSTEMINCLUDE
+SYSTEMINCLUDE   /epoc32/include/swi
+SYSTEMINCLUDE 	/epoc32/include/ecom
+
+#ifdef __TARM_SYMBIAN_CONVERGENCY
+SYSTEMINCLUDE 	/epoc32/include/devman
+#else
+// nothing
+#endif
+
+SOURCEPATH      ../src
+USERINCLUDE     ../inc
+USERINCLUDE     ../../include
+
+SOURCE          FileCoderB64.cpp
+SOURCE          nsmldmuri.cpp
+SOURCE          TARMDmAdapter.cpp
+SOURCE          TARMDmStreamAdapter.cpp
+SOURCE          nsmldmiapmatcher.cpp
+SOURCE          TARMCharConv.cpp
+
+LIBRARY         euser.lib
+LIBRARY         ecom.lib
+LIBRARY					charconv.lib
+LIBRARY         sysutil.lib
+LIBRARY					edbms.lib
+LIBRARY         bafl.lib
+LIBRARY         commonengine.lib
+LIBRARY         imut.lib
+LIBRARY         apparc.lib
+LIBRARY         ws32.lib
+LIBRARY         apgrfx.lib
+LIBRARY         cone.lib
+LIBRARY         efsrv.lib // RFile
+LIBRARY         estor.lib // RFileWriteStream
+LIBRARY 				flogger.lib
+LIBRARY         featmgr.lib
+#ifdef __TARM_SYMBIAN_CONVERGENCY
+LIBRARY		      devmancmdmgr.lib
+#else
+// nothing
+#endif
+
+SMPSAFE

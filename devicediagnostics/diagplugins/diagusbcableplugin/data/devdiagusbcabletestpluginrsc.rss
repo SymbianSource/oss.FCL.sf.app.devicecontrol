@@ -1,0 +1,402 @@
+/*
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Resource file for DiagUSBCableTestPlugin
+*
+*/
+
+
+
+//  RESOURCE IDENTIFIER
+NAME    DGUC // 4 letter ID // this has to be unique for each plugin
+
+//  INCLUDES
+#include    <avkon.loc>
+#include    <avkon.mbg>
+#include    <avkon.rsg>
+#include    <avkon.rh>
+#include    <AvkonIcons.hrh>
+#include    <bldvariant.hrh>
+#include    <data_caging_paths_strings.hrh>
+#include    <eikcore.rsg>
+#include    <eikon.rsg>
+#include    <uikon.rh>
+#include    <eikon.rh>
+
+#include    <diagplugincommon.loc>
+
+#include    "diagusbcabletestplugin.hrh"
+#include    <diagusbcabletestplugin.loc>
+
+// CONSTANTS
+#define     BMPFILE_NAME    "\\resource\\apps\\avkon2.mbm"
+
+
+//  RESOURCE DEFINITIONS
+
+RESOURCE RSS_SIGNATURE
+    {
+    }
+
+RESOURCE TBUF
+    {
+    buf="DGUC";
+    }
+
+
+// ---------------------------------------------------------------------------
+//  r_diag_usb_cable_test_heading_pane
+//
+// The plugin name in the header of the dialog that is
+// shown when starting test execution.
+// ---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_diag_usb_cable_test_heading_pane
+    {
+    buf = qtn_diag_msg_title_usb_cable;                    
+    }
+
+
+
+// ---------------------------------------------------------------------------
+// r_diag_usb_cable_test_popup_info_pane
+// ---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_diag_usb_cable_test_popup_info_pane
+    {
+    buf = qtn_diag_conf_test_failed_usb_cable;
+    }
+    
+
+// ---------------------------------------------------------------------------
+// r_diag_usb_cable_test_title_pane
+// The title pane shown when USB cable test is running
+// ---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_diag_usb_cable_test_title_pane
+    {
+    buf = qtn_diag_title_test_usb_cable;
+    }
+
+// ADO & Platformization Changes
+//------------------------------------------------------------------------------
+//  r_cba_connect_and_press_ok_single_execution
+//
+//  Command Button Array for query dialog 
+// "Connect your USB cable. Press OK when ready." in case of single plugin execution
+//------------------------------------------------------------------------------
+//    
+
+RESOURCE CBA r_diag_usb_softkeys_cancel__ok
+			{
+			buttons =
+					{
+					CBA_BUTTON { id = EUsbTestConnectUSBOK;
+											 txt = text_softkey_ok;	} ,
+											 
+					CBA_BUTTON { id = EUsbTestConnectUSBCancel;
+											 txt = text_softkey_cancel; }
+					};
+			}
+
+
+// ADO & Platformization Changes
+//------------------------------------------------------------------------------
+//  r_cba_connect_and_press_ok_single_execution
+//
+//  Command Button Array for query dialog 
+// "Connect your USB cable. Press OK when ready." in case of single plugin execution
+//------------------------------------------------------------------------------
+//    
+
+RESOURCE CBA r_diag_usb_softkeys_skip__ok
+            {
+            buttons =
+                    {
+                    CBA_BUTTON { id = EUsbTestConnectUSBOK;
+                                             txt = text_softkey_ok; } ,
+                                             
+                    CBA_BUTTON { id = EUsbTestConnectUSBSkip;
+                                             txt = qtn_diag_softk_skip; }
+                    };
+            }
+
+      
+
+
+
+// ADO & Platformization Changes
+// ---------------------------------------------------------------------------
+// r_messagequery_title
+// The dialog shown when the plugin begins execution.
+// ---------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_messagequery_title
+    {
+     flags   = EGeneralQueryFlags | 
+               EEikDialogFlagNoBorder |
+               EEikDialogFlagNoTitleBar;
+
+     //buttons = r_diag_usb_softkeys_cancel__ok;
+     buttons = r_diag_usb_softkeys_skip__ok;  // ADO & Platformization Changes
+
+     items=
+         {
+         DLG_LINE
+             {
+             type    = EAknCtPopupHeadingPane;
+             id      = EAknMessageQueryHeaderId;
+             control = AVKON_HEADING
+                 {              
+                    label         = qtn_diag_msg_title_usb_cable;
+                    headinglayout = R_AVKON_WML_SIGN_QUERY_HEADING_PANE;
+                 };
+             },
+         DLG_LINE
+             {
+             type    = EAknCtMessageQuery;
+             id      = EAknMessageQueryContentId;
+             control = AVKON_MESSAGE_QUERY
+                 {
+                 message = qtn_diag_msg_info_usb_cable;
+                 };
+             }
+         };
+     }
+
+
+
+// ---------------------------------------------------------------------------
+// r_diag_usb_cable_test_single_graphic
+// Plugin name in the suite view listbox.
+// ---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_diag_usb_cable_test_single_graphic
+    {
+    buf = qtn_diag_lst_test_usb_cable;
+    }
+
+//----------------------------------------------------
+//  r_diag_usb_cable_test_single
+//
+// Plugin's name in results view
+//----------------------------------------------------
+//
+RESOURCE TBUF r_diag_usb_cable_test_single
+    {
+    buf = qtn_diag_lst_usb_cable;          
+    }
+
+
+//------------------------------------------------------------------------------
+//  r_cba_connect_and_press_ok
+//
+//  Command Button Array for query dialog "Connect your USB cable. Press OK when ready." 
+//------------------------------------------------------------------------------
+//    
+RESOURCE CBA r_cba_connect_and_press_ok
+      {
+      buttons = 
+          { 
+          CBA_BUTTON { id = EUsbTestConnectUSBSkip;      
+                       txt = qtn_diag_softk_skip;   },
+                        
+          CBA_BUTTON { id = EUsbTestConnectUSBCancel;    
+                       txt = text_softkey_cancel; } ,
+                       
+          CBA_BUTTON { id = EAknSoftkeyOk;                              
+                       txt = text_softkey_ok;   } 
+          }; 
+      }  
+//------------------------------------------------------------------------------
+//  r_cba_connect_and_press_ok_single_execution
+//
+//  Command Button Array for query dialog 
+// "Connect your USB cable. Press OK when ready." in case of single plugin execution
+//------------------------------------------------------------------------------
+//    
+RESOURCE CBA r_cba_single_execution
+      {
+      buttons = 
+          {                       
+          CBA_BUTTON { id = EAknSoftkeyOk;                              
+                       txt = text_softkey_ok;   } ,          
+                        
+          CBA_BUTTON { id = EUsbTestConnectUSBCancel;    
+                       txt = text_softkey_cancel; }
+          }; 
+      }  
+
+
+//------------------------------------------------------------------------------
+//  r_cba_connect_and_press_ok_single_execution
+//
+//  Command Button Array for query dialog 
+// "Connect your USB cable. Press OK when ready." in case of single plugin execution
+//------------------------------------------------------------------------------
+//    
+RESOURCE CBA r_cba_group_execution
+      {
+      buttons = 
+          {                       
+          CBA_BUTTON { id = EAknSoftkeyOk;                              
+                       txt = text_softkey_ok;   } ,          
+                        
+          CBA_BUTTON { id = EUsbTestConnectUSBSkip;    
+                       txt = qtn_diag_softk_skip; }
+          }; 
+      }  
+      
+      
+// -----------------------------------------------------------------------------
+//
+// r_diag_usb_cable_test_connect_and_press_ok
+// query dialog for "Connect your USB cable. Press OK when ready." 
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_diag_usb_cable_test_connect_and_press_ok
+    {
+    flags = EGeneralQueryFlags;
+    buttons = r_cba_single_execution;
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtQuery;
+            id   = EGeneralQuery;
+            control = AVKON_CONFIRMATION_QUERY
+                {
+                layout  = EConfirmationQueryLayout;
+                label   = qtn_diag_conf_usb_connect;
+                bmpfile = BMPFILE_NAME; 
+                //bmpid   = EMbmAvkonQgn_prop_usb;        // set correct bmp id when available
+                //bmpmask = EMbmAvkonQgn_prop_usb_mask;   // set correct bmp id when available
+                bmpid   = EMbmAvkonQgn_note_info;
+                bmpmask = EMbmAvkonQgn_note_info_mask;
+                };
+            }
+        };
+    }
+
+
+
+//------------------------------------------------------------------------------
+//  r_cba_usb_cable_test_no_cable_detected
+//
+//  Command Button Array for query dialog 
+// "No cable detected. Press OK to continue tests or press Back to retry this test."
+//------------------------------------------------------------------------------
+//    
+RESOURCE CBA r_cba_usb_cable_test_no_cable_detected
+      {
+      buttons = 
+          { 
+          CBA_BUTTON { id = EAknSoftkeyOk; 
+                       txt = text_softkey_ok; },
+
+          CBA_BUTTON { id = EUsbTestConnectUSBBack;
+                       txt = text_softkey_back; } ,
+
+          CBA_BUTTON { id = EAknSoftkeyOk;
+                       txt = text_softkey_ok; }
+          }; 
+      }
+
+//------------------------------------------------------------------------------
+//  r_diag_cable_test_cba_ok_dot_empty
+//
+//  Command Button Array for query dialog "Please remove all cable." 
+//------------------------------------------------------------------------------
+//    
+RESOURCE CBA r_diag_cable_test_cba_ok_dot_empty
+      {
+      buttons = 
+          { 
+          CBA_BUTTON { id = EAknSoftkeyOk;
+                       txt = text_softkey_ok;   },
+          CBA_BUTTON { },
+          
+          CBA_BUTTON { id = EAknSoftkeyOk; }
+          }; 
+      } 
+
+
+// ---------------------------------------------------------------------------
+//
+// r_diag_usb_cable_test_no_cable_detected
+// query dialog for "USB data cable not detected. Press OK to continue or 
+// press Back to retry this test."
+//
+// ---------------------------------------------------------------------------
+//    
+RESOURCE DIALOG r_diag_usb_cable_test_no_cable_detected
+    {
+    flags = EGeneralQueryFlags;
+    buttons = R_AVKON_SOFTKEYS_YES_NO__YES;
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtPopupHeadingPane;
+            id = EAknMessageQueryHeaderId;
+            control = AVKON_HEADING
+                {
+                label = qtn_diag_err_title_no_usb;
+                headinglayout = 0;
+                };
+            },
+            
+        DLG_LINE
+            {
+            type = EAknCtMessageQuery;
+            id = EAknMessageQueryContentId;
+            control = AVKON_MESSAGE_QUERY
+                {
+                message = qtn_diag_err_no_usb;
+                };
+            }
+        };
+    }
+    
+//------------------------------------------------------------------------------
+//
+// r_diag_cable_test_remove_all_cables
+// query dialog for "Please remove all cables" 
+//
+//------------------------------------------------------------------------------
+//    
+RESOURCE DIALOG r_diag_cable_test_remove_all_cables
+    {
+    flags   = EGeneralQueryFlags;
+    buttons = r_diag_cable_test_cba_ok_dot_empty;
+
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtQuery;
+            id   = EGeneralQuery;
+            control = AVKON_CONFIRMATION_QUERY
+                {
+                layout  = EConfirmationQueryLayout;
+                label   = qtn_diag_msg_remove_all_cables;
+                bmpfile = BMPFILE_NAME; 
+                bmpid   = EMbmAvkonQgn_note_info;
+                bmpmask = EMbmAvkonQgn_note_info_mask;
+                };
+            }
+        };
+    }
+    
+//End of File

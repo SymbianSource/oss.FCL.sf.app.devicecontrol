@@ -1,0 +1,40 @@
+/*
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  External Media Card Plugin
+*
+*/
+
+
+#ifndef DIAGEXTERNALMEDIACARDPLUGIN_HRH
+#define DIAGEXTERNALMEDIACARDPLUGIN_HRH
+
+// commands
+
+enum TMemoryPluginCBA
+    {
+    ECBACmdSkip = 0x6300,
+    ECBACmdCancel,
+    ECBACmdNo
+    };
+    
+     /** Dialog ids.  These are used in the application's resource file.
+ */
+enum TExtMemNoteControlIds
+    {
+    EYBWaitNoteId = 0x100    
+    };
+    
+#endif //  DIAGEXTERNALMEDIACARDPLUGIN_HRH
+
+//End of File

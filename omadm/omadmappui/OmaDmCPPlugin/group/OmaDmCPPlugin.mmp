@@ -1,0 +1,77 @@
+/*
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  mmp file for Device Manager Control panel plugin
+*
+*/
+
+
+#include <defaultcaps.hrh>
+#include <data_caging_paths.hrh>
+#include <platform_paths.hrh>
+
+TARGET          omadmcpplugin.dll
+TARGETTYPE      PLUGIN
+UID             0x10009D8D 0x1028339D
+
+CAPABILITY      CAP_ECOM_PLUGIN
+VENDORID    	VID_DEFAULT
+
+#if defined(ARMCC)
+DEFFILE		../eabi/OmaDmCPPlugin.def
+#elif defined(WINSCW)
+DEFFILE		../BWinscw/OmaDmCPPlugin.def
+#endif
+
+SOURCEPATH      ../src
+SOURCE          OmaDMCPPlugin.cpp
+
+APP_LAYER_SYSTEMINCLUDE
+SYSTEMINCLUDE   /epoc32/include/ecom
+ 
+USERINCLUDE     ../inc 
+USERINCLUDE     ../../inc  //For Loc file
+
+
+SOURCEPATH      ../data
+START RESOURCE  1028339D.rss       
+TARGET          omadmcpplugin.rsc		
+END
+
+SOURCEPATH      ../data
+START RESOURCE  OmaDmCPPluginResource.rss       
+TARGET          omadmcppluginresource.rsc
+TARGETPATH      RESOURCE_FILES_DIR
+LANGUAGE_IDS
+HEADER
+END
+
+LIBRARY         gsecomplugin.lib
+LIBRARY         gsframework.lib 
+LIBRARY         aknskins.lib  
+LIBRARY         aknicon.lib
+LIBRARY         egul.lib
+LIBRARY         euser.lib
+LIBRARY         cone.lib
+LIBRARY         eikcore.lib
+LIBRARY         eikcoctl.lib
+LIBRARY			    avkon.lib
+LIBRARY         commonengine.lib
+LIBRARY         bafl.lib
+
+// Required only for embedded app
+LIBRARY         apgrfx.lib
+LIBRARY         ws32.lib
+LIBRARY         apparc.lib
+
+SMPSAFE

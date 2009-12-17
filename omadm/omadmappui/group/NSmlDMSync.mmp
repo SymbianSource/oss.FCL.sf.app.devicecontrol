@@ -1,0 +1,134 @@
+/*
+* Copyright (c) 2005-2006 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  NSmlDMSync mmp file 
+*
+*/
+
+#include  <platform_paths.hrh>
+#include <data_caging_paths.hrh>
+#include <bldvariant.hrh>
+
+
+TARGET          nsmldmsync.exe
+TARGETTYPE      exe
+
+UID             0x100039CE  0x101F6DE5
+EPOCSTACKSIZE   0x5000
+
+CAPABILITY      CAP_APPLICATION
+VENDORID        VID_DEFAULT
+
+
+//
+// AIF icons/files
+//
+START RESOURCE ../data/NSmlDMSync.rss
+// HEADER means epoc32/include
+HEADER
+TARGETPATH APP_RESOURCE_DIR    
+LANGUAGE_IDS
+END
+
+START RESOURCE ../data/NSmlDMSync_reg.rss
+DEPENDS nsmldmsync.rsg
+// Do not change the UID below.
+TARGETPATH /private/10003a3f/apps
+END
+
+SOURCEPATH  ../src
+
+SOURCE      NSmlDMAuthQueryDlg.cpp
+SOURCE      NSmlDMDbNotifier.cpp
+SOURCE      NSmlDMDlgProfileView.cpp
+SOURCE      NSmlDMItemData.cpp
+SOURCE      NSmlDMProfilesContainer.cpp
+SOURCE      NSmlDMProfilesView.cpp
+SOURCE      NSmlDMProgress.cpp
+SOURCE      NSmlDMSyncApp.cpp 
+SOURCE      NSmlDMSyncAppEngine.cpp
+SOURCE      NSmlDMSyncAppServer.cpp
+SOURCE      NSmlDMSyncDialog.cpp
+SOURCE      NSmlDMSyncDocument.cpp
+SOURCE      NSmlDMSyncHandler.cpp
+SOURCE      NSmlDMSyncProfile.cpp
+SOURCE      NSmlDMSyncProfileItem.cpp
+SOURCE      NSmlDMSyncProfileList.cpp
+SOURCE      NSmlDMSyncState.cpp
+SOURCE      NSmlDMSyncUtil.cpp
+
+
+#ifdef __SYNCML_DM_FOTA
+SOURCE      NSmlDMFotaModel.cpp
+#else
+SOURCE      NSmlDMFotaModel_nofota.cpp
+#endif
+SOURCE      NSmlDMFotaView.cpp
+SOURCE      NSmlDMFotaContainer.cpp
+SOURCE      NSmlDMFotaSettingsDialog.cpp
+SOURCE      NSmlDMSyncAppUi_fota.cpp
+
+
+USERINCLUDE     ../inc
+
+// Default system include paths for app layer modules.
+APP_LAYER_SYSTEMINCLUDE
+SYSTEMINCLUDE   /epoc32/include/libc
+
+LIBRARY     aknskins.lib
+LIBRARY     apgrfx.lib
+LIBRARY     apengine.lib
+LIBRARY     apparc.lib
+LIBRARY     apsettingshandlerui.lib 
+LIBRARY     avkon.lib
+LIBRARY     bafl.lib
+LIBRARY     cone.lib
+LIBRARY     commdb.lib
+LIBRARY     commonengine.lib
+LIBRARY     edbms.lib
+LIBRARY     efsrv.lib
+LIBRARY     eikctl.lib
+LIBRARY     eikcore.lib
+LIBRARY     eikcoctl.lib 
+LIBRARY     eikdlg.lib
+LIBRARY     estor.lib
+LIBRARY     euser.lib
+LIBRARY     featmgr.lib
+LIBRARY     hlplch.lib      //help
+LIBRARY     ws32.lib
+LIBRARY     connectionuiutilities.lib
+LIBRARY     sysutil.lib
+LIBRARY	    sysversioninfo.lib
+LIBRARY     etel.lib                        // RTelServer
+LIBRARY     etelmm.lib                      // RMobilePhone
+
+
+LIBRARY     syncmlclientapi.lib
+LIBRARY     nsmltransporthandler.lib
+LIBRARY     nsmltransport.lib
+LIBRARY     nsmlhistorylog.lib
+LIBRARY     syncservice.lib
+LIBRARY     centralrepository.lib
+
+#ifdef __SYNCML_DM_FOTA
+LIBRARY     fotaengine.lib
+#endif
+
+LIBRARY	policyengine.lib
+LIBRARY			  sysversioninfo.lib
+
+LIBRARY			  sisregistryclient.lib
+
+DEBUGLIBRARY    flogger.lib
+
+SMPSAFE

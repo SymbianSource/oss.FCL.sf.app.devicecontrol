@@ -1,0 +1,66 @@
+/*
+* Copyright (c) 2007-2007 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Resource file for GSDDPlugin
+*
+*/
+
+
+
+//  RESOURCE IDENTIFIER
+NAME    GSDD // 4 letter ID
+
+//  INCLUDES
+#include    "gsdevdiagplugin.hrh"
+#include    <gsdevdiagplugin.loc>
+
+#include    <gs.loc>
+#include    <gscommon.rh>
+#include    <appinfo.rh>
+#include    <avkon.loc>
+#include    <avkon.mbg>
+#include    <avkon.rsg>
+#include    <AvkonIcons.hrh>
+#include    <bldvariant.hrh>
+#include    <data_caging_paths_strings.hrh>
+#include    <eikcore.rsg>
+#include    <eikon.rsg>
+#include    <uikon.rh>
+//#include    <GSApp.rsg>
+
+// CONSTANTS
+
+//  RESOURCE DEFINITIONS
+
+RESOURCE RSS_SIGNATURE
+    {
+    }
+
+// Common resources among GS
+//#include    "..\data\GSCommonResources.rss"
+
+
+RESOURCE TBUF
+    {
+    buf="DDAP";
+    }
+
+
+RESOURCE TBUF r_gs_diagnostics_view_caption
+    {
+    buf = qtn_diag_diagnostics_title;
+    }
+
+
+
+//End of File

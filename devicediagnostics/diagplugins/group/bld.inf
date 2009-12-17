@@ -1,0 +1,41 @@
+/*
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Build information of all test suites.
+*
+*/
+
+#include "../diagbatterychargerplugin/group/bld.inf"
+#include "../diagbrowserplugin/group/bld.inf"
+#include "../diagdatanetworkplugin/group/bld.inf"
+#include "../diagearpieceplugin/group/bld.inf"
+#include "../diagexternalmediacardplugin/group/bld.inf"
+#include "../diagheadsetcableplugin/group/bld.inf"
+#include "../DiagInternalMemoryPlugin/group/bld.inf"
+#include "../diagloudspeakerplugin/group/bld.inf"
+#include "../diagnetcoverageplugin/group/bld.inf"
+#include "../diagusbcableplugin/group/bld.inf"
+#include "../diagvibrateplugin/group/bld.inf"
+//#include "../diagcameraplugin/group/bld.inf"
+//#include "../diaginternaldisplayplugin/group/bld.inf" // ADO & Platformization Changes
+//#include "../diagsmsussdwatcherplugins/group/bld.inf"
+
+// ADO & Platformization Changes
+//#include "../diagvideoshareplugin/group/bld.inf"
+//#include "../diagvoiceplugin/group/bld.inf"
+
+PRJ_PLATFORMS
+DEFAULT
+
+//  End of File
+

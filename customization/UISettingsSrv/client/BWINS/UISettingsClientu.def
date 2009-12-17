@@ -1,0 +1,15 @@
+EXPORTS
+	??0RUISettingsSrv@@QAE@XZ @ 1 NONAME ; RUISettingsSrv::RUISettingsSrv(void)
+	?Connect@RUISettingsSrv@@QAEHXZ @ 2 NONAME ; int RUISettingsSrv::Connect(void)
+	?GetSoftkeyBitmap@RUISettingsSrv@@QAEHHAAVTDes16@@AAVTDes8@@@Z @ 3 NONAME ; int RUISettingsSrv::GetSoftkeyBitmap(int, class TDes16 &, class TDes8 &)
+	?GetSoftkeyMask@RUISettingsSrv@@QAEHHAAVTDes16@@AAVTDes8@@@Z @ 4 NONAME ; int RUISettingsSrv::GetSoftkeyMask(int, class TDes16 &, class TDes8 &)
+	?GetStartupImagePath@RUISettingsSrv@@QAEHAAVTDes16@@@Z @ 5 NONAME ; int RUISettingsSrv::GetStartupImagePath(class TDes16 &)
+	?GetStartupNoteType@RUISettingsSrv@@QAEHAAH@Z @ 6 NONAME ; int RUISettingsSrv::GetStartupNoteType(int &)
+	?GetStartupTextL@RUISettingsSrv@@QAEPAVHBufC16@@XZ @ 7 NONAME ; class HBufC16 * RUISettingsSrv::GetStartupTextL(void)
+	?SetSoftkeyBitmap@RUISettingsSrv@@QAEHHABVTDesC16@@ABVTDesC8@@@Z @ 8 NONAME ; int RUISettingsSrv::SetSoftkeyBitmap(int, class TDesC16 const &, class TDesC8 const &)
+	?SetSoftkeyMask@RUISettingsSrv@@QAEHHABVTDesC16@@ABVTDesC8@@@Z @ 9 NONAME ; int RUISettingsSrv::SetSoftkeyMask(int, class TDesC16 const &, class TDesC8 const &)
+	?SetStartupImage@RUISettingsSrv@@QAEHABVTDesC16@@@Z @ 10 NONAME ; int RUISettingsSrv::SetStartupImage(class TDesC16 const &)
+	?SetStartupNoteType@RUISettingsSrv@@QAEHH@Z @ 11 NONAME ; int RUISettingsSrv::SetStartupNoteType(int)
+	?SetStartupText@RUISettingsSrv@@QAEHABVTDesC16@@@Z @ 12 NONAME ; int RUISettingsSrv::SetStartupText(class TDesC16 const &)
+	?Version@RUISettingsSrv@@QBE?AVTVersion@@XZ @ 13 NONAME ; class TVersion RUISettingsSrv::Version(void) const
+

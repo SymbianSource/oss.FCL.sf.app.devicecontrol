@@ -1,0 +1,39 @@
+/*
+* Copyright (c) 2005 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Contains the UIDs and common definitions for menu ids
+*
+*/
+
+
+#ifndef DIAGBATTERYCHARGERCABLETESTPLUGIN_HRH
+#define DIAGBATTERYCHARGERCABLETESTPLUGIN_HRH
+
+// Definitions
+#define _UID3                 0x2000E590
+#define _IMPLEMENTATION_UID   0x2000E591
+
+
+// commands
+enum TBatteryChargerTestCmdIDs
+   {
+    EBatteryTestConnectBatteryChargerSkip = 1,          // Do not start from 0
+    EBatteryTestConnectBatteryChargerCancel,
+    EBatteryTestConnectBatteryChargerBack,
+    EBatteryTestConnectBatteryChargerNo,            // ADO & Platformization Changes
+    EBatteryTestConnectBatteryChargerYes						// ADO & Platformization Changes
+   };
+
+#endif //  DIAGBATTERYCHARGERCABLETESTPLUGIN_HRH
+
+//End of File

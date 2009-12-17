@@ -1,0 +1,67 @@
+/*
+* Copyright (c) 2004-2006 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Localization strings for PnpProvisioning
+*
+*/
+
+
+// LOCALISATION STRINGS
+
+// d: When user has downloaded settings from Plug and Play Mobile Services following
+// d: confirmation query is shown. If the user cancels the query settings are not saved. 
+// d: If the user accepts the query settings are saved.
+// l: popup_note_window/opt2
+// r: 3.1
+#define qtn_op_pnp_query_save "Save settings?"
+
+
+// d: If setting as default is not automatically possible following confirmation
+// d: query is shown. If the user cancels the query settings are not set as default
+// d: settings. If the user accepts the query settings are set as default settings.
+// l: popup_note_window/opt2
+// r: 3.1
+#define qtn_op_pnp_query_set_sefault "Set downloaded settings as default settings?"
+
+
+// d: If saving settings takes more than 1 second, a wait note is displayed until settings are saved.
+// l: popup_note_wait_window
+// r: 3.1
+#define qtn_op_pnp_wait_saving "Saving settings"
+
+
+// d: When settings are saved information note is displayed.
+// l: popup_note_window/opt2
+// r: 3.1
+#define qtn_op_pnp_info_saved "Settings saved"
+
+
+// d: If settings cannot be saved error note is displayed.
+// l: popup_note_window/opt2
+// r: 3.1
+#define qtn_op_pnp_error_not_saved "Settings cannot be saved"
+
+//d:Caption for Service Help Plugin
+//l:list_single_large_graphic_pane_t1
+//r:3.2.3
+#define qtn_cp_fetch_settings "Fetch settings"
+
+//d: After settings are saved this New mailbox created will be the default mailbox
+// : currently in use.
+//l: popup_note_window/opt1
+//r: 3.2.3
+#define qtn_op_pnp_mailbox_saved_default "Mailbox settings saved as Default"
+
+
+
+// End of File

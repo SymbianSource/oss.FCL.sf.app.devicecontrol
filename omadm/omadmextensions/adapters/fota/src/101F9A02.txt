@@ -1,0 +1,7 @@
+[database]
+read
+SID = 101F9A02
+write
+SID = 101F9A02
+schema
+SID = 101F9A02

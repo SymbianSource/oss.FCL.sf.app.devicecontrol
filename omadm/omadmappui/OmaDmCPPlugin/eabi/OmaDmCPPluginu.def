@@ -1,0 +1,5 @@
+EXPORTS
+	_Z24ImplementationGroupProxyRi @ 1 NONAME
+	_ZTI14COmaDmCPPlugin @ 2 NONAME ; #<TI>#
+	_ZTV14COmaDmCPPlugin @ 3 NONAME ; #<VT>#
+

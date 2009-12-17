@@ -1,0 +1,85 @@
+/*
+* Copyright (c) 2002 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: Implementation of customization components
+*
+*/
+  
+
+// To get the APP_LAYER_SYSTEMINCLUDE-definition
+#include <platform_paths.hrh>
+#include "defaultcaps.hrh"
+
+CAPABILITY      CAP_GENERAL_DLL
+TARGET          operatorlogoadapter.dll
+TARGETTYPE      PLUGIN
+UID             0x10009D8D 0x10207829
+VENDORID        VID_DEFAULT
+
+APP_LAYER_SYSTEMINCLUDE
+SYSTEMINCLUDE   /epoc32/include/swi
+SYSTEMINCLUDE 	/epoc32/include/ecom
+
+#ifdef __TARM_SYMBIAN_CONVERGENCY
+SYSTEMINCLUDE 	/epoc32/include/devman
+#else
+// nothing
+#endif
+
+SOURCEPATH      ../src
+
+USERINCLUDE     ../inc
+USERINCLUDE			../../include
+USERINCLUDE     ../../DMUtils/inc
+
+SOURCE          OperatorLogoAdapter.cpp
+SOURCE          SyncImageOperations.cpp
+
+
+// RESOURCE       
+START RESOURCE  OperatorLogoAdapter.rss
+TARGET          operatorlogoadapter.rsc
+LANGUAGE_IDS
+END
+
+
+
+LIBRARY			    euser.lib
+LIBRARY			    efsrv.lib
+LIBRARY			    ecom.lib
+LIBRARY			    imut.lib
+LIBRARY         imageconversion.lib
+LIBRARY         bitmaptransforms.lib
+LIBRARY         fbscli.lib
+LIBRARY			    ws32.lib
+LIBRARY         etel.lib
+LIBRARY         etelmm.lib
+LIBRARY         phoneclient.lib
+LIBRARY 		    flogger.lib
+
+//#ifdef __SAP_POLICY_MANAGEMENT
+LIBRARY			    policyengine.lib
+LIBRARY			    dmutil.lib
+//#endif
+
+#ifdef __TARM_SYMBIAN_CONVERGENCY
+LIBRARY		      devmancmdmgr.lib
+#else
+// nothing
+#endif
+
+STATICLIBRARY	  dmutils.lib
+LIBRARY                 featmgr.lib
+LIBRARY			    mediaclientimage.lib
+
+SMPSAFE

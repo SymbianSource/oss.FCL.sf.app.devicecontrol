@@ -1,0 +1,30 @@
+/*
+* Copyright (c) 2003 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  iby file for Configuration Manager Application
+*
+*/
+
+
+#ifndef PNPRESOURCES_IBY
+#define PNPRESOURCES_IBY
+
+#ifdef __PLUG_AND_PLAY_MOBILE_SERVICES
+
+    S60_APP_RESOURCE( pnpprovisioning )
+
+#endif // __PLUG_AND_PLAY_MOBILE_SERVICES
+
+#endif // PNPRESOURCES_IBY
+
+//  End of File  

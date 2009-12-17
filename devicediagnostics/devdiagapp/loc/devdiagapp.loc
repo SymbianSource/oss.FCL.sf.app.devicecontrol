@@ -1,0 +1,284 @@
+/*
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Localization strings. 
+*
+*/
+
+
+rls_string STRING_short_caption "Diagnostics"
+rls_string STRING_r_DevDiagApp_caption "Diagnostics"
+
+/**
+* DO NOT LOCALIZE. This application is not visible on the grid (launched from GS).
+**/
+#define qtn_diag_diagnostics_title "Diagnostics"
+
+// d:Options list item to perfom a single test 
+// l:list_single_pane_t1_cp2
+// r:5.0
+//
+#define qtn_diag_options_perform_test "Perform test"
+
+// d:Options list item to perfom all hardware tests
+// l:list_single_pane_t1_cp2
+// r:5.0
+//
+#define qtn_diag_options_perform_hardware_tests "Perform all hardware tests"
+
+// d:Options list item to perform all tests (HW+service+Conn+Service)
+// l:list_single_pane_t1_cp2
+// r:5.0
+//
+#define qtn_diag_options_perform_all_tests "Perform all tests"
+
+// d:Options list item to perfom all connectivity tests
+// l:list_single_pane_t1_cp2
+// r:5.0
+//
+#define qtn_diag_options_perform_connectivity_tests "Perform all connectivity tests"
+
+// d:Options list item to perfom all service tests
+// l:list_single_pane_t1_cp2
+// r:5.0
+//
+#define qtn_diag_options_perform_services_tests "Perform all service tests"
+
+// d:Options list item to perfom all coverage tests
+// l:list_single_pane_t1_cp2
+// r:5.0
+//
+#define qtn_diag_options_perform_coverage_tests "Perform all coverage tests"
+
+// d:Title of the hardware tests
+// l:title_pane_t2/opt12
+// r:5.0
+//
+#define qtn_diag_title_hardware "Hardware"
+
+// d:Title of the connectivity tests
+// l:title_pane_t2/opt12
+// r:5.0
+//
+#define qtn_diag_title_connectivity "Connectivity"
+
+// d:Title of the service tests
+// l:title_pane_t2/opt12
+// r:5.0
+//
+#define qtn_diag_title_services "Services"
+
+// d:Title of the coverage tests
+// l:title_pane_t2/opt12
+// r:5.0
+//
+#define qtn_diag_title_coverage "Coverage"
+
+// d:Indicates that a test has not been executed.
+// l:list_double_large_graphic_pane_t2
+// r:5.0
+//
+#define qtn_diag_list_not_performed "Not Performed"
+
+// d:Indicates that a test has been executed successfully.
+// %U is time when the test was passed. Either qtn_date_usual or qtn_time_usual (depending on when the test was executed).
+// l:list_double_large_graphic_pane_t2
+// r:5.0
+//
+#define qtn_diag_lst_test_pass "Passed %U"
+
+// d:Indicates that a test has been executed and the result was failed.
+// %U is time when the test was failed. Either qtn_date_usual or qtn_time_usual (depending on when the test was executed).
+// l:list_double_large_graphic_pane_t2
+// r:5.0
+//
+#define qtn_diag_lst_test_failed "Failed %U"
+
+// d:Means that we are executing this test.
+// l:list_double_large_graphic_pane_t2
+// r:5.0
+//
+#define qtn_diag_lst_test_ongoing "Testing ..."
+
+// d:Message query heading 
+// l:heading_pane_t1
+// r:5.0
+//
+#define qtn_diag_msg_title_perform_all_hardware_tests "Perform all hardware tests"
+
+// d:Message query text that is displayed when all hardware tests are performed.
+// l:popup_info_list_pane_t1
+// r:5.0
+//
+#define qtn_diag_msg_perform_all_hardware_tests "All hardware tests will be performed. In case you don't want to perform some test you can skip it."
+
+// d:Message query heading 
+// l:heading_pane_t1
+// r:5.0
+//
+#define qtn_diag_msg_title_perform_all_coverage_tests "Perform all coverage tests"
+
+// d:Message query text that is displayed when all coverage tests are performed.
+// l:popup_info_list_pane_t1
+// r:5.0
+//
+#define qtn_diag_msg_perform_all_coverage_tests "All coverage tests will be performed. In case you don't want to perform some test you can skip it."
+/* Add this as part of UI spec conformation
+// d:Message query heading 
+// l:heading_pane_t1
+// r:5.0
+//
+#define qtn_diag_msg_title_perform_all_connectivity_tests "Perform all connectivity tests"
+
+// d:Message query text that is displayed when all coverage tests are performed.
+// l:popup_info_list_pane_t1
+// r:5.0
+//
+#define qtn_diag_msg_perform_all_connectivity_tests "All connectivity tests will be performed. In case you don't want to perform some test you can skip it."
+
+/ d:Message query heading 
+// l:heading_pane_t1
+// r:5.0
+//
+#define qtn_diag_msg_title_perform_all_serivices_tests "Perform all service tests"
+
+// d:Message query text that is displayed when all coverage tests are performed.
+// l:popup_info_list_pane_t1
+// r:5.0
+//
+#define qtn_diag_msg_perform_all_services_tests "All service tests will be performed. In case you don't want to perform some test you can skip it."
+*/
+// d:Confirmation dialog is displayed after a group of tests are executed. 
+// d:This indicates that all tests have been passed (skipped /cancelled tests are not count)
+// l:popup_note_window
+// r:5.0
+//
+#define qtn_diag_conf_test_passed "Testing is complete."
+
+// d:Confirmation dialog is displayed after a group of tests are executed. 
+// d:This indicates that one or more tests have been failed.
+// l:popup_note_window
+// r:5.0
+//
+#define qtn_diag_conf_test_failed "Testing is complete. Following tests have failed: \n"
+
+// d:Message query text that is displayed when all tests are performed.
+// l:popup_info_list_pane_t1
+// r:5.0
+//
+#define qtn_diag_msg_title_perform_all_tests "Perform all tests"
+
+// d:Message query text that is displayed when all tests are performed.
+// l:popup_info_list_pane_t1
+// r:5.0
+//
+#define qtn_diag_msg_perform_all_tests "All tests will be performed. In case you don't want to perform some test you can skip it."
+
+
+// d:Waiting dialog that is displayed when plug-in loading takes some time.
+// l:popup_note_wait_window
+// r:5.0
+//
+#define qtn_diag_wait_note_loading_test "Loading..."
+
+// d:Dialog title shown when the current disk space (On C: drive) is too low to run Device Diagnostics.
+// l:heading_pane_t1
+// r:5.0
+//
+#define qtn_diag_err_title_memory_low "Device memory low"
+
+// d:Dialog text shown when the current disk space (On C: drive) is too low to run Device Diagnostics.
+// l:popup_info_list_pane_t1
+// r:5.0
+//
+#define qtn_diag_err_memory_low "There is not enough device memory.\nDelete some files from device, and run Diagnostics again."
+
+// d:Dialog title shown when the battery level required to run Device Diagnostics is too low.
+// l:heading_pane_t1
+// r:5.0
+//
+#define qtn_diag_err_title_battery_low "Battery level is low"
+
+// d:Dialog text shown when the current battery level is too low to run Device Diagnostics.
+// l:popup_info_list_pane_t1
+// r:5.0
+//
+#define qtn_diag_err_battery_low "Not enough battery to run tests.\nRecharge battery first."
+
+
+// d:List query dialog heading. This is displayed before tests are cancelled.
+// l:heading_pane_t1
+// r:5.0
+//
+#define qtn_diag_list_query_cancel "Cancel:" 
+
+
+// d:List query dialog option. 
+// l:list_single_pane_t1_cp2
+// r:5.0
+//
+#define qtn_diag_list_query_cancel_selected "Selected test"
+
+// d:List query dialog option. 
+// l:list_single_pane_t1_cp2
+// r:5.0
+//
+#define qtn_diag_list_query_cancel_rest "Rest of the tests"
+
+// d:List query dialog heading. This is displayed before tests are skipped.
+// l:heading_pane_t1
+// r:5.0
+//
+#define qtn_diag_list_query_skip "Skip:"
+
+// d:List query dialog option. 
+// l:list_single_pane_t1_cp2
+// r:5.0
+//
+#define qtn_diag_list_query_skip_selected "Selected test"
+
+// d:List query dialog option. 
+// l:list_single_pane_t1_cp2
+// r:5.0
+//
+#define qtn_diag_list_query_skip_rest "Rest of the tests"
+
+// d:Message query Dialog text. This dialog is shown when device diagnostics application is opened after a crash. %U is the name of the plug-in that crashed.
+// l:popup_info_list_pane_t1
+// r:5.0
+//
+#define qtn_diag_conf_query_after_crash "Last time Diagnostics crashed during following test:\n%U\nTest could not be completed. Do you want to perform the test again?"
+
+// d:After performing a group of tests, test results are listed (only if test cases failed).
+// l:heading_pane_t1
+// r:5.0
+//
+#define qtn_diag_msg_title_test_results "Test results"
+
+// d:Confirmation dialog is displayed after a tests is executed. 
+// d:This indicates if the test is passed.
+// l:popup_note_window
+// r:5.0
+//
+#define qtn_diag_conf_test_passed_1			"Testing is complete. The test has passed"
+
+// d:Confirmation dialog is displayed after a tests is executed.
+// d:This indicates if the test is failed.
+// l:popup_note_window
+// r:5.0
+//
+#define qtn_diag_conf_test_failed_1			"Testing is complete. The test has failed"
+
+//#define qtn_diag_msg_title_help  "Help"  // tmp imp to be removed
+
+//#define qtn_diag_msg_help       "Help for Dianostics is not ready now."  // tmp imp to be removed

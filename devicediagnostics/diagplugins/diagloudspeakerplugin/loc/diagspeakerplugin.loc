@@ -1,0 +1,112 @@
+/*
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Localization strings for DiagSpeakerPlugin.
+*
+*/
+
+
+// d:Text of a list item in Application
+// l:list_single_graphic_heading_pane_t1_cp2
+// r:3.1
+//
+#define qtn_diag_lst_speakerphone "Loudspeaker test"
+
+// d:Text of a list item in Application
+// l:title_pane_t2/opt12
+// r:3.1
+//
+//#define qtn_diag_title_test_speakerphone "Loudspeaker test" // LVT Change
+
+// d:Message query prompt to start plugin (text) 
+// l:popup_info_list_pane_t1
+// r:3.1
+//
+#define qtn_diag_msg_speakerphone "The following test will check loudspeaker functionality"
+
+// d:Message query prompt to start recording (header) 
+// l:heading_pane_t1
+// r:3.1
+//
+#define qtn_diag_msg_title_record_speakerphone "Record a soundclip"
+
+// d:Message query prompt to start recording (header) 
+// l:popup_info_list_pane_t1
+// r:3.1
+//
+#define qtn_diag_msg_record_speakerphone "Please record the following phrase 'Hello, testing, 1, 2, 3'"
+
+// d:Progress Note during recording 
+// l:popup_note_wait_window
+// r:3.1
+//
+#define qtn_diag_note_record_speakerphone "Repeat: 'Hello, testing, 1,2,3'\nThen press Stop."
+
+// d:Confimation query to start playing 
+// l:popup_note_window
+// r:3.1
+//
+#define qtn_diag_conf_start_play_speakerphone "Press play to listen to the recording via the loudspeaker"
+
+
+// d:Progress Note during playing 
+// l:popup_note_wait_window
+// r:3.1
+//
+
+#define qtn_diag_note_play_speakerphone "Playing recording via loudspeaker"
+
+// d:Confimation query to ask heard voice 
+// l:popup_note_window
+// r:3.1
+//
+#define qtn_diag_conf_speakerphone "Was the recording played back correctly?"
+
+// d:Confimation query to ask repeat 
+// l:popup_note_window
+// r:3.1
+//
+#define qtn_diag_conf_repeat_speakerphone "Do you want to repeat the loudspeaker test?"
+
+
+// d:List item of test
+// l:list_single_graphic_pane_t1
+// r:3.1
+//
+//#define qtn_diag_lst_test_speakerphone  "Test Speakerphone"  // LVT Change
+
+// d:Screen title of test 
+// l:list_single_graphic_pane_t1
+// r:3.1
+//
+//#define qtn_diag_title_test_speakerphone "Loudspeaker test"  // LVT Change
+
+// d:Header for information
+// l:heading_pane_t1
+// r:3.1
+//
+#define qtn_diag_msg_title_speakerphone "Loudspeaker test"
+
+//d:Failed result text
+//l:popup_info_list_pane_t1
+//r:5.0
+//
+#define qtn_diag_conf_test_failed_speakerphone "Loudspeaker test"
+
+//d:Softkey text.
+//l:control_pane_t1/opt7 
+//r:5.0
+//
+#define qtn_diag_softk_skip "Skip"
+
+// End of File

@@ -1,0 +1,10 @@
+EXPORTS
+	?Close@RScreenSaverClient@@QAEXXZ @ 1 NONAME ; void RScreenSaverClient::Close(void)
+	?Connect@RScreenSaverClient@@QAEHXZ @ 2 NONAME ; int RScreenSaverClient::Connect(void)
+	?DisplayName@CScreenSaverListInfo@@QBEABVTDesC16@@XZ @ 3 NONAME ; class TDesC16 const & CScreenSaverListInfo::DisplayName(void) const
+	?GetScreenSaverListInfoL@RScreenSaverClient@@QAEXAAV?$RPointerArray@VCScreenSaverListInfo@@@@@Z @ 4 NONAME ; void RScreenSaverClient::GetScreenSaverListInfoL(class RPointerArray<class CScreenSaverListInfo> &)
+	?GetScreenSaverListL@RScreenSaverClient@@QAEXAAVCDesC16Array@@@Z @ 5 NONAME ; void RScreenSaverClient::GetScreenSaverListL(class CDesC16Array &)
+	?ImplementationUid@CScreenSaverListInfo@@QBE?AVTUid@@XZ @ 6 NONAME ; class TUid CScreenSaverListInfo::ImplementationUid(void) const
+	?OpaqueData@CScreenSaverListInfo@@QBEABVTDesC8@@XZ @ 7 NONAME ; class TDesC8 const & CScreenSaverListInfo::OpaqueData(void) const
+	?Version@CScreenSaverListInfo@@QBEHXZ @ 8 NONAME ; int CScreenSaverListInfo::Version(void) const
+

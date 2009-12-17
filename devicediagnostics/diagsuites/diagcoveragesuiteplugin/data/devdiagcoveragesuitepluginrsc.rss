@@ -1,0 +1,97 @@
+/*
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Resource definitions for project Diagnostics Coverage Suite.
+*
+*/
+
+
+// Resource Name Identifier
+NAME DCVS
+
+// Include Files
+#include <eikon.rh>
+#include <avkon.rh>
+#include <avkon.loc>
+#include <avkon.rsg>
+#include <diagcoveragesuiteplugin.loc>
+#include "diagcoveragesuiteplugin.hrh"
+
+// Resource Identifiers
+RESOURCE RSS_SIGNATURE { }
+RESOURCE TBUF { buf="DCVS"; }
+
+// ========================== RESOURCE DEFINITIONS ===========================
+
+// ---------------------------------------------------------------------------
+// r_diag_coverage_suite_list_large_graphic
+// The suite's name in the main view listbox.
+// ---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_diag_coverage_suite_list_large_graphic
+    {
+    buf = qtn_diag_lst_view_my_coverage;
+    }
+
+// ---------------------------------------------------------------------------
+// r_diag_coverage_suite_heading_pane
+// The suite's name in the header of the dialog that is shown when starting
+// test execution.
+// ---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_diag_coverage_suite_heading_pane
+    {
+    buf = qtn_diag_msg_title_all_my_coverage;
+    }
+
+// ---------------------------------------------------------------------------
+// r_diag_coverage_suite_popup_info_pane
+// The body text of the dialog that is shown when starting test execution.
+// ---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_diag_coverage_suite_popup_info_pane
+    {
+    buf = qtn_diag_msg_all_my_coverage;
+    }
+
+// ---------------------------------------------------------------------------
+// r_diag_coverage_suite_title_pane
+// The title pane shown when coverage tests are running.
+// ---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_diag_coverage_suite_title_pane
+    {
+    buf = qtn_diag_title_coverage;
+    }
+
+// ---------------------------------------------------------------------------
+// r_diag_coverage_suite_list_single_graphic
+// Suite name in the suite view listbox.
+// ---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_diag_coverage_suite_list_single_graphic
+    {
+    buf = qtn_diag_folder_coverage;
+    }
+
+// ---------------------------------------------------------------------------
+// r_diag_coverage_suite_list_single
+// The suite's name in the results view.
+// ---------------------------------------------------------------------------
+//
+RESOURCE TBUF r_diag_coverage_suite_list_single
+    {
+    buf = qtn_diag_folder_coverage;
+    }
+
+// End of File
