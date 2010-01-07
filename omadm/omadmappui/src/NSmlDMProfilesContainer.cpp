@@ -345,7 +345,6 @@ void CNSmlDMProfilesContainer::HandleListBoxEventL( CEikListBox* aListBox,
                                                  TListBoxEvent aEventType )
 	{
 	FLOG( "[OMADM] CNSmlDMProfilesContainer::HandleListBoxEventL()" );	
-	iProfilesListBox->SetCurrentItemIndexAndDraw( aListBox->CurrentItemIndex() );	
 	iDocument->SetCurrentIndex( aListBox->CurrentItemIndex() ); 
 	if ( aEventType == MEikListBoxObserver::EEventItemSingleClicked )
 	    {

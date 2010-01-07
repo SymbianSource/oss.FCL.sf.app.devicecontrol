@@ -26,7 +26,7 @@ const TUid KCRUidNSmlDMSyncApp = {0x101f6de5};
 //browser uid 
 const TUid browseruid = {0x10008d39}; 
 //java uid 
-const TUid  javauid =   {0x1028289E};
+const TUid  javauid =   {0x2001FD68};
 //flash uid 
 const TUid  flashuid = {0x101FD693}; 
 

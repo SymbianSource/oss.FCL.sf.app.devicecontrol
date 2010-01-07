@@ -27,6 +27,13 @@
 #include "../browseradapter/bld/bld.inf"
 #include "../streamingadapter/bld/bld.inf"
 
+#include "../globalwlansettings/group/bld.inf"
+#include "../nsmldinternet/group/bld.inf"
+#include "../nsmldmalwaysonadapter/group/bld.inf"
+#include "../nsmldmbmadapter/group/bld.inf"
+#include "../wlanctrldcmoadapter/group/bld.inf"
+#include "../connmoadapter/group/bld.inf"
+
 #ifdef __SYNCML_DM_DS
 #include "../syncmlds/bld/bld.inf"
 #endif
