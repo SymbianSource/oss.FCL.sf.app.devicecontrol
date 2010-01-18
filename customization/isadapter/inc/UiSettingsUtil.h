@@ -19,7 +19,7 @@
 #ifndef __UISETTINGSUTIL_H__
 #define __UISETTINGSUTIL_H__
 
-#include <FavouritesDb.h>           // Favourites Database
+#include <favouritesdb.h>           // Favourites Database
 #include <msvapi.h>
 #include <apgcli.h>
 #include <centralrepository.h>

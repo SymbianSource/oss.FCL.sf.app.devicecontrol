@@ -24,7 +24,7 @@
 #include <e32base.h>
 #include <smldmadapter.h>
 // s60
-#include <FavouritesDb.h>           // Favourites Database
+#include <favouritesdb.h>           // Favourites Database
 
 class CUiSettingsUtil;
 

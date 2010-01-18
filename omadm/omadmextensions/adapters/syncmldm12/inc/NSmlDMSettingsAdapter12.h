@@ -947,6 +947,13 @@ class CNSmlDMSettingsAdapter12 : public CSmlDmAdapter
   */  
         
   TInt ConstructTreeL(const TDesC8& aURI);
+  
+    /**
+        * The function extracts DMAcc/x node from aURI		        
+        * @param    aURI     DMAcc aURI.
+        * @return   DMAcc/x node.
+    */ 
+  TPtrC8 GetDynamicDMNodeUri(const TDesC8& aURI);
 
     private:    // Data
 	

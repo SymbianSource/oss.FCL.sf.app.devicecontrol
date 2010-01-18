@@ -29,7 +29,7 @@ UID             0x100039CE 0x10204339
 
 
 VENDORID        VID_DEFAULT
-CAPABILITY      CAP_APPLICATION NetworkControl // NetworkControl needed when closing connections
+CAPABILITY      CAP_APPLICATION NetworkControl AllFiles // NetworkControl needed when closing connections
 
 SOURCEPATH      ../PnP/PnpProvisioningAppSrc
 SOURCE          PnpProvisioningApp.cpp 
@@ -78,7 +78,7 @@ LIBRARY         apengine.lib provisioningengine.lib eikctl.lib
 LIBRARY         efsrv.lib hash.lib apgrfx.lib
 LIBRARY         commdb.lib		// for commdb
 LIBRARY         nhwrparser.lib charconv.lib
-LIBRARY         connmon.lib pnp.lib
+LIBRARY         connmon.lib pnp.lib centralrepository.lib
 DEBUGLIBRARY    flogger.lib
 
 SMPSAFE

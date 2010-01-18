@@ -59,6 +59,8 @@ private:
   	     * settings ID 
   	     */ 
   	     TBool ValidateAppUidWithProvappIDL();
+  	     TUint32 iLaunchUid;
+  	     TUint32 iPosition;
 
 public:
 
@@ -79,7 +81,12 @@ public:
 	// Additional  functions can be added if new functions are required
         // for service activation
 
+		TBool isPresent(TDesC& p );
 
+		void ParseValues(RPointerArray<HBufC>& array, TDesC& aValue);
+		void GetCenrepValueL(const TUid aRepositoryUid,TUint32 aKey, TDes16& aValue);
+		TBool Search(RPointerArray<HBufC>& array,TDesC& p);
+		TBool isFound(TDesC& p,TUint32 position);
 };
 
 

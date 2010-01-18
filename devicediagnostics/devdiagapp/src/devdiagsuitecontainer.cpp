@@ -427,11 +427,13 @@ void CDevDiagSuiteContainer::AddIconsL()
         {
         icons = iListBox->ItemDrawer()->ColumnData()->IconArray();
         }
-    	
-    for ( TInt i = 0; i < iChildren.Count(); ++i )
+    if(icons)
+    	{	
+    	for ( TInt i = 0; i < iChildren.Count(); ++i )
         {
         icons->AppendL( iChildren[i]->CreateIconL( ));
-        }   
+        }
+      }   
     }
 
 

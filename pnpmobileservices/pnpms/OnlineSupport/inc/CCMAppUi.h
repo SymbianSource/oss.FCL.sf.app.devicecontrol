@@ -26,7 +26,7 @@
 #include <e32std.h>
 #include <coeccntx.h>
 #include <aknappui.h>
-#include <FavouritesLimits.h>   // for KFavouritesMaxUrl
+#include <favouriteslimits.h>   // for KFavouritesMaxUrl
 #include <sysutil.h>
 #include <ApDataHandler.h>      // for creating new Init Access
 #include <ApAccessPointItem.h>  // for creating new Init Access

@@ -117,7 +117,8 @@ void CNSmlDmStreamingAdapter::ConstructL()
                 CleanupStack::PopAndDestroy(); // implArray
                 // Load default values
                 //iModel->LoadSettingsL(EConfigDefault);
-                iModel->LoadSettingsL(EConfigUser);
+                if(iModel)
+                	iModel->LoadSettingsL(EConfigUser);
                 }
         _DBG_FILE("CNSmlDmStreamingAdapter::ConstructL: end");
     }

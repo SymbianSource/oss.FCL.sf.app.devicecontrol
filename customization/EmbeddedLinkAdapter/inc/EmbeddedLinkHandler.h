@@ -19,7 +19,7 @@
 #define  EMBEDDEDLINKHANDLER_H
 
 #include <e32base.h>
-#include <FavouritesLimits.h>
+#include <favouriteslimits.h>
 #include <e32std.h>
 
 #include <FavouritesDb.h>

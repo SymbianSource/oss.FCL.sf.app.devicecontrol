@@ -1192,11 +1192,24 @@ void CNapBranch::AddNodeObjectL(const TDesC8& aURI,
         // Sanity check: If the dynamic name of the NAP node has is the same as deleted previously and
         // DM Framework hasn't updated the tree, it will give the LUID when calling this method. Thus,
         // it's needed to check that the connection method really exists.
-        RCmConnectionMethodExt cm;        
-
-        if ( !GetConnectionMethodLC( *iCmManager, cm,  CUtils::IntLUID( aParentLUID) ) )
-            {
-            // New node, add to buffer
+        TBuf8<KSmlMaxURISegLen> parentLUID;
+        parentLUID.Zero();
+        parentLUID = aParentLUID;
+        RCmConnectionMethodExt cm;               
+        if ( !GetConnectionMethodLC( *iCmManager, cm,  CUtils::IntLUID( parentLUID) ) )
+            {            
+			if(aParentLUID.Length() > 0)
+				{
+				TInt ret = iCallback->RemoveMappingL(KConnMoAdapterUid,
+							GetDynamicNAPNodeUri( aURI ), ETrue );
+				if(ret)
+					{
+					iCallback->SetStatusL( aStatusRef, CSmlDmAdapter::EError );
+					CleanupStack::PopAndDestroy( &cm );
+					return;
+					}				
+				}
+			// New node, add to buffer
             iBuffer->AddNodeToBufferL( aURI, KNullDesC8, aStatusRef );
             OstTrace0( TRACE_NORMAL, CNAPBRANCH_ADDNODEOBJECTL_NEW_NODE2,
                     "CNapBranch::AddNodeObjectL;New node -> Add to buffer." );

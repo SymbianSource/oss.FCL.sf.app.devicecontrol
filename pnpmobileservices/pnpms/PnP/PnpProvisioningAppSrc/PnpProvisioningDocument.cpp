@@ -237,11 +237,11 @@ THttpProvStates::TProvisioningStatus CPnpProvisioningDocument::SaveSettingsL()
         
 
     TInt numSaved( 0 );
-    CPnpProvisioningSaver* saver = new(ELeave) CPnpProvisioningSaver( *wpengine, EFalse );
+    CPnpProvisioningSaver* saver = new(ELeave) CPnpProvisioningSaver( *wpengine, EFalse, EFalse );
     TInt retValue( KErrNone );
     LOGSTRING("saver created");
     // dismiss waitdialog, saver will show own waitdialog
-    iAppUi->WaitDialogDismissedL(EAknSoftkeyEmpty);
+    //iAppUi->WaitDialogDismissedL(EAknSoftkeyEmpty);
   
     TRAPD( saverErr, retValue = saver->ExecuteLD( numSaved ) );
     
@@ -328,8 +328,17 @@ THttpProvStates::TProvisioningStatus CPnpProvisioningDocument::SaveSettingsL()
         if( setAsDefault )
             {
             LOGSTRING( "create setter" );
-            CPnpProvisioningSaver* setter = new(ELeave) CPnpProvisioningSaver( *wpengine, ETrue );          
+            CPnpProvisioningSaver* setter = NULL;
             TInt numSet( 0 );
+            if(!activate)
+            {
+            setter = new(ELeave) CPnpProvisioningSaver( *wpengine, ETrue, ETrue );          
+            iAppUi->WaitDialogDismissedL(EAknSoftkeyEmpty);
+            }
+            else
+            {
+            setter = new(ELeave) CPnpProvisioningSaver( *wpengine, ETrue, EFalse );          
+            }
             LOGSTRING( "setter->ExecuteLD" );
             setter->ExecuteLD( numSet );
             }
@@ -347,12 +356,6 @@ THttpProvStates::TProvisioningStatus CPnpProvisioningDocument::SaveSettingsL()
         globalNote->ShowNoteL( EAknGlobalInformationNote , *msgTextSaved );
         CleanupStack::PopAndDestroy( 2 );
         }
-        else
-        {
-        CPnpServiceActivation *service = CPnpServiceActivation::NewLC();
-        service->DisplayAppSpecNoteL();
-        CleanupStack::PopAndDestroy();
-       	}
          
     }
     else

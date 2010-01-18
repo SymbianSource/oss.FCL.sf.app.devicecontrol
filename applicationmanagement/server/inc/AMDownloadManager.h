@@ -19,7 +19,7 @@
 #define __CAMDOWNLOADMANAGER_H__
 
 #include <e32base.h>
-#include <DownloadMgrClient.h>
+#include <downloadmgrclient.h>
 
 #include "AMDeploymentComponent.h"
 #include "aminstalloptions.h"

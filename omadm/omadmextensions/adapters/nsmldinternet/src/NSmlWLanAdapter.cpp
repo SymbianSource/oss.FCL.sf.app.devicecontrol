@@ -673,6 +673,10 @@ void CNSmlWLanAdapter::AddLeafObjectL( const TDesC8& aURI,
     if (eapId == KErrNotFound)
         {
         _DBG_FILE("CNSmlWLanAdapter::AddLeafObjectL(): Non-EAP setting.");
+        if(luid==KErrNotFound)
+        	{
+        	return;
+        	}
         err = iWlanSettings->GetWlanSettings( luid, *iSettings );    
         }
     else
@@ -1559,6 +1563,10 @@ void CNSmlWLanAdapter::DeleteObjectL( const TDesC8& aURI,
     if( ( NumOfUriSegs( aURI ) < 6 )
      	|| (aURI.Match( _L8("AP/*/NAPDef/*/WLAN/*") ) != KErrNotFound && NumOfUriSegs( aURI ) == 6 ) )
         {
+        if(luid==KErrNotFound)
+        	{
+        	return;
+        	}	
         TInt ret = iWlanSettings->DeleteWlanSettings( luid );
 
         if( ret == KErrNone )
@@ -1743,7 +1751,12 @@ CSmlDmAdapter::TError CNSmlWLanAdapter::FetchLeafObjectL( const TDesC8& aURI,
 		}
     
     TPtrC8 lastUriSeg = GetLastUriSeg( aURI );
-
+    
+    if(luid==KErrNotFound)
+    	{
+    	return;
+    	}
+        
     TInt err = iWlanSettings->GetWlanSettings( luid, *iSettings );
 
     if( err == KErrNotFound )
@@ -2451,7 +2464,11 @@ void CNSmlWLanAdapter::ChildURIListL( const TDesC8& aURI,
     if( aURI.Match( _L8("AP/*/NAPDef/*") ) != KErrNotFound && uriSegs==4 )
         {
         DBG_ARGS8(_S8("WLanAdapter::ChildURIListL->NAPDef - <%S> <%S>"), &aURI, &aLUID );
-        if( iWlanSettings->RecordExists( luid ) < 0 )
+        if(luid==KErrNotFound)
+        	  {
+        	  return;
+        	  }
+    	  if( iWlanSettings->RecordExists( luid ) < 0 )
             {
             currentUriSegmentList->InsertL( 0, KNSmlNAPDefWlanNode );
             iCallBack->SetStatusL( aStatusRef, CSmlDmAdapter::EOk );
@@ -2484,6 +2501,10 @@ void CNSmlWLanAdapter::ChildURIListL( const TDesC8& aURI,
             }
         else
             {
+            if(luid==KErrNotFound)
+        	      {
+        	      return;
+        	      }	
             if( iWlanSettings->RecordExists( luid ) < 0)
                 {
                 iCallBack->SetStatusL(aStatusRef,CSmlDmAdapter::ENotFound);
@@ -2522,6 +2543,10 @@ void CNSmlWLanAdapter::ChildURIListL( const TDesC8& aURI,
     else if( aURI.Match( _L8("AP/*/NAPDef/*/WLAN/*") ) != KErrNotFound && uriSegs==6 )
         {
         DBG_ARGS8(_S8("WLanAdapter::ChildURIListL->NAPDef - <%S> <%S>"), &aURI, &aLUID );
+        if(luid==KErrNotFound)
+        	  {
+        	  return;
+        	  }
         if( iWlanSettings->RecordExists( luid ) < 0 )
             {
             iCallBack->SetStatusL( aStatusRef, CSmlDmAdapter::ENotFound );
@@ -2574,6 +2599,10 @@ void CNSmlWLanAdapter::ChildURIListL( const TDesC8& aURI,
     else if( aURI.Match( _L8("AP/*/NAPDef/*/WLAN/*/WEPKey/*") ) != KErrNotFound && uriSegs==8 )
         {
         DBG_ARGS8(_S8("WLanAdapter::ChildURIListL->WEPKey/* - <%S> <%D>"), &aURI, luid );
+        if(luid==KErrNotFound)
+        	  {
+        	  return;
+        	  }
         if( iWlanSettings->RecordExists( luid ) < 0 )
             {
             //wlan settings not found for aLUID
@@ -2620,6 +2649,10 @@ void CNSmlWLanAdapter::ChildURIListL( const TDesC8& aURI,
             }
         else
             {
+            if(luid==KErrNotFound)
+        	      {
+        	      return;
+        	      }
             if( iWlanSettings->RecordExists( luid ) < 0)
                 {
                 iCallBack->SetStatusL(aStatusRef,CSmlDmAdapter::ENotFound);
@@ -2655,6 +2688,10 @@ void CNSmlWLanAdapter::ChildURIListL( const TDesC8& aURI,
     else if( aURI.Match( _L8("AP/*/NAPDef/*/WLAN/*/SecondarySSID/*") ) != KErrNotFound && uriSegs==8 )
         {
         DBG_ARGS8(_S8("WLanAdapter::ChildURIListL->SecondarySSID/* - <%S> <%D>"), &aURI, luid );
+        if(luid==KErrNotFound)
+        	  {
+        	  return;
+        	  }
         if( iWlanSettings->RecordExists( luid ) < 0 )
             {
             //wlan settings not found for aLUID
@@ -2677,6 +2714,10 @@ void CNSmlWLanAdapter::ChildURIListL( const TDesC8& aURI,
         // Need to get the service id from parent node
 		luid = GetServiceIdFromUriL ( aURI );
 		
+		if(luid==KErrNotFound)
+        	  {
+        	  return;
+        	  }
 		if( iWlanSettings->RecordExists( luid ) < 0 )
             {
             //wlan settings not found for aLUID

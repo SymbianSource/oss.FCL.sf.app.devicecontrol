@@ -39,10 +39,10 @@ const TInt KMaxWaitTime = 1000000;
 // ================= MEMBER FUNCTIONS =======================
 
 // C++ default constructor.
-CPnpProvisioningSaver::CPnpProvisioningSaver( CWPEngine& aEngine, TBool aSetAsDefault )
+CPnpProvisioningSaver::CPnpProvisioningSaver( CWPEngine& aEngine, TBool aSetAsDefault, TBool aWaitNote )
 : CActive( EPriorityStandard ), iEngine( aEngine ), 
   iSetAsDefault( aSetAsDefault ),
-  iCurrentItem( 0 ), iResult( KErrNone ),iEndKeyPressed(EFalse)
+  iCurrentItem( 0 ), iResult( KErrNone ),iEndKeyPressed(EFalse), iShowWaitNote(aWaitNote)
     {
     CActiveScheduler::Add( this );
     }
@@ -64,6 +64,7 @@ void CPnpProvisioningSaver::PrepareLC()
     LOGSTRING("Constructing dialog");
     
     // Set up the dialog and callback mechanism.
+    if(iSetAsDefault && iShowWaitNote)
     ShowWaitNoteL();
     }
 
@@ -161,16 +162,10 @@ void CPnpProvisioningSaver::RunL()
         }
     else
         {
-        if(iWaitDialogMonitor->iStatus != KErrCancel)
-        	{
+
         LOGSTRING2("Saving item: %i", iCurrentItem );
         TRAP( err, iEngine.SaveL( iCurrentItem ) );
-        	}
-        else
-        	{
-        	iEndKeyPressed = ETrue; //means End key or cancel pressed before saving some sttings
-        	LOGSTRING2("item: %i not saved", iCurrentItem );
-        	}
+        
         }
 
     // If CommsDB or BookmarkDB are locked, schedule a retry
@@ -203,12 +198,12 @@ void CPnpProvisioningSaver::RunL()
     if( iCurrentItem == iEngine.ItemCount()-1 )
         {
         LOGSTRING("All saved");
-        LOGSTRING2( "Saver RunL iWaitDialogMonitor->iStatus %i", iWaitDialogMonitor->iStatus.Int() );        
+        //LOGSTRING2( "Saver RunL iWaitDialogMonitor->iStatus %i", iWaitDialogMonitor->iStatus.Int() );        
         ProcessFinishedL();
         }
     else
         {
-        LOGSTRING2( "Saver RunL 2nd iWaitDialogMonitor->iStatus %i", iWaitDialogMonitor->iStatus.Int() );
+        //LOGSTRING2( "Saver RunL 2nd iWaitDialogMonitor->iStatus %i", iWaitDialogMonitor->iStatus.Int() );
         iCurrentItem++;
         CompleteRequest();
         }
@@ -220,7 +215,10 @@ void CPnpProvisioningSaver::RunL()
 //
 void CPnpProvisioningSaver::ProcessFinishedL()
     {
-    LOGSTRING2( "Saver iWaitDialogMonitor->iStatus %i", iWaitDialogMonitor->iStatus.Int() );
+    //LOGSTRING2( "Saver iWaitDialogMonitor->iStatus %i", iWaitDialogMonitor->iStatus.Int() );
+    iWait.AsyncStop();
+    if(iWaitDialogMonitor)
+    {
     //End key or cancel pressed after saving settings
     if(iWaitDialogMonitor->iStatus == KErrCancel)
     	{
@@ -231,6 +229,7 @@ void CPnpProvisioningSaver::ProcessFinishedL()
         delete iGlobalWaitNote;
         iGlobalWaitNote = NULL;
         }
+     }
     }
 
 // ---------------------------------------------------------

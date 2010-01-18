@@ -24,7 +24,7 @@
 #include <rconnmon.h>
 #include <ApUtils.h>
 #include <PnpProvisioning.rsg>
-#include <BrowserUiSDKCRKeys.h>         // for KCRUidBrowser
+#include <browseruisdkcrkeys.h>         // for KCRUidBrowser
 #include <AknGlobalNote.h>              // for CAknGlobalNote
 #include <AknGlobalConfirmationQuery.h> // for CAknGlobalConfirmationQuery
 

@@ -1000,6 +1000,16 @@ void CNSmlDMSettingsAdapter12::AddNodeObjectL( const TDesC8& aURI,
 		    iCallBack->SetStatusL( aStatusRef, CSmlDmAdapter::EAlreadyExists );
 		    return;
 		    }
+		else
+			{						
+			TInt ret = iCallBack->RemoveMappingL(KNSmlDMSettingsAdapterImplUid,
+							GetDynamicDMNodeUri( aURI ), ETrue );
+			if(ret != KErrNone)
+				{
+			    iCallBack->SetStatusL( aStatusRef, CSmlDmAdapter::EError );
+		    	return;
+				}			
+			}		
 		}
 	iNewProfile = ETrue; 
 	AddNodeBufferL (aURI, aStatusRef);
@@ -3961,5 +3971,23 @@ EXPORT_C const TImplementationProxy* ImplementationGroupProxy( TInt& aTableCount
     return ImplementationTable;
 	}
 
+//------------------------------------------------------------------------------
+// TPtrC8 CNSmlDMSettingsAdapter12::GetDynamicDMNodeUri( const TDesC8& aURI )
+// returns DM/xxx URI
+//------------------------------------------------------------------------------
+TPtrC8 CNSmlDMSettingsAdapter12::GetDynamicDMNodeUri(const TDesC8& aURI)
+    {    
+    TInt i= 0;
+	TBuf8<50> DmAccRoot(KNSmlDefDMAcc);
+    for ( i = aURI.Find( KNSmlDefDMAcc ) + DmAccRoot.Length() + 1; i < aURI.Length(); i++ )
+        {
+        if( aURI[i] == '/' )
+            {
+            break;
+            }
+        }
+    
+    return aURI.Left( i );
+    }
 // End of File
 

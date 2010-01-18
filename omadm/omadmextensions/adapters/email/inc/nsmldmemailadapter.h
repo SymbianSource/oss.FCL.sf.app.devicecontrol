@@ -725,6 +725,13 @@ struct TNSmlEmailSettingsElement
      */
 		TInt ConstructTreeL(const TDesC8& aURI);
 		
+ /**
+        * The function extracts Email/x node from aURI		        
+        * @param    aURI     Email aURI.
+        * @return   Email/x node.
+    */ 
+    TPtrC8 GetDynamicEmailNodeUri( const TDesC8& aURI );
+		
 private:
     // Pointer to CMsvSession
     CMsvSession* iMsvSession;

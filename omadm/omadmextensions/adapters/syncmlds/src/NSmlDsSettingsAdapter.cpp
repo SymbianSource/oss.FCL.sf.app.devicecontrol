@@ -941,6 +941,16 @@ void CNSmlDSSettingsAdapter::AddNodeObjectL( const TDesC8& aURI,
 		}
 	else
 		{
+		if( aParentLUID.Length() > 0 )
+		{		
+			TInt ret = iCallBack->RemoveMappingL(KNSmlDSSettingsAdapterImplUid,
+						GetDynamicDSNodeUri( aURI ), ETrue );
+			if(ret)
+				{
+				iCallBack->SetStatusL( aStatusRef, CSmlDmAdapter::EError );
+				return;
+				}
+		}		
         //
         //	Create new profile
         //
@@ -3817,5 +3827,24 @@ RDebug::Print( _L("jshong FOTA : ConstructTreeL 1-5 ") );
          CleanupStack::PopAndDestroy( 1 );//profileIdArray
         return profileID;
 }
+
+//------------------------------------------------------------------------------
+// TPtrC8 CUtils::GetDynamicDSNodeUri( const TDesC8& aURI )
+// returns Syncml/DSAcc/xxx URI
+//------------------------------------------------------------------------------
+TPtrC8 CNSmlDSSettingsAdapter::GetDynamicDSNodeUri(const TDesC8& aURI)
+    {    
+    TInt i= 0;
+    TBuf8<50> DsAccRoot(KDSAcc1);
+    for ( i = aURI.Find( KDSAcc1 ) + DsAccRoot.Length() + 1 ; i < aURI.Length(); i++ )
+        {
+        if( aURI[i] == '/'  )            
+			{            break;            
+			}
+        }    
+		
+    return aURI.Left( i );
+    }
+	
 // End of File
 

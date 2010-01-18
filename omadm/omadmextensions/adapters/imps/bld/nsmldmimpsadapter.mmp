@@ -43,3 +43,5 @@ LIBRARY         euser.lib ecom.lib charconv.lib
 LIBRARY         sysutil.lib wvsapsettingsstore.lib efsrv.lib
 LIBRARY         nsmldmclientserverutils.lib nsmldmiapmatcher.lib nsmldebug.lib
 LIBRARY         featmgr.lib
+
+SMPSAFE

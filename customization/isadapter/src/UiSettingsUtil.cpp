@@ -17,7 +17,7 @@
 
 
 // s60
-#include <FavouritesItemList.h>
+#include <favouritesitemlist.h>
 #include <msvuids.h>
 #include <SenduiMtmUids.h>
 #include <javaregistryentrytype.h>

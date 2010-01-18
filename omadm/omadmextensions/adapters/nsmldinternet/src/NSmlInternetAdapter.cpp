@@ -3694,12 +3694,8 @@ void CNSmlInternetAdapter::ChildURIListL( const TDesC8& aURI,
         if ( aLUID.Length() > 0 )
             {
             // Stale data, remove mapping. 
-            RNSmlDMCallbackSession dMCbSession;
-            User::LeaveIfError( dMCbSession.Connect() );
-            CleanupClosePushL( dMCbSession );
-        
-            dMCbSession.RemoveMappingInfoL( KNSmlInternetAdapterImplUid, GetDynamicAPNodeUri( aURI ), ETrue );
-            CleanupStack::PopAndDestroy( &dMCbSession );
+		    TInt ret = iCallBack->RemoveMappingL( KNSmlInternetAdapterImplUid,
+							GetDynamicAPNodeUri( aURI ), ETrue );					
             }
         
         iCallBack->SetStatusL( aStatusRef, CSmlDmAdapter::ENotFound );
@@ -4837,15 +4833,10 @@ void CNSmlInternetAdapter::AddLeafBufferL( const TDesC8& aURI,
             tableView->ReadTextL( TPtrC(COMMDB_NAME ),  name);
             if ( name.Compare( aObject ) != 0 )
                 {
-                // Not correct name
-                RNSmlDMCallbackSession dMCbSession;
-                User::LeaveIfError( dMCbSession.Connect() );
-                CleanupClosePushL( dMCbSession );
-                    
+                // Not correct name                                    
                 // Remove all mappings from AP/xxx level
-                dMCbSession.RemoveMappingInfoL( KNSmlInternetAdapterImplUid, GetDynamicAPNodeUri( aURI ), ETrue );
-                CleanupStack::PopAndDestroy( &dMCbSession ); 
-
+                TInt ret = iCallBack->RemoveMappingL( KNSmlInternetAdapterImplUid,
+								GetDynamicAPNodeUri( aURI ) , ETrue );		
                 iPrevURI->Des().Format( KNullDesC8 );
                 iPrevLUID = 0;
                 }     
@@ -4905,16 +4896,14 @@ void CNSmlInternetAdapter::AddNodeObjectL( const TDesC8& aURI,
         !APExistsL( apId ) )
         {
         // AP has been deleted. Handle as new data.
-        _DBG_FILE("CNSmlInternetAdapter::AddNodeObjectL(): parentLUID.Length() > 0 && !APExistsL() -> Remove mapping ");
-          
-        RNSmlDMCallbackSession dMCbSession;
-        User::LeaveIfError( dMCbSession.Connect() );
-        CleanupClosePushL( dMCbSession );
-        
-        // Remove all mappings from AP/xxx level
-        dMCbSession.RemoveMappingInfoL( KNSmlInternetAdapterImplUid, GetDynamicAPNodeUri( aURI ), ETrue );
-        CleanupStack::PopAndDestroy( &dMCbSession );
-        
+        _DBG_FILE("CNSmlInternetAdapter::AddNodeObjectL(): parentLUID.Length() > 0 && !APExistsL() -> Remove mapping ");          
+        TInt ret = iCallBack->RemoveMappingL( KNSmlInternetAdapterImplUid,
+								GetDynamicAPNodeUri( aURI ) , ETrue );
+		if(ret)
+			{
+			iCallBack->SetStatusL( aStatusRef, CSmlDmAdapter::EError );
+			return;
+			}
         parentLUID.Zero();
         iPrevURI->Des().Format( KNullDesC8 );
         iPrevLUID = 0;

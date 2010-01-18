@@ -2487,10 +2487,39 @@ void CApplicationManagementSession::ActiveComponentsL(
 
 										add  = sisEntry.IsPresentL();	
 										
-										if(add)
-										RDEBUG( "CApplicationManagementSession::ActiveComponentsL ETrue" );
-										else
-										RDEBUG( "CApplicationManagementSession::ActiveComponentsL EFalse" );
+			  if(add)
+                    {
+				
+				// If Present update the Version, name and other info to that deployement component. Since application would have got an update
+                        // by some other means
+				
+                        TVersion version = sisEntry.VersionL();
+                        TBuf8<KVersionLength> pkgDes;
+                        pkgDes.AppendNum(version.iMajor);
+                        pkgDes.Append(KLiteralPeriod);
+                        pkgDes.AppendNum(version.iMinor);
+                        
+				
+				HBufC *packagename = sisEntry.PackageNameL();
+				TBuf8<512> packagename8;
+				packagename8.Copy(*packagename);
+				delete packagename;
+
+                        compo.SetNameL(packagename8);
+                        compo.SetVersionL(pkgDes);
+				                        
+
+                        Server().Storage()->UpdateL( compo );
+                        
+
+				
+
+				RDEBUG( "CApplicationManagementSession::ActiveComponentsL ETrue" );
+
+
+			  }
+			  else
+			      RDEBUG( "CApplicationManagementSession::ActiveComponentsL EFalse" );
 																	    
 	
                     CleanupStack::PopAndDestroy(2, &sisSession);
@@ -3662,6 +3691,8 @@ void CApplicationManagementSession::StateChangeComponentIdsCountL(
                         preInstallCompo->SetNameL(preInstalledAppName);
                         preInstallCompo->SetVersionL(preInstalledAppParams[count]->iVersion);
                         preInstallCompo->SetMimeTypeL(preInstalledAppParams[count]->iMimeType);
+				preInstallCompo->SetAppRemovableStatus(ETrue);
+
                         Server().Storage()->UpdateL( *preInstallCompo );
                         Server().Storage()->CheckForDuplicateNodesInDeployedL(*preInstallCompo);
                         }

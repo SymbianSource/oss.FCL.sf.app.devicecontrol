@@ -919,6 +919,13 @@ class CNSmlDSSettingsAdapter : public CSmlDmAdapter
         
         TInt ConstructTreeL(const TDesC8& aURI);
 
+   /**
+        * The function extracts Syncml/DSAcc/x node from aURI		        
+        * @param    aURI     Syncml/DSAcc aURI.
+        * @return   Syncml/DSAcc/x node.
+    */ 
+		TPtrC8 GetDynamicDSNodeUri(const TDesC8& aURI);
+
     private:    // Data
 	    
         // Callback interface for returning result or status

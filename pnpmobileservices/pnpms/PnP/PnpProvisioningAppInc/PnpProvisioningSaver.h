@@ -47,7 +47,7 @@ class CPnpProvisioningSaver :
         * C++ default constructor.
         * @param aEngine Engine to be used for saving
         */
-        CPnpProvisioningSaver( CWPEngine& aEngine, TBool aSetAsDefault );
+        CPnpProvisioningSaver( CWPEngine& aEngine, TBool aSetAsDefault, TBool aWaitNote );
 
         /**
         * Destructor.
@@ -158,6 +158,7 @@ class CPnpProvisioningSaver :
         //End key pressed or not
         TBool iEndKeyPressed;
         
+        TBool iShowWaitNote;
     };
 
 

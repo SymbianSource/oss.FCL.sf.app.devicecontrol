@@ -28,7 +28,7 @@
 #include <etelmm.h>
 #include <textresolver.h>
 #include <sysutil.h>
-#include <HttpFilterCommonStringsExt.h>
+#include <httpfiltercommonstringsext.h>
 #include <OnlineSupport.rsg>            // has to be system include.
 #include <centralrepository.h>          // link against centralrepository.lib
 #include <BrowserUiSDKCRKeys.h>         // for KCRUidBrowser

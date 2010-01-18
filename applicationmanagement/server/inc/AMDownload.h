@@ -19,7 +19,7 @@
 #define __CAMDOWNLOAD_H__
 
 #include <e32base.h>
-#include <DownloadMgrClient.h>
+#include <downloadmgrclient.h>
 
 
 // FORWARD DECLARATIONS

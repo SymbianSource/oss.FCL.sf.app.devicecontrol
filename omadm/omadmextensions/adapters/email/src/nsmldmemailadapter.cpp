@@ -767,12 +767,19 @@ void CNSmlDmEmailAdapter::FetchLeafObjectL( const TDesC8& aURI,
             {
             data = iBuffer->At(index).iImap4Settings->ServerAddress().AllocLC();
             }
-        HBufC8 *data8 = HBufC8::NewLC(data->Size());
-        TPtr8 dataPtr8 = data8->Des();
-        CnvUtfConverter::ConvertFromUnicodeToUtf8( dataPtr8, data->Des() );
+        else
+        	{
+          	status = CSmlDmAdapter::ENotFound;
+        	}
+        if(data)
+        	{	    
+        		HBufC8 *data8 = HBufC8::NewLC(data->Size());
+        		TPtr8 dataPtr8 = data8->Des();
+        		CnvUtfConverter::ConvertFromUnicodeToUtf8( dataPtr8, data->Des() );
 
-        object->InsertL(0,dataPtr8);
-        CleanupStack::PopAndDestroy(2); //data, data8
+        		object->InsertL(0,dataPtr8);
+        		CleanupStack::PopAndDestroy(2); //data, data8
+        	}
         }
 
     else if(lastUriSeg.Compare(KNSmlDMEmailMsnd)==0)
@@ -1245,6 +1252,17 @@ void CNSmlDmEmailAdapter::AddNodeObjectL( const TDesC8& aURI,
             Callback().SetStatusL(aStatusRef, CSmlDmAdapter::EAlreadyExists);
             _DBG_FILE("CNSmlDmEmailAdapter::AddNodeObjectL(): EAlreadyExists end");
             return;
+            }
+        else
+            {
+            TInt ret = Callback().RemoveMappingL( KNSmlDMEmailAdapterImplUid, 
+						GetDynamicEmailNodeUri(aURI), ETrue );
+			if(ret != KErrNone)
+				{
+            	Callback().SetStatusL(aStatusRef, CSmlDmAdapter::EError);
+	            _DBG_FILE("CNSmlDmEmailAdapter::AddNodeObjectL(): EError end");
+            	return;
+				}
             }
         Callback().SetMappingL(aURI,KNullDesC8);
         }
@@ -2832,6 +2850,11 @@ CSmlDmAdapter::TError CNSmlDmEmailAdapter::FetchObjectL(const TDesC8& aURI,
             {
             data = iBuffer->At(index).iImap4Settings->ServerAddress().AllocLC();
             }
+        else
+        	{
+          	status = CSmlDmAdapter::ENotFound;
+          	return status;            
+        	}
         HBufC8 *data8 = HBufC8::NewLC(data->Size());
         TPtr8 dataPtr8 = data8->Des();
         CnvUtfConverter::ConvertFromUnicodeToUtf8( dataPtr8, data->Des() );
@@ -3331,4 +3354,27 @@ TInt CNSmlDmEmailAdapter::ConstructTreeL(const TDesC8& aURI)
         CleanupStack::PopAndDestroy(); //emailAccs
 		return ret;
 }
+
+//------------------------------------------------------------------------------
+// TPtrC8 CNSmlDmEmailAdapter::GetDynamicEmailNodeUri( const TDesC8& aURI )
+// returns Email/xxx URI
+//------------------------------------------------------------------------------
+TPtrC8 CNSmlDmEmailAdapter::GetDynamicEmailNodeUri( const TDesC8& aURI )
+    {
+    DBG_ARGS8(_S8("CNSmlDmEmailAdapter::GetDynamicEmailNodeUri() - <%S> "), &aURI);
+    TInt i= 0;
+	TBuf8<50> EmailAccRoot(KNSmlDMEmailNodeName);
+    for ( i = aURI.Find( KNSmlDMEmailNodeName ) + EmailAccRoot.Length() + 1; 
+						i < aURI.Length(); i++ )
+        {
+        if( aURI[i] == '/' )
+            {
+            break;
+            }
+        }        
+    _DBG_FILE("CNSmlDmEmailAdapter::GetDynamicEmailNodeUri(): end");
+    return aURI.Left( i );
+    }
+
+
 // End of File

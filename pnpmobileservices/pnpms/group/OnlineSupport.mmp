@@ -27,7 +27,7 @@ EPOCSTACKSIZE	0x5000 //define our own stack as this is no longer provided by app
 UID		        0x100039CE 0x10204338
 SECUREID        0x10204338
 VENDORID		VID_DEFAULT
-CAPABILITY		CAP_APPLICATION PowerMgmt
+CAPABILITY		CAP_APPLICATION PowerMgmt AllFiles
 
 
 SOURCEPATH      ../OnlineSupport/src

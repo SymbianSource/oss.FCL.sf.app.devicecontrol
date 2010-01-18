@@ -174,13 +174,17 @@ CConnMoNodeElement* CAddBuffer::FindDynamicNode( const TDesC8& aUri )
                 }
             }
         }
-    OstTraceExt1( TRACE_NORMAL, 
+	if ( resultNode != NULL )
+	    {
+        OstTraceExt1( TRACE_NORMAL, 
                   CADDBUFFER_FINDDYNAMICNODE_EXIT, 
                   "EXIT: CAddBuffer::FindDynamicNode;resultNode=%s", 
                   resultNode->iUri );
+	    }
     
     return resultNode;
     }
+    
 
 //------------------------------------------------------------------------------
 // CAddBuffer::Find
