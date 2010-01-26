@@ -103,8 +103,11 @@ void CDcmoDMAdapter::ConstructL()
 CDcmoDMAdapter::~CDcmoDMAdapter()
     {
     	_DBG_FILE( "CDcmoDMAdapter Destructor"  );
-    	idcmoClient->Close();
-    	delete idcmoClient;
+    	if( idcmoClient )
+    		{
+    			idcmoClient->Close();
+    			delete idcmoClient;
+    		}
     	idcmoClient = NULL;
     }
 
