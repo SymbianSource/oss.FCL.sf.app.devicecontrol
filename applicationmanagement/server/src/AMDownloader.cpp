@@ -226,6 +226,8 @@ void CAMDownloader::CreateAndUpdateProgressDialogL(TInt32 aDownloadedSize,
         RProperty::Get(KUidPSApplicationManagementKeys,
                 KAMOperationNonSilent, operNonSilent);
 
+         RDEBUG_2( "CAMDownloader::Value of operNonSilent '%d'", operNonSilent );
+
         if (operNonSilent==1 || operNonSilent==KErrNotFound)
             {
             TApaTaskList taskList(CEikonEnv::Static()->WsSession() );
@@ -237,6 +239,15 @@ void CAMDownloader::CreateAndUpdateProgressDialogL(TInt32 aDownloadedSize,
                 task.BringToForeground();
 
             }
+         else
+            {
+			RDEBUG( "CAMDownloadManager::HandleAlreadyRunningL - CreateAndUpdateProgressDialogL UI enabled = 0" );
+
+		    TInt UIenabled = 0;
+			TInt err = RProperty::Set(KUidPSApplicationManagementKeys,
+			                KAMServerUIEnabled, UIenabled);
+        	User::LeaveIfError(err); // invalid
+			}
 
         iProgStarted = 1;
         }

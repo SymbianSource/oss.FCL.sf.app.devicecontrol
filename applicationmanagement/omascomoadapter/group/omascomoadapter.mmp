@@ -79,5 +79,6 @@ LIBRARY		nsmldmclientserverutils.lib
 LIBRARY		nsmldmiapmatcher.lib apgrfx.lib ws32.lib 
 #endif
 
-	
+SMPSAFE
+
 // End of File

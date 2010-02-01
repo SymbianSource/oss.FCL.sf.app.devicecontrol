@@ -23,6 +23,7 @@
 #include <e32base.h>
 #include <ecom.h>
 #include <utf.h>
+#include <SettingEnforcementInfo.h> // DCMO Enforcement
 #include "nsmldebug.h"
 #include "dcmodmadapter.h"
 #include "dcmointerface.h"
@@ -274,6 +275,17 @@ void CDcmoDMAdapter::FetchLeafObjectL( const TDesC8& aURI,
     _DBG_FILE( "CDcmoDMAdapter::FetchLeafObjectL - begin"  );
     MSmlDmAdapter::TError retValue = CSmlDmAdapter::EOk; 
 		TDCMOStatus err (EDcmoFail);
+		
+    TBool dcmoEnforce=EFalse;
+	  TRAPD(eError, dcmoEnforce =CheckEnforcementL())
+	  if(!(eError==KErrNone && dcmoEnforce))
+	  {
+	  	 // Respond
+	  	retValue = CSmlDmAdapter::ENotAllowed;
+  		Callback().SetStatusL( aStatusRef, retValue );
+  		return;
+	  }
+    
 		TBuf<MAXBUFLEN> iName;
 		
 		TPtrC8 category = GetCategoryFromUriL( aURI );
@@ -512,6 +524,17 @@ void CDcmoDMAdapter::ExecuteCommandL( const TDesC8&  aURI ,
     _DBG_FILE( "CDcmoDMAdapter::ExecuteCommandL - begin"  );
    	MSmlDmAdapter::TError status = CSmlDmAdapter::EOk;
     TInt err (EDcmoFail);
+    
+    TBool dcmoEnforce=EFalse;
+	  TRAPD(eError, dcmoEnforce =CheckEnforcementL())
+	  if(!(eError==KErrNone && dcmoEnforce))
+	  {
+	  	 // Respond
+	  	status = CSmlDmAdapter::ENotAllowed;
+  		Callback().SetStatusL( aStatusRef, status );
+  		return;
+	  }
+	  
 		TBuf<MAXBUFLEN> iName;
 		TPtrC8 category = GetCategoryFromUriL( aURI );
 		iName.Copy ( category );		
@@ -886,4 +909,18 @@ TPtrC8 CDcmoDMAdapter::GetCategoryFromUriL(const TDesC8& aURI )
 
 }
 
+//----------------------------------------------------------------------
+// TBool CDcmoDMAdapter::CheckEnforcementL()
+// If DCMO policy is enforced true is returned else false
+//----------------------------------------------------------------------
+TBool CDcmoDMAdapter::CheckEnforcementL()
+{
+    CSettingEnforcementInfo* info = CSettingEnforcementInfo::NewL();
+    CleanupStack::PushL(info);
+    TBool enforceActive ( EFalse );
+    User::LeaveIfError(info->EnforcementActive(EDCMOEnforcement, enforceActive));
+    CleanupStack::PopAndDestroy(info);
+    return enforceActive;
+}
+    
 // End of File  

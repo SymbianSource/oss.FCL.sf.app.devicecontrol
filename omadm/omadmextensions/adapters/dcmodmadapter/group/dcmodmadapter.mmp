@@ -48,6 +48,7 @@ LIBRARY         dmutil.lib
 STATICLIBRARY   dmutils.lib
 LIBRARY         charconv.lib
 LIBRARY					dcmoclient.lib
+LIBRARY					policyengine.lib
 LIBRARY					nsmldebug.lib
 
 

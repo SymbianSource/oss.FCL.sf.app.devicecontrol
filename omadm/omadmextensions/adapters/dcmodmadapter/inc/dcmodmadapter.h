@@ -498,7 +498,14 @@ class CDcmoDMAdapter : public CSmlDmAdapter
     	* @param aError A system wide error code.
     	* @return A TError value depending on aError.
     	*/
-    CSmlDmAdapter::TError MapErrorToStatus( TInt aError ) const;     
+    		CSmlDmAdapter::TError MapErrorToStatus( TInt aError ) const;     
+    	
+    	/**
+	    * This function returns the dcmo enforcement 
+	    * @param None
+	    * @return TBool true if dcmo enforcement or false
+	    */        	
+    	TBool CheckEnforcementL();
                                 
     private: // Constructor
         /**

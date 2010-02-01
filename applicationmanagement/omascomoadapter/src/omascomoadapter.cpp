@@ -1037,7 +1037,9 @@ RApplicationManagement &CSCOMOAdapter::SessionL()
             TPckg<TCertInfo> pcert(info);
             errx = re->Get(KCertKey, pcert) ;
 
-            RDEBUG_2("aCertInfo.iFingerprint.Length() is  %u",info.iFingerprint.Length() );
+            RDEBUG("CSCOMOAdapter::SessionL() aCertInfo");
+
+            //RDEBUG_2("aCertInfo.iFingerprint.Length() is  %u",info.iFingerprint.Length() );
             if (errx == KErrNone)
                 {
                 RDEBUG("CSCOMOAdapter::SessionL() errx == KErrNone");
