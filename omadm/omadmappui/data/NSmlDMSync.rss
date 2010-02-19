@@ -876,7 +876,7 @@ RESOURCE AVKON_SETTING_PAGE r_settings_number
 //
 //----------------------------------------------------  
 //
-RESOURCE LISTBOX r_setting_app_listbox 
+RESOURCE LISTBOX r_setting_app_radiolistbox 
   {
   flags = 0x0001 ;
   }
@@ -893,7 +893,7 @@ RESOURCE AVKON_SETTING_PAGE r_settings_radio
   number = EAknSettingPageNoOrdinalDisplayed;
   softkey_resource = R_AVKON_SOFTKEYS_OK_CANCEL__OK;
   type =  EAknSetListBox;
-  editor_resource_id =  r_setting_app_listbox;
+  editor_resource_id =  r_setting_app_radiolistbox;
   }
 
 //----------------------------------------------------
@@ -1127,7 +1127,6 @@ RESOURCE TBUF r_qtn_fota_not_updated                    { buf = qtn_fota_list_no
 RESOURCE TBUF r_qtn_fota_profile_always_ask             { buf = qtn_fota_setting_value_always_ask; }
 RESOURCE TBUF r_qtn_fota_list_query_select_server_profile { buf = qtn_fota_list_query_select_server; }
 
-RESOURCE TBUF r_qtn_fota_connection_needed              { buf = qtn_fota_conf_query_connection_is_needed; }
 
 // Strings on tabs
 RESOURCE TBUF r_qtn_dm_tab_phone_updates                { buf = qtn_dm_tab_phone_updates; }

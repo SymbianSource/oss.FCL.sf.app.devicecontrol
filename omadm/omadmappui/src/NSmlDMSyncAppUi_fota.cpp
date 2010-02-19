@@ -286,10 +286,13 @@ void CNSmlDMSyncAppUi::HandleCommandL( TInt aCommand )
 		
 		case ENSmlMenuCmdStartSync:			// start synchronisation
 			{
-            if ( ShowConfirmationNoteL( R_QTN_SML_CONF_STARTQUERY ) )
-                {
-                StartSyncL();
-                }
+			if(TUtil::ShowNativeDialogL(EPrivacyPolicy)==KErrNone)
+			    {
+                if ( ShowConfirmationNoteL( R_QTN_SML_CONF_STARTQUERY ) )
+                    {
+                    StartSyncL();
+                    }
+			    }
 			}
 		    break;
 		

@@ -203,7 +203,8 @@ void CNSmlDMSyncAppEngine::SynchronizeL( TDesC& aServerName,
                                          TInt aProfileId,
                                          TInt aJobId,
                                          TInt aConnectionBearer,
-                                         const TBool aUseFotaProgressNote )
+                                         const TBool aUseFotaProgressNote,
+                                         TBool aSilent)
     {
    	FLOG( "[OMADM] CNSmlDMSyncAppEngine::SynchronizeL:" );
 
@@ -217,7 +218,8 @@ void CNSmlDMSyncAppEngine::SynchronizeL( TDesC& aServerName,
                                 aProfileId, 
                                 aJobId, 
                                 aConnectionBearer,
-                                aUseFotaProgressNote );
+                                aUseFotaProgressNote,
+                                aSilent);
     }
 
 // -----------------------------------------------------------------------------

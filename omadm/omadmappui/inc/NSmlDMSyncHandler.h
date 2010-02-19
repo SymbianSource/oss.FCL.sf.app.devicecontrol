@@ -225,7 +225,8 @@ NONSHARABLE_CLASS (CNSmlDMSyncHandler) : public CBase,
 		                   const TInt aProfileId,
 		                   const TInt aJobId,
 		                   const TInt aConnectionBearer,
-                           const TBool aUseFotaProgressNote );
+                           const TBool aUseFotaProgressNote,
+                           const TBool aSilent);
 		
         /**
         * Shows the progress dialog.
@@ -284,7 +285,12 @@ NONSHARABLE_CLASS (CNSmlDMSyncHandler) : public CBase,
 		CNSmlDMSyncState* State();
 
     public:
-
+		
+        /**
+        * Starts synchronization.
+        * @return None
+        */
+		void StartSynchronizeL();
 		/**
         * Utility function.
         * @return ETrue if sync is currently running, EFalse otherwise.
@@ -383,6 +389,12 @@ NONSHARABLE_CLASS (CNSmlDMSyncHandler) : public CBase,
         
         // Identifies Fota progress note launched or not
         TBool iFotaProgressLaunched;
+        // Set true for silent session 
+        TBool iSilent; 
+        
+    public:
+        // Periodic timer active object to start synchronization
+        CPeriodic* iPeriodic;
 	};
 
 #endif  // NSMLDMSYNCHANDLER_H

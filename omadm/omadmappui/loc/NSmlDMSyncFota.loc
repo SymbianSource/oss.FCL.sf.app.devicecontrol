@@ -116,15 +116,6 @@
 //
 #define qtn_fota_list_query_select_server_profile   "Select server profile"
 
-//d:Confirmation note used when the user initiates the firmware
-//d:update check. Confirms that the user wants to initiate connection
-//d:to the server.
-//l:popup_note_window
-//w:
-//r:3.1
-//
-#define qtn_fota_conf_query_connection_is_needed    "You are about to connect to the Internet. Normal data call costs may apply. Connect?"
-
 //d:Wait note shown during the user initiated checking of updates.
 //d:Is shown during the communication with the device management
 //d:server and possibly, but not necessarily, during the downloading

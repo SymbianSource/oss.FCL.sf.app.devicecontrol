@@ -131,8 +131,11 @@ void CNSmlDMFotaView::HandleCommandL( TInt aCommand )
             }*/
 
         case ENSmlMenuCmdFotaCheck:
-            {
-            InitiateFotaCheckL();
+            {            
+            if(TUtil::ShowNativeDialogL(EPrivacyPolicy) == KErrNone)
+                {
+                InitiateFotaCheckL();
+                }
             break;
             }
         case ENSmlMenuCmdFotaInstall:
@@ -207,9 +210,7 @@ void CNSmlDMFotaView::InitiateFotaCheckL()
     {
     FLOG( "[OMADM]\t CNSmlDMFotaView::InitiateFotaCheck()" );
     TInt profileId( KErrNotFound );
-    TBool isValidId( EFalse );
-    HBufC* stringHolder = NULL;
-
+    TBool isValidId( EFalse );    
     profileId = iFotaModel->DefaultFotaProfileIdL();
 
     if ( profileId >= KErrNone )
@@ -223,40 +224,11 @@ void CNSmlDMFotaView::InitiateFotaCheckL()
     	if( profileId == KErrNotFound )    
     	  return;
         }
-    TInt query(EFalse);
-    CRepository* cRepository=NULL;
-	TRAPD ( error, cRepository = CRepository::NewL ( KCRUidNSmlNotifierDomainKeys ) );
-	if ( error == KErrNone )
-	{
-		CleanupStack::PushL( cRepository );
-		TInt dmChargingNote(1);
-		cRepository->Get ( KNSmlDMChargingNote, dmChargingNote );
-		if(dmChargingNote==1)
-		{      
-    	CAknQueryDialog* dlg = CAknQueryDialog::NewL();
-    	CleanupStack::PushL( dlg );
-    	stringHolder = StringLoader::LoadLC( R_QTN_FOTA_CONNECTION_NEEDED );
-    	dlg->SetPromptL( stringHolder->Des() );
-    
-    CleanupStack::PopAndDestroy( stringHolder );
-    stringHolder = NULL;
-    
-    	CleanupStack::Pop( dlg );
-    
-    	query = dlg->ExecuteLD( R_SML_CONFIRMATION_QUERY );
-  		}
-  		else
-  			query = ETrue;
-  		CleanupStack::PopAndDestroy( cRepository );//cRepository
-  	}
-    if(query)
-    {
         __ASSERT_ALWAYS( iFotaModel, TUtil::Panic( KErrGeneral ) );
         
         iFotaModel->EnableFwUpdRequestL( profileId );
         ( ( CNSmlDMSyncAppUi* ) AppUi() )->StartSyncL( profileId, ETrue );
     	iFotaDLObserver->StartL(ETrue);
-        }
     
     FLOG( "[OMADM]\t CNSmlDMFotaView::InitiateFotaCheck() completed" );
     }

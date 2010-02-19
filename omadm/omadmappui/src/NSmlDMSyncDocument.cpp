@@ -655,7 +655,8 @@ void CNSmlDMSyncDocument::RestoreL( const CStreamStore& aStore,
         	                           params.iProfileId,
         	                           params.iJobId,
         	                           bearer,
-        	                           EFalse );
+        	                           EFalse,
+        	                           iSilent);
         	break;
             }
         case KSyncServCmdShowProgress:

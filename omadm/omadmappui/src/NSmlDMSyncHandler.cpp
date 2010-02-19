@@ -28,7 +28,7 @@
 #include <data_caging_path_literals.hrh>  // for resource and bitmap directories
 #include <SyncMLErr.h>      // sync error codes
 
-
+#include <e32property.h>
 #include <AknsUtils.h>
 #include <DevManInternalCRKeys.h>
 #include <centralrepository.h>
@@ -49,6 +49,7 @@ _LIT( KBitmapFileName,  "z:nsmldmsync.mif" );
 _LIT( KBitmapFileName,  "z:nsmldmsync.mbm" );
 #endif
 
+const TInt KRequestTriggerWaitTime(1000);
 // -----------------------------------------------------------------------------
 // CNSmlDMSyncHandler::NewL
 //
@@ -163,7 +164,17 @@ void CNSmlDMSyncHandler::HandleDialogEventL( TInt aButtonId )
 		}
     FLOG( "CNSmlDMSyncHandler::HandleDialogEventL() completed" );
     }
-
+// ----------------------------------------------------------------------------------------
+// StaticSynchronizeRequestL() called to start Synchronization
+// ----------------------------------------------------------------------------------------
+static TInt StaticSynchronizeRequestL(TAny* aPtr)
+    {
+    CNSmlDMSyncHandler* ptr = (CNSmlDMSyncHandler*) aPtr;
+    FLOG("StaticSynchronizeRequestL");   
+    TRAPD(err, ptr->StartSynchronizeL() );  
+    FLOG("StaticSynchronizeRequestL completed");
+    return err;
+    }
 // -----------------------------------------------------------------------------
 // CNSmlDMSyncHandler::SynchronizeL
 // -----------------------------------------------------------------------------
@@ -172,7 +183,8 @@ void CNSmlDMSyncHandler::SynchronizeL( TDesC& aServerName,
                                        const TInt aProfileId,
                                        const TInt aJobId,
                                        const TInt aConnectionBearer,
-                                       const TBool aUseFotaProgressNote )
+                                       const TBool aUseFotaProgressNote, 
+                                       const TBool aSilent)
 	{
 	FLOG( "CNSmlDMSyncHandler::SynchronizeL Server alert" );
 	
@@ -181,7 +193,7 @@ void CNSmlDMSyncHandler::SynchronizeL( TDesC& aServerName,
     iProfileId = aProfileId;
     iJobId = aJobId;
     iUseFotaProgressNote = aUseFotaProgressNote;
-    
+    iSilent = aSilent;
     iSyncJob.OpenL( Session(), iJobId );
     iSyncJobId = iSyncJob.Identifier();
     FTRACE( FPrint( _L(
@@ -244,7 +256,81 @@ void CNSmlDMSyncHandler::SynchronizeL( TDesC& aServerName,
                     KNSmlDMSyncUiInitiatedJobKey,
                     iSyncJobId );
 	}
-	
+
+
+// -----------------------------------------------------------------------------
+// CNSmlDMSyncHandler::StartSynchronizeL
+// -----------------------------------------------------------------------------
+//
+void CNSmlDMSyncHandler::StartSynchronizeL()
+    {
+    FLOG( "CNSmlDMSyncHandler::StartSynchronizeL" );
+    if(iPeriodic)
+       {
+       delete iPeriodic;
+       iPeriodic = NULL;
+       FLOG("CNSmlDMSyncHandler::iPeriodic-deleted");
+       }
+    const TUid KDisclaimerProperty = {0x101F8769};
+    const TUint32 KInteger = 0x00000001;
+    TInt propValue;
+    TInt err = KErrNone;
+    
+    if(iSilent == EFalse)   //disclaimer shown for non silent session
+        {
+        if(TUtil::ShowNativeDialogL(EPrivacyPolicy)==KErrNone)
+            {
+            TRAP( err, ShowProgressDialogL() );
+            if ( err != KErrNone )
+                {
+                Session().CancelEvent();
+                Session().CancelProgress();
+                iSyncJob.StopL();
+                iSyncJob.Close();
+                propValue = 0;
+                RProperty::Set(KDisclaimerProperty, KInteger, propValue);
+                User::Leave( err );
+                }
+            FLOG( "CNSmlDMSyncHandler::SynchronizeL Sync is running" );
+
+            // Publish key here; set to 1
+            propValue = 1;
+            RProperty::Set(KDisclaimerProperty, KInteger, propValue);
+            }
+        else
+            {
+            Session().CancelEvent();
+            Session().CancelProgress();
+            propValue = 0;
+            RProperty::Set(KDisclaimerProperty, KInteger, propValue);            
+            }
+        }
+    else    //for silent session, disclaimer not shown
+        {
+        TRAP( err, ShowProgressDialogL() );
+        if ( err != KErrNone )
+            {
+            Session().CancelEvent();
+            Session().CancelProgress();
+            iSyncJob.StopL();
+            iSyncJob.Close();
+            propValue = 0;
+            RProperty::Set(KDisclaimerProperty, KInteger, propValue);
+            User::Leave( err );
+            }
+         FLOG( "CNSmlDMSyncHandler::SynchronizeL Sync is running" );
+
+            // Publish key here; set to 1
+         propValue = 1;
+         RProperty::Set(KDisclaimerProperty, KInteger, propValue);
+        }
+     
+     iSyncDocument->MarkFwUpdChangesStartL();
+     
+     iSyncRunning = ETrue;
+     iSyncError = KErrNone;
+     FLOG( "CNSmlDMSyncHandler::StartSynchronizeL completed" );
+    }
 // -----------------------------------------------------------------------------
 // CNSmlDMSyncHandler::SynchronizeL
 // -----------------------------------------------------------------------------
@@ -282,23 +368,34 @@ void CNSmlDMSyncHandler::SynchronizeL()
 	else
 	   iNotinFotaView = 0;    //already busy because in other view
 	IsDMBusy =ETrue; 
-  r2=RProperty::Set(KUidSmlSyncApp,KDMIdle,IsDMBusy);	   
-	
-	TRAP( err, ShowProgressDialogL() );
-	if ( err != KErrNone )
+  r2=RProperty::Set(KUidSmlSyncApp,KDMIdle,IsDMBusy);	
+  
+	if(iServerAlertedSync)
 		{
-		Session().CancelEvent();
-		Session().CancelProgress();
-		iSyncJob.StopL();
-		iSyncJob.Close();
-		User::Leave( err );
+        iPeriodic = CPeriodic::NewL (EPriorityNormal) ;
+        FLOG("CNSmlDMSyncHandler::SynchronizeL: iPeriodic created)");
+        iPeriodic->Start(TTimeIntervalMicroSeconds32(KRequestTriggerWaitTime*20)
+                  , TTimeIntervalMicroSeconds32(KRequestTriggerWaitTime*2500)
+                  , TCallBack(StaticSynchronizeRequestL,this) ) ;
 		}
-	FLOG( "CNSmlDMSyncHandler::SynchronizeL Sync is running" );
+	else
+	    {//For user initiated session
+		TRAP( err, ShowProgressDialogL() );
+		if ( err != KErrNone )
+		    {
+            Session().CancelEvent();
+            Session().CancelProgress();
+            iSyncJob.StopL();
+            iSyncJob.Close();
+            User::Leave( err );
+		    }
+		FLOG( "CNSmlDMSyncHandler::SynchronizeL Sync is running" );
+	    iSyncDocument->MarkFwUpdChangesStartL();
+	    
+	    iSyncRunning = ETrue;
+	    iSyncError = KErrNone;
+		}
 
-    iSyncDocument->MarkFwUpdChangesStartL();
-	
-	iSyncRunning = ETrue;
-	iSyncError = KErrNone;
 	}
 
 // -----------------------------------------------------------------------------

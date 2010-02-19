@@ -34,7 +34,7 @@ PRJ_MMPFILES
 //#include "../UISettingsSrv/Server/group/bld.inf"
 #include "../UISettingsSrv/bld/bld.inf"
 
-#include "../isadapter/bld/bld.inf"
+//#include "../isadapter/bld/bld.inf"
 #include "../supadapter/bld/bld.inf"
 #include "../WallpaperAdapter/bld/bld.inf"
 #include "../OperatorLogoAdapter/bld/bld.inf"

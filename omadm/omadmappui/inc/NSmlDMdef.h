@@ -143,10 +143,10 @@ enum TNSmlStatus
 	};
 
 enum TNSmlAccessPointSelection
-	{
-	ENsmlAlwaysAsk,
+	{	
 	ENsmlDefaultConnection,
-	ENsmlIap
+	ENsmlIap,
+	ENsmlAlwaysAsk
 	};	
 
 //Constants used when update happen NSC/DM 
