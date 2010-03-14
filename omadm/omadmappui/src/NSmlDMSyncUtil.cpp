@@ -24,8 +24,10 @@
 #include <collate.h>
 #include <StringLoader.h>
 #include <avkon.rsg>
-
+#include <DevManInternalCRKeys.h>
+#include <centralrepository.h>
 #include <SettingEnforcementInfo.h> // VSettingEnforcementInfo
+#include <ecom/ecom.h>
 
 #include "NSmlDMdef.h"
 #include "NSmlDMSyncUtil.h"
@@ -321,7 +323,86 @@ TBool TUtil::SettingEnforcementState()
     return ret;
     }
 
+// ---------------------------------------------------------
+//  TUtil::iDMNotifier
+// ---------------------------------------------------------
+CDMNativeNotifier* TUtil::iDMNotifier=NULL;
 
+// ---------------------------------------------------------
+// TUtil::ShowDialogBox
+// 
+// Shows the requested dialog
+// ---------------------------------------------------------
+TInt TUtil::ShowNativeDialogL(TInt aOperation)
+    {
+    CRepository* centrep = NULL;
+    TInt disclaimerAccepted(0);
+    RImplInfoPtrArray dmImplArray;
+    CleanupClosePushL(dmImplArray);
+    
+    CDMNativeNotifier::ListImplementationsL(dmImplArray);
+    
+    TInt rval = -1;
+    switch(aOperation)
+        {
+        case EPrivacyPolicy:
+            {  
+            //Check for implementations and set cenrep if count = 0 
+            if( dmImplArray.Count() == 0 )  //No implementations found
+                { 
+                centrep = CRepository::NewLC( KCRUidDeviceManagementInternalKeys );
+                if(centrep)
+                    {
+                    centrep->Get( KDMDisclaimerAccepted , disclaimerAccepted );
+                    if(disclaimerAccepted != EDMDialogNotAccepted)
+                        { 
+                          disclaimerAccepted=1;
+                          centrep->Set( KDMDisclaimerAccepted , disclaimerAccepted ); //for Disclaimer
+                        }
+                    CleanupStack::PopAndDestroy(centrep); 
+                    dmImplArray.ResetAndDestroy();
+                    CleanupStack :: PopAndDestroy(&dmImplArray);
+                    return KErrNone ;
+                    }    
+                }
+            TUid id( dmImplArray[0]->ImplementationUid());
+            dmImplArray.ResetAndDestroy();
+            CleanupStack :: PopAndDestroy(&dmImplArray);
+           
+            centrep = CRepository::NewLC( KCRUidDeviceManagementInternalKeys );
+            if (centrep ) 
+               {          
+               centrep->Get( KDMDisclaimerAccepted , disclaimerAccepted ); //for Disclaimer
+               CleanupStack::PopAndDestroy(centrep);
+               }
+            if(disclaimerAccepted==EDMDialogAccepted)
+                {
+                return KErrNone;
+                }
+            else
+                {
+                if(iDMNotifier == NULL)
+                    {
+                    iDMNotifier = CDMNativeNotifier::NewL(id);
+                    }
+                if(disclaimerAccepted==EDMDialogActive)
+                    {
+                    rval = iDMNotifier->ShowDialogL(EPrivacyPolicy);
+                    }
+                else if(disclaimerAccepted==EDMDialogNotAccepted)
+                    {
+                    rval = iDMNotifier->ShowDialogL(EPrivacyPolicy);
+                    delete iDMNotifier;
+                    iDMNotifier=NULL;      
+                    REComSession::FinalClose();
+                    }
+                }
+            break;
+            } 
+        }
+
+    return rval;
+    }
 /*****************************************************************************
  * class TURIParser
  *****************************************************************************/

@@ -141,7 +141,8 @@ NONSHARABLE_CLASS (CNSmlDMSyncAppEngine) : public CBase
                            const TInt aProfileId,
                            const TInt aJobId,
                            const TInt aConnectionBearer,
-                           const TBool aUseFotaProgressNote );
+                           const TBool aUseFotaProgressNote,
+                           const TBool aSilent);
         
         /**
         * Check if duplicate server id is found

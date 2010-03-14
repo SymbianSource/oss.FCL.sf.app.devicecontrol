@@ -21,13 +21,13 @@
 #include <aknpasswordsettingpage.h>
 #include <aknnotewrappers.h>
 #include <aknnavi.h>
-#include <ApUtils.h>
-#include <ApSettingsHandlerUI.h>
 #include <StringLoader.h>
 #include <featmgr.h>
 #include <ConnectionUiUtilities.h>
 #include <aknradiobuttonsettingpage.h>
-
+#include <cmapplicationsettingsui.h>
+#include <cmmanager.h>
+#include <cmconnectionmethod.h>
 #include "NSmlDMSyncApp.h"
 #include "NSmlDMSyncDocument.h"
 #include "NSmlDMSyncAppUi.h"
@@ -935,12 +935,8 @@ TBool CNSmlDMDlgProfileView::EditSettingItemAccessPointL(
 	{
 	FLOG( "[OMADM] CNSmlDMDlgProfileView::EditSettingItemAccessPointL:" );
 	
-	TInt curSelection(ENsmlAlwaysAsk);
-    if( aItem.iNumberData == KErrNotFound   ) //Always ask
-       {       
-       curSelection = ENsmlAlwaysAsk;
-       }
-    else if(aItem.iNumberData == KErrGeneral) //default conenction
+	TInt curSelection(ENsmlDefaultConnection);
+   if(aItem.iNumberData == KErrGeneral || aItem.iNumberData == KErrNotFound ) //default conenction
         {
         curSelection = ENsmlDefaultConnection;
         }
@@ -955,12 +951,9 @@ TBool CNSmlDMDlgProfileView::EditSettingItemAccessPointL(
 									R_CMMANAGERUI_SETT_USER_DEFINED);
     HBufC* title = StringLoader::LoadLC(
 									R_CMMANAGERUI_SETT_DESTINATION);
-    HBufC* alwaysask = StringLoader::LoadLC(
-									R_ALWAYS_ASK_ALWAYS_ASK);
     
-    CDesCArrayFlat* stringData = new (ELeave) CDesCArrayFlat( 3 );
+    CDesCArrayFlat* stringData = new (ELeave) CDesCArrayFlat( 2 );
     CleanupStack::PushL( stringData );
-    stringData->AppendL(alwaysask->Des());
     stringData->AppendL(destName->Des());
     stringData->AppendL(userdef->Des());
 
@@ -977,79 +970,53 @@ TBool CNSmlDMDlgProfileView::EditSettingItemAccessPointL(
 	TUint32 currentAccesspoint(0);
 	if ( !ret )
 		{		
-		CleanupStack::PopAndDestroy(5);
+		CleanupStack::PopAndDestroy(4);
 		return EFalse; // user canceled "Always ask" dialog
 		}
-		
-    if ( curSelection == ENsmlAlwaysAsk  )
-    	{    	
-    	aItem.SetValue( alwaysask->Des() );
-		aItem.iNumberData = KErrNotFound;    					
-		CleanupStack::PopAndDestroy(5);
-		return ETrue;  // user selected "Always ask" option 
-    	}
-    else if(curSelection == ENsmlDefaultConnection )
+	if(curSelection == ENsmlDefaultConnection || curSelection == ENsmlAlwaysAsk )
         {        
         aItem.SetValue( destName->Des() );
         aItem.iNumberData = KErrGeneral;
-        CleanupStack::PopAndDestroy(5);        
+        CleanupStack::PopAndDestroy(4);        
         return ETrue;  // user selected "default connection" option 
         }
 	else
-	    {
-	    CCommsDatabase* commDb = CCommsDatabase::NewL( EDatabaseTypeIAP );
-	    CleanupStack::PushL( commDb );
-	    CApUtils* aputils = CApUtils::NewLC(*commDb);
-	    currentAccesspoint =  aItem.iNumberData ;
-        CleanupStack::PopAndDestroy( aputils );
-	    CleanupStack::PopAndDestroy( commDb );
-	    
+	    {	   
+	    currentAccesspoint =  aItem.iNumberData ;	    
 	    FTRACE( RDebug::Print( 
 	     _L("[OMADM] CNSmlDMDlgProfileView::EditSettingItemAccessPointL: current ap (%d)"),
 	                                                currentAccesspoint ) );
 	    }
-	
-	
-	TInt apBearerFlags;
-	if ( FeatureManager::FeatureSupported( KFeatureIdAppCsdSupport ) )
-		{
-		apBearerFlags = EApBearerTypeCSD | 
-		                EApBearerTypeGPRS | 
-		                EApBearerTypeHSCSD | 
-		                EApBearerTypeWLAN;
-		}
-	else
-		{
-		apBearerFlags = EApBearerTypeGPRS | EApBearerTypeWLAN;
-		}
-
-	CApSettingsHandler* handler = CApSettingsHandler::NewLC( 
-            ETrue,
-			EApSettingsSelListIsPopUp,
-			EApSettingsSelMenuSelectNormal,
-			KEApIspTypeAll,
-			apBearerFlags,
-			KEApSortNameAscending );
-
-    TInt retVal = KErrNone;
-    TUint32 selectedIap(0);
-	TRAP_IGNORE( retVal = handler->RunSettingsL( currentAccesspoint,
-	                                             selectedIap ) );
-	CleanupStack::PopAndDestroy(handler);
-	CleanupStack::PopAndDestroy(5);
-
-    if ( retVal & KApUiEventSelected )
-		{
-		SetAccessPointInfoL( selectedIap );
-		}
-	else if ( retVal == KApUiEventExitRequested )
-		{
-		DoExitFromMenuL();
-		}
-	else
-		{		
-		//Keep previous selection
-		}
+	 TCmSettingSelection userSelection;
+	 userSelection.iId = currentAccesspoint;
+	 userSelection.iResult = CMManager::EConnectionMethod;
+	        CCmApplicationSettingsUi* settings = CCmApplicationSettingsUi::NewL();
+	        CleanupStack::PushL(settings);
+	        TUint listedItems = CMManager::EShowConnectionMethods; 
+	        TBearerFilterArray filter;
+	        TBool selected = settings->RunApplicationSettingsL(userSelection,
+	                                                           listedItems,
+	                                                           filter);
+	        CleanupStack::PopAndDestroy(settings);
+	        if (selected) {
+	                   switch (userSelection.iResult)
+	                       {	                      
+	                       case CMManager::EConnectionMethod:
+	                           {
+	                           
+	                           SetAccessPointInfoL( userSelection.iId );
+	                           break;
+	                           }
+							default:
+								break;
+	                          }	                   	                   
+	                   }
+	        else
+	            {
+	        // Check end key handling etc?
+	        //Keep previous selection
+	            }
+	CleanupStack::PopAndDestroy(4);
 	return ETrue;
 	}
 
@@ -1060,59 +1027,25 @@ TBool CNSmlDMDlgProfileView::EditSettingItemAccessPointL(
 void CNSmlDMDlgProfileView::SetAccessPointInfoL( TUint aId )
 	{
 	FLOG( "[OMADM] CNSmlDMDlgProfileView::SetAccessPointInfoL:");
-	
-	CCommsDatabase* commDb = CCommsDatabase::NewL( EDatabaseTypeIAP );
-	CleanupStack::PushL( commDb );
-
-	TInt apBearerFilter;
-
-	if ( FeatureManager::FeatureSupported( KFeatureIdAppCsdSupport ) )
-		{
-		apBearerFilter = EApBearerTypeCSD | 
-		                 EApBearerTypeGPRS | 
-		                 EApBearerTypeHSCSD | 
-		                 EApBearerTypeWLAN;
-		}
-	else
-		{
-		apBearerFilter = EApBearerTypeGPRS | EApBearerTypeWLAN;
-		}
-	CApSelect* apSelect = CApSelect::NewLC( *commDb,
-	                                        KEApIspTypeAll,
-	                                        apBearerFilter,
-	                                        KEApSortUidAscending );
-
 	TBool retValue( EFalse );
-
-	if ( apSelect->MoveToFirst() )
+	RCmManager cmManager;    
+	        cmManager.OpenLC();
+	        RCmConnectionMethod conn;
+	        TRAPD(err, conn = cmManager.ConnectionMethodL( aId ));
+	        if(err == KErrNone)//connection method exists
+	            retValue = ETrue;
+	       
+	if (retValue )
 		{
-		if ( aId == apSelect->Uid() )
-			{
-			retValue = ETrue;		
-			}
-		while ( ( ! retValue ) && ( apSelect->MoveNext() ) )
-			{
-			if ( aId == apSelect->Uid() )
-				{
-				retValue = ETrue;
-				}
-			}
-		}
-
-	if ( retValue )
-		{
-		CApUtils* aputils = CApUtils::NewLC(*commDb);
-		TRAP_IGNORE( aId = aputils->IapIdFromWapIdL( aId ) );
-
-		FTRACE(RDebug::Print(_L("accesspoint after IapIdFromWapIdL (%d)"), aId));
-		
-		Item( ENSmlAccessPoint )->SetValue( apSelect->Name() );
+	    CleanupClosePushL( conn ); 
+		HBufC* name = conn.GetStringAttributeL( CMManager::ECmName );
+		Item( ENSmlAccessPoint )->SetValue( *name );
+		delete name;
+		CleanupStack::PopAndDestroy( 1 ); // conn
 		Item( ENSmlAccessPoint )->iNumberData = aId;
-		Item( ENSmlAccessPoint )->iWapAPInUse = EFalse;
-		
-		CleanupStack::PopAndDestroy( aputils );
+		Item( ENSmlAccessPoint )->iWapAPInUse = EFalse; 
 		}
-	else
+	else//connection method doesn't exist
 		{		
 		HBufC* emptyText = 
 		    iEikonEnv->AllocReadResourceLC(R_CMMANAGERUI_SETT_DEFAULT_CONNECTION);
@@ -1121,9 +1054,7 @@ void CNSmlDMDlgProfileView::SetAccessPointInfoL( TUint aId )
 		Item( ENSmlAccessPoint )->iWapAPInUse = EFalse;
 		CleanupStack::PopAndDestroy(emptyText);
 		}
-	
-	CleanupStack::PopAndDestroy( apSelect );
-	CleanupStack::PopAndDestroy( commDb );
+	CleanupStack::PopAndDestroy( 1 ); //cmManager	
 	}
 
 // -----------------------------------------------------------------------------
@@ -1131,110 +1062,53 @@ void CNSmlDMDlgProfileView::SetAccessPointInfoL( TUint aId )
 // -----------------------------------------------------------------------------
 //
 void CNSmlDMDlgProfileView::GetAccessPointInfoL( TInt aId )
-	{
-	FTRACE( RDebug::Print( 
-	 _L("[OMADM] CNSmlDMDlgProfileView::GetAccessPointInfoL: aId (%d)"), aId));
-    
-    TInt err = KErrNone;
-	
-	CCommsDatabase* commDb = CCommsDatabase::NewL( EDatabaseTypeIAP );
-	CleanupStack::PushL( commDb );
-	CApUtils* aputils = CApUtils::NewLC( *commDb );
-	
-	TBool apExists = EFalse;
-	TRAP( err, apExists = aputils->IAPExistsL( aId ) );
-	if (  aId == KErrNotFound )
-		{
-		HBufC* emptyText = 
-		            iEikonEnv->AllocReadResourceLC( R_ALWAYS_ASK_ALWAYS_ASK );		
-        Item( ENSmlAccessPoint )->SetValue( emptyText->Des() );
-		Item( ENSmlAccessPoint )->iNumberData = KErrNotFound;
-		Item( ENSmlAccessPoint )->iWapAPInUse = EFalse;		
-		CleanupStack::PopAndDestroy( emptyText );
-		CleanupStack::PopAndDestroy( aputils );
-		CleanupStack::PopAndDestroy( commDb );
-		return;
-		}
-	else if(!apExists || aId == KErrGeneral) 
-	    {
-	    HBufC* emptyText = 
-	    iEikonEnv->AllocReadResourceLC(R_CMMANAGERUI_SETT_DEFAULT_CONNECTION);
-	    Item( ENSmlAccessPoint )->SetValue( emptyText->Des() );
-	    Item( ENSmlAccessPoint )->iNumberData = KErrGeneral;
-	    Item( ENSmlAccessPoint )->iWapAPInUse = EFalse;
-	    CleanupStack::PopAndDestroy( emptyText );
-	    CleanupStack::PopAndDestroy( aputils );
-	    CleanupStack::PopAndDestroy( commDb );
-	    return;
-	    }
-	else
-	    {}
-    // convert internet ap to Wap ap
-	TRAP( err, aId = aputils->WapIdFromIapIdL( aId ) );
-    CleanupStack::PopAndDestroy( aputils );
-    
-	if ( err != KErrNone )
-		{
-		CleanupStack::PopAndDestroy( commDb );
-		return;
-		}
-	
-    TInt apBearerFilter;
+    {
+    FTRACE( RDebug::Print( 
+            _L("[OMADM] CNSmlDMDlgProfileView::GetAccessPointInfoL: aId (%d)"), aId));
 
-	if ( FeatureManager::FeatureSupported( KFeatureIdAppCsdSupport ) )
-		{
-		apBearerFilter = EApBearerTypeCSD | 
-		                 EApBearerTypeGPRS | 
-		                 EApBearerTypeHSCSD | 
-		                 EApBearerTypeWLAN;
+    TInt err = KErrNotFound;
+    TBool apExists = EFalse;
+    RCmManager cmManager;    
+    cmManager.OpenLC();
+    RCmConnectionMethod conn;
+    TRAP(err, conn = cmManager.ConnectionMethodL( aId ));
+    if(err == KErrNone)//connection method exists
+        {
+    CleanupClosePushL( conn );
+    apExists = ETrue;
+        }
+    if(!apExists || aId == KErrGeneral || aId == KErrNotFound ) 
+        {
+    HBufC* emptyText = 
+            iEikonEnv->AllocReadResourceLC(R_CMMANAGERUI_SETT_DEFAULT_CONNECTION);
+    Item( ENSmlAccessPoint )->SetValue( emptyText->Des() );
+    Item( ENSmlAccessPoint )->iNumberData = KErrGeneral;
+    Item( ENSmlAccessPoint )->iWapAPInUse = EFalse;
+    CleanupStack::PopAndDestroy( emptyText );
+    if(err == KErrNone)//connection method exists
+        {
+    CleanupStack::PopAndDestroy( 2 );//conn, cmManager	 
+        }
+    else
+        CleanupStack::PopAndDestroy( 1 );//cmManager
+    return;
+        }
+    else
+        {   
+        HBufC* name = conn.GetStringAttributeL( CMManager::ECmName );
+        Item( ENSmlAccessPoint )->SetValue( *name );
+        delete name;
+        Item( ENSmlAccessPoint )->iNumberData = aId;
+        Item( ENSmlAccessPoint )->iWapAPInUse = ETrue;        
 		}
-	else
-		{
-		apBearerFilter = EApBearerTypeGPRS | EApBearerTypeWLAN;
-		}
-	CApSelect* selector = CApSelect::NewLC(
-	                             *commDb,
-	                             KEApIspTypeAll,
-		                         apBearerFilter,
-		                         KEApSortUidAscending);
-	
-	TBool found = EFalse;
-	
-	// find access point with id aId
-	if (selector->MoveToFirst())
-		{
-		if (aId == (TInt)selector->Uid())
-			{
-			found = ETrue;		
-			}
-		while (!found && selector->MoveNext())
-			{
-			if (aId == (TInt)selector->Uid())
-				{
-				found = ETrue;
-				}
-			}
-		}
+    if(err == KErrNone)//connection method exists
+        {
+        CleanupStack::PopAndDestroy( 2 );//conn, cmManager
+        }
+    else
+        CleanupStack::PopAndDestroy( 1 );
 
-	if (found) 
-		{
-		Item( ENSmlAccessPoint )->SetValue( selector->Name() );
-		Item( ENSmlAccessPoint )->iNumberData = aId;
-		Item( ENSmlAccessPoint )->iWapAPInUse = ETrue;
-		}
-	else
-		{		
-		HBufC* emptyText = 
-		   iEikonEnv->AllocReadResourceLC(R_CMMANAGERUI_SETT_DEFAULT_CONNECTION);
-        Item( ENSmlAccessPoint )->SetValue( emptyText->Des() );
-		Item( ENSmlAccessPoint )->iNumberData = KErrNotFound;
-		CleanupStack::PopAndDestroy(emptyText);
-		}
-		
-    CleanupStack::PopAndDestroy(selector);
-    CleanupStack::PopAndDestroy(commDb);
-
-	}
+    }
 
 // -----------------------------------------------------------------------------
 // CNSmlDMDlgProfileView::EditSettingItemListYesNoL

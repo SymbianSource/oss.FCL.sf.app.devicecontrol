@@ -21,6 +21,8 @@
 
 // INCLUDES
 #include <e32base.h>
+#include <DMNativeNotifier.h>
+
 
 // CLASS DECLARATION
 
@@ -148,7 +150,19 @@ NONSHARABLE_CLASS (TUtil)
         * @return Boolean
         */        
 		static TBool SettingEnforcementState();
+		
+        /**
+        * Shows dialog using DMNotifier interface
+        * @param aOperation
+        * @return Integer
+        */ 
+		static TInt ShowNativeDialogL(TInt aOperation);
 
+    public:
+		
+		//Holds the instance of implementation 
+		static CDMNativeNotifier* iDMNotifier;
+		
     private:
     
         /**
