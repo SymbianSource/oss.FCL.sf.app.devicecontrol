@@ -25,7 +25,7 @@
 #include <commdb.h>
 #include <CWPEngine.h>
 #include <CWPAdapter.h>
-#include <ActiveFavouritesDbNotifier.h>
+#include <activefavouritesdbnotifier.h>
 
 #include "PnpProvisioningSaver.h"
 #include "PnpLogger.h"

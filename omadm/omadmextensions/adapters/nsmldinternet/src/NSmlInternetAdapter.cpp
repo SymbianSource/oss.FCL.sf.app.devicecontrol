@@ -189,7 +189,8 @@ void CNSmlInternetAdapter::ConstructL()
 
     iNetworkId = KErrNotFound;
     iLingerValue = NULL;
-  iLingerFlag = ETrue;
+    iLingerFlag = ETrue;
+    isAdd = EFalse;
     }
 
 //------------------------------------------------------------------------------
@@ -303,7 +304,7 @@ void CNSmlInternetAdapter::DDFStructureL( MSmlDmDDFObject& aDDF )
 //
     MSmlDmDDFObject& nNameDDF = nNAPDefDDF.AddChildObjectL(KNSmlDdfNAPName);        // Name
     FillNodeInfoL( nNameDDF, 
-                   aclTypesAddGet, 
+                   aclTypesNoDelete, 
                    MSmlDmDDFObject::EZeroOrOne, 
                    MSmlDmDDFObject::EDynamic, 
                    MSmlDmDDFObject::EChr, 
@@ -830,6 +831,8 @@ void CNSmlInternetAdapter::AddLeafObjectL( const TDesC8& aURI,
     _DBG_FILE("CNSmlInternetAdapter::AddLeafObjectL(): begin");
     DBG_ARGS8(_S8("AP:add aURI AddLeafObjectL   - %S - %S"), &aURI, &aParentLUID);
     DBG_ARGS8(_S8("AP:Object %S"), &aObject);
+    
+    isAdd = ETrue;
 
   TInt parentLUID(0);
   if(aParentLUID.Length()<=0 )
@@ -3487,16 +3490,20 @@ CSmlDmAdapter::TError CNSmlInternetAdapter::FetchLeafObjectL(
         // name
         if ( aURI.Find( KNSmlDdfNAPName ) >= 0 )
             {
-            CCommsDbTableView* tableView = iDatabase->OpenViewMatchingUintLC(serviceType,
+            TUint32 iapID10 = IntLUID(aLUID);
+          /*  CCommsDbTableView* tableView = iDatabase->OpenViewMatchingUintLC(serviceType,
                                                                              qDB,
-                                                                             serviceId);
+                                                                             serviceId);*/
+            CCommsDbTableView* tableView = iDatabase->OpenViewMatchingUintLC(TPtrC(IAP),
+                                                                                    TPtrC(COMMDB_ID),
+                                                                                    iapID);
                 
             errorCode = tableView->GotoFirstRecord();
                 
             if ( errorCode == KErrNone )
                 {
                 TBuf<KCommsDbSvrMaxFieldLength> columnValue;
-                TRAPD(leavecode,tableView->ReadTextL(qColumn,  columnValue));
+                TRAPD(leavecode,tableView->ReadTextL(TPtrC(COMMDB_NAME ),  columnValue));
                 if(leavecode != 0)
                     {
                     CleanupStack::PopAndDestroy(); // tableView
@@ -3508,6 +3515,8 @@ CSmlDmAdapter::TError CNSmlInternetAdapter::FetchLeafObjectL(
                 pushed++;
                 }
             CleanupStack::PopAndDestroy(); // tableView
+            CleanupStack::PopAndDestroy(pushed);
+            return CSmlDmAdapter::EOk;
             }
         // BearerL + NoPxForL + IAPService
         else if (aURI.Find(KNSmlDdfIAPService) >= 0) 
@@ -4835,10 +4844,19 @@ void CNSmlInternetAdapter::AddLeafBufferL( const TDesC8& aURI,
                 {
                 // Not correct name                                    
                 // Remove all mappings from AP/xxx level
-                TInt ret = iCallBack->RemoveMappingL( KNSmlInternetAdapterImplUid,
-								GetDynamicAPNodeUri( aURI ) , ETrue );		
-                iPrevURI->Des().Format( KNullDesC8 );
-                iPrevLUID = 0;
+                if(isAdd)
+                    {
+                    TInt ret = iCallBack->RemoveMappingL( KNSmlInternetAdapterImplUid,
+                                                    GetDynamicAPNodeUri( aURI ) , ETrue );      
+                    iPrevURI->Des().Format( KNullDesC8 );
+                    iPrevLUID = 0;
+                    }
+                else
+                    {
+                    iIAPExists = ETrue;
+                    iLeafType = EDMUpdate;
+                    }
+                
                 }     
             else
                 {

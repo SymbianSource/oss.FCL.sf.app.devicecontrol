@@ -567,6 +567,7 @@ private:
         RArray<TPtrC> iLockTableList;
         
         TBool iWlanSupported;
+        TBool isAdd;
     };
 
 

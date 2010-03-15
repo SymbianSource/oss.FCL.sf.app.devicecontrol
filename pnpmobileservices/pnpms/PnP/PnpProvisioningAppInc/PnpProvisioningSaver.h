@@ -23,7 +23,7 @@
 // INCLUDES
 #include <msgbiocontrol.h>                // for CMsgBioControl
 #include <ActiveApDb.h>
-#include <FavouritesDbObserver.h>
+#include <favouritesdbobserver.h>
 #include "mwaitdialogstatusnotifier.h"  // for MWaitDialogStatusNotifier
 
 // FORWARD DECLARATIONS

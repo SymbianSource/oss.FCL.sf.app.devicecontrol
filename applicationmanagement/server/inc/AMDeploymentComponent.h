@@ -28,7 +28,7 @@
 #include "aminstalloptions.h"
 #include "amdeploymentcomponentdata.h"
 #include "AMDownload.h"
-#include<HttpDownloadMgrCommon.h>
+#include <httpdownloadmgrcommon.h>
 
 
 namespace NApplicationManagement

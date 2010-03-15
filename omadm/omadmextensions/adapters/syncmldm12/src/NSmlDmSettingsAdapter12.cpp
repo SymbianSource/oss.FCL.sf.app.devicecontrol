@@ -3900,6 +3900,15 @@ TBool CNSmlDMSettingsAdapter12::IsDMAccUriFormatMatchPredefined(const TDesC8 & a
 TInt CNSmlDMSettingsAdapter12::ConstructTreeL(const TDesC8& aURI)
 {
 		TInt profileID = KErrNotFound;
+		_LIT8( KNSmlDMIdZero,			"DMAcc/DMId000" );
+		TBuf8<20> zeroURI; // DMAcc/DMIdnnn , nnn = profileid
+		zeroURI.Append( KNSmlDMIdZero );
+		HBufC8* ismapInfo = iCallBack->GetLuidAllocL(zeroURI);
+		if (ismapInfo->Length() != 0) // Tree is already constructrd, no need to proceed.
+		{
+			delete ismapInfo;
+			return profileID;
+		}
 	  if( iSyncSessionOpen == EFalse )
     {
     	iSyncSession.OpenL();

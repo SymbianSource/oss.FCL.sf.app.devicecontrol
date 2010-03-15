@@ -48,7 +48,7 @@
 #include <e32property.h>
 #include <centralrepository.h>
 #include <DevManInternalCRKeys.h>
-#include<HttpDownloadMgrCommon.h>
+#include <httpdownloadmgrcommon.h>
 
 #include "NSmlPrivateAPI.h"
 

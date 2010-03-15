@@ -28,7 +28,7 @@
 #include <swi/sisregistrysession.h>
 #include <swi/sisregistrypackage.h>
 #include <swi/sisregistryentry.h>
-#include <DownloadMgrClient.h>
+#include <downloadmgrclient.h>
 
 #include "ApplicationManagementClientServer.h"
 #include "PlatformSecurityPolicies.h"

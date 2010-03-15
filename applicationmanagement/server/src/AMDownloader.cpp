@@ -18,7 +18,7 @@
 
 // INCLUDE FILES
 //#include <BrowserUiInternalCRKeys.h>
-#include <DownloadMgrClient.h>
+#include <downloadmgrclient.h>
 
 #include "AMDownloader.h"
 //#include "aminstalloptions.h"

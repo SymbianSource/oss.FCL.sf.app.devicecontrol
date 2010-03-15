@@ -22,7 +22,7 @@
 #include <favouriteslimits.h>
 #include <e32std.h>
 
-#include <FavouritesDb.h>
+#include <favouritesdb.h>
 
 
 class CEmbeddedLinkApp;

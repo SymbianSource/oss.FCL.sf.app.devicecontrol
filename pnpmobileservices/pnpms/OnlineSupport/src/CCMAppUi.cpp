@@ -31,10 +31,10 @@
 #include <httpfiltercommonstringsext.h>
 #include <OnlineSupport.rsg>            // has to be system include.
 #include <centralrepository.h>          // link against centralrepository.lib
-#include <BrowserUiSDKCRKeys.h>         // for KCRUidBrowser
+#include <browseruisdkcrkeys.h>         // for KCRUidBrowser
 #include <CoreApplicationUIsSDKCRKeys.h>// for KCRUidCoreApplicationUIs
 //#include <BrowserUiInternalCRKeys.h>    //  BrowserUiSDKCRKeys.h file can replace this header file
-#include <WebUtilsInternalCRKeys.h>     // for the profile strings
+#include <webutilsinternalcrkeys.h>     // for the profile strings
 
 #include "OnlineSupportLogger.h"
 #include "CCMAppUi.h"

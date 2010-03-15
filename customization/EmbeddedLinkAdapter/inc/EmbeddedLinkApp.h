@@ -18,8 +18,8 @@
 #define  EMBEDDEDLINKAPP_H
 #include "EmbeddedLinkHandler.h"
 #include <f32file.h>
-#include <FavouritesItem.h>
-#include <FavouritesItemList.h>
+#include <favouritesitem.h>
+#include <favouritesitemlist.h>
 
 class CEmbeddedLinkApp : public CBase
 {
