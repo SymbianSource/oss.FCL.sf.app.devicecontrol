@@ -80,6 +80,6 @@ SOURCES += ./src/dmadvancedview.cpp \
 			
 RESOURCES += ./resources/deviceupdates.qrc
 CONFIG += hb
-TRANSLATIONS += deviceupdates.ts
+#TRANSLATIONS += deviceupdates.ts
    
 

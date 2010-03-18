@@ -33,7 +33,7 @@ include(Cpqtsp.pri)
 LIBS+=-lxqservice -lxqserviceutil -lflogger
 MMP_RULES += "LIBRARY msgs.lib centralrepository.lib provisioningengine.lib featmgr.lib"
 
-TRANSLATIONS += deviceupdates.ts
+#TRANSLATIONS += deviceupdates.ts
 
 SERVICE.FILE = resources/service_conf.xml
 SERVICE.OPTIONS = embeddable

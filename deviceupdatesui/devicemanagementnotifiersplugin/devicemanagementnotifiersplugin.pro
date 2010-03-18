@@ -19,7 +19,7 @@ HEADERS += devicemanagementnotifierwidget_p.h
 HEADERS += devicemanagementnotifierutils.h 
 HEADERS += syncmlnotifierprivate.h
 RESOURCES = devicemanagementnotifierdevman.qrc
-TRANSLATIONS += deviceupdates.ts
+#TRANSLATIONS += deviceupdates.ts
 
 symbian: {
     TARGET.EPOCALLOWDLLDATA = 1
