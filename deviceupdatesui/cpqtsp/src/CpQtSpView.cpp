@@ -19,7 +19,7 @@
 #include <hbapplication.h>
 #include <hbtoolbar.h>
 #include <hbaction.h>
-#include <HbMenu.h>
+#include <hbmenu.h>
 #include <HbTextItem>
 #include <HbFontSpec>
 #include <HbMessageBox>
@@ -121,7 +121,7 @@ void CpQtSpView::saveProvisoningMessage()
   if( errSave == KErrNone )
   {
   	//For testing purpose. Will be removed in future.
-    HbMessageBox::launchInformationMessageBox("Message Saved");
+    //HbMessageBox::launchInformationMessageBox("Message Saved");
   }
 }
 

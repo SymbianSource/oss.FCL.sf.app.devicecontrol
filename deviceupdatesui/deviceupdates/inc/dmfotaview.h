@@ -19,7 +19,7 @@
 #define DMFOTAVIEW_H_
 
 
-#include <HbApplication.h>
+#include <hbapplication.h>
 #include <hbwidget.h>
 #include <QGraphicsLinearLayout>
 #include <hbgroupbox.h>

@@ -17,14 +17,14 @@
 
 
 #include <e32property.h>
-#include "syncmlnotifierprivate.h"
 #include <SyncMLClientDM.h>
 #include <SyncMLClient.h>
 #include <centralrepository.h>
 #include <DevManInternalCRKeys.h>
-#include "nsmlconstantdefs.h"
-#include "syncmlnotifierparams.h"
 #include <centralrepository.h>
+#include "nsmlconstantdefs.h"
+#include "SyncMLNotifierParams.h"
+#include "syncmlnotifierprivate.h"
 
 
 

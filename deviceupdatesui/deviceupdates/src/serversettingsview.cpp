@@ -16,10 +16,10 @@
 */
 
 #include <hblineedit.h>
-#include <HbMessageBox.h>
-#include "ServerSettingsView.h"
+#include <hbmessagebox.h>
+#include "serversettingsview.h"
 #include "dmadvancedview.h"
-#include "settingsdataformcustomItem.h"
+#include "settingsdataformcustomitem.h"
 
 ServerSettingsView::ServerSettingsView(HbMainWindow* mainWindow, DmAdvancedView* serversview, QString& header, QGraphicsItem* parent): HbView(parent), iMainWindow(mainWindow),
  form(NULL),dataformmodel(NULL),serversView(serversview),backbehaviorset(false)

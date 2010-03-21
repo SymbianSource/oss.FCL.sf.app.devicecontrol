@@ -16,11 +16,11 @@
 */
 
 
-#include "NSmlDMSyncProfile.h"
 #include <SyncMLTransportProperties.h>
-#include "NSmlDMdef.h"
-#include "NSmlDMSyncDebug.h"
-#include "NSmlDMSyncUtil.h"
+#include "nsmldmsyncprofile.h"
+#include "nsmldmdef.h"
+#include "nsmldmsyncdebug.h"
+#include "nsmldmsyncutil.h"
 
 // ============================ MEMBER FUNCTIONS ==============================
 //

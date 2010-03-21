@@ -16,8 +16,8 @@
 */
 
 
-#include "NSmlDMSyncProfileItem.h"
-#include "NSmlDMSyncDebug.h"
+#include "nsmldmsyncprofileitem.h"
+#include "nsmldmsyncdebug.h"
 
 // ============================ MEMBER FUNCTIONS ===============================
 

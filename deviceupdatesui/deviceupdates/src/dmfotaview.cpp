@@ -18,9 +18,9 @@
 #include <hbmainwindow.h>
 #include <hbpushbutton.h>
 #include <hbaction.h>
-#include <HbDialog.h>
-#include <SysUtil.h>
-#include <HbScrollArea.h>
+#include <hbdialog.h>
+#include <sysutil.h>
+#include <hbscrollarea.h>
 #include <etel.h>
 #include <featmgr.h>
 #include <etelmm.h>
@@ -128,8 +128,7 @@ bool DMFotaView::addFotaView()
         {
         val = hbTrId("txt_device_update_dblist_product_release");
         str = QString::fromUtf16(prodrelease.Ptr(), prodrelease.Length());
-        val2 = hbTrId("txt_device_update_dblist_product_release_val_l1").arg(str);       
-        FormatList(val,val2);
+        FormatList(val,str);
         }
     
     //Software version
@@ -169,8 +168,7 @@ bool DMFotaView::addFotaView()
                 }
             val = hbTrId("txt_device_update_dblist_software_version");
             str = QString::fromUtf16(swversion.Ptr(), swversion.Length());
-            val2 = hbTrId("txt_device_update_dblist_software_version_val_l1").arg(str); 
-            FormatList(val,val2);
+            FormatList(val,str);
             }
 
     //Model
@@ -197,8 +195,7 @@ bool DMFotaView::addFotaView()
         {
         val = hbTrId("txt_device_update_dblist_model");
         str = QString::fromUtf16(phoneName.Ptr(), phoneName.Length());
-        val2 = hbTrId("txt_device_update_dblist_model_val_l1").arg(str); 
-        FormatList(val,val2);
+        FormatList(val,str);
         }
     }
     phone.Close();
@@ -209,8 +206,7 @@ bool DMFotaView::addFotaView()
         {
         val = hbTrId("txt_device_update_dblist_type");
         str = QString::fromUtf16(typedesignator.Ptr(), typedesignator.Length());
-        val2 = hbTrId("txt_device_update_dblist_type_val_l1").arg(str);        
-        FormatList(val,val2);
+        FormatList(val,str);
         }
       
     //Product Code
@@ -237,8 +233,7 @@ bool DMFotaView::addFotaView()
              {        
              val = hbTrId("txt_device_update_dblist_product_code");
              str = QString::fromUtf16(productcode.Ptr(), productcode.Length());  
-             val2 = hbTrId("txt_device_update_dblist_product_code_val_l1").arg(str);        
-             FormatList(val,val2);
+             FormatList(val,str);
              }                    
         }
 
@@ -247,8 +242,7 @@ bool DMFotaView::addFotaView()
         {
         val = hbTrId("txt_device_update_dblist_imei");
         str = QString::fromUtf16(imei.Ptr(), imei.Length()); 
-        val2 = hbTrId("txt_device_update_dblist_imei_val_l1").arg(str);
-        FormatList(val,val2);
+        FormatList(val,str);
         }
 
     

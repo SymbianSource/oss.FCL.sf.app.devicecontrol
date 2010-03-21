@@ -23,7 +23,7 @@
 //  INCLUDES
 #include <e32base.h>
 #include <SyncMLClient.h>
-#include "NSmlDMdef.h"
+#include "nsmldmdef.h"
 
 // FORWARD DECLARATIONS
 class CNSmlDMSyncHandler;

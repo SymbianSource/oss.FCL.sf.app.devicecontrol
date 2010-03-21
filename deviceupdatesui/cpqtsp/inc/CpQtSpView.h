@@ -24,7 +24,7 @@
 #include <QGraphicsLinearLayout>
 #include <CWPNameValue.h>
 #include <CWPBioControl.h>
-#include <MSVAPI.H>
+#include <msvapi.h>
 #include <hbscrollarea.h>
 
 class CObserver : public CBase, public MMsvSessionObserver

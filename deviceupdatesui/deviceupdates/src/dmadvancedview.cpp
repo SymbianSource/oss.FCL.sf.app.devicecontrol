@@ -17,7 +17,7 @@
 */
 
 #include "dmadvancedview.h"
-#include "ServerSettingsView.h"
+#include "serversettingsview.h"
 
 DmAdvancedView::DmAdvancedView(HbMainWindow *mainWindow, HbView *mainView, QGraphicsItem *parent):HbView(parent),
     bluetooth(":/icons/qgn_prop_sml_bt.svg"),

@@ -19,7 +19,7 @@
 #include <cmmanager.h>
 #include <cmconnectionmethod.h>
 #include "dmadvancedview.h"
-#include "NSmlDMSyncPrivateCRKeys.h"
+#include "nsmldmsyncprivatecrkeys.h"
 #include "dminforetrieval.h"
 
 DmInfo::DmInfo(DmAdvancedView* serversview, QGraphicsItem* /*parent*/)

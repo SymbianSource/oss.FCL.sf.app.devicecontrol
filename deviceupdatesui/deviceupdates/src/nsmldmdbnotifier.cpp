@@ -17,7 +17,7 @@
 
 
 #include "nsmldmdbnotifier.h"
-#include "nSmldmsyncdebug.h"
+#include "nsmldmsyncdebug.h"
 #include "nsmldmdef.h"
 
 // -----------------------------------------------------------------------------

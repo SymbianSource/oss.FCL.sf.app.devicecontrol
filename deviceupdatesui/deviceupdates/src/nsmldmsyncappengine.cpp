@@ -16,11 +16,11 @@
 */
 
 
-#include "NSmlDMSyncAppEngine.h"
-#include "NSmlDMSyncDebug.h"
-#include "NSmlDMSyncHandler.h"
 #include <collate.h>
 #include <e32property.h>
+#include "nsmldmsyncappengine.h"
+#include "nsmldmsyncdebug.h"
+#include "nsmldmsynchandler.h"
 #include "nsmldmsyncinternalpskeys.h"
 #include "dminforetrieval.h"
 

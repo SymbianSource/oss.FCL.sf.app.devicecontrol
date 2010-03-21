@@ -18,17 +18,17 @@
 
 #ifndef DMINFORETRIEVAL_H_
 #define DMINFORETRIEVAL_H_
-#include <QObject.h>
+#include <qobject.h>
 #include <featmgr.h>
 #include <QGraphicsItem>
 #include <e32base.h>
 #include <badesca.h>
-#include "NSmlDMSyncAppEngine.h"
-#include "NSmlDMSyncProfile.h"
+#include "nsmldmsyncappengine.h"
+#include "nsmldmsyncprofile.h"
 //#include "NSmlDMSyncProfileItem.h"
-#include "NSmlDMSyncUtil.h"
-#include "NSmlDMSyncDebug.h"
-#include "NSmlDMSyncProfileList.h"
+#include "nsmldmsyncutil.h"
+#include "nsmldmsyncdebug.h"
+#include "nsmldmsyncprofilelist.h"
 #include "nsmldmdbnotifier.h"
 class DmAdvancedView;
 class TNSmlDMProfileItem;

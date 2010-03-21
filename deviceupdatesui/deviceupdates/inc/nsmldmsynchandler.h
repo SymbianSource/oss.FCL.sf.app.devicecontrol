@@ -24,9 +24,9 @@
 //#include <AknProgressDialog.h>
 #include <SyncMLObservers.h>
 //#include "NSmlDMProgress.h"
-#include "NSmlDMSyncUtil.h"
-#include "NSmlDMSyncProfile.h"
-#include "NSmlDMSyncAppEngine.h"
+#include "nsmldmsyncutil.h"
+#include "nsmldmsyncprofile.h"
+#include "nsmldmsyncappengine.h"
 // FORWARD DECLARATIONS
 class CNSmlDMSyncState;
 class CNSmlDMActiveCaller;

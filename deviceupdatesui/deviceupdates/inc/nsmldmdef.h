@@ -20,7 +20,7 @@
 #define NSMLDMDEF_H
 
 #include <e32base.h>
-#include "NSmlDMUIDefines.h"
+#include "nsmldmuidefines.h"
 //#include "NSmlDMSyncUi.hrh"
 
 #define KNSmlMaxURLLength 150

@@ -22,7 +22,7 @@
 #include <e32std.h>
 #include <SyncMLObservers.h>
 #include <SyncMLClient.h>
-#include "NSmlDMSyncUtil.h"
+#include "nsmldmsyncutil.h"
 
 // CLASS DECLARATION
 

@@ -22,7 +22,7 @@
 
 //  INCLUDES
 #include <e32base.h>
-#include "NSmlDMdef.h"
+#include "nsmldmdef.h"
 
 /**
 * TNSmlDMSyncProfileItem

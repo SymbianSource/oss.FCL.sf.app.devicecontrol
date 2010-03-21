@@ -19,14 +19,12 @@
 #include <SyncMLTransportProperties.h>
 #include <centralrepository.h>
 #include <featmgr.h>
-
-#include "NSmlDMSyncPrivateCRKeys.h"
-
-#include "NSmlDMSyncProfileList.h"
-#include "NSmlDMSyncProfile.h"
-#include "NSmlDMSyncDebug.h"
-#include "NSmlDMSyncAppEngine.h"
-#include "NSmlDMSyncUtil.h"
+#include "nsmldmsyncprivatecrkeys.h"
+#include "nsmldmsyncprofilelist.h"
+#include "nsmldmsyncprofile.h"
+#include "nsmldmsyncdebug.h"
+#include "nsmldmsyncappengine.h"
+#include "nsmldmsyncutil.h"
 
 // ============================ MEMBER FUNCTIONS ==============================
 //

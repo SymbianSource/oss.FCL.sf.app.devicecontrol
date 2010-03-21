@@ -30,10 +30,10 @@
 #include <hblabel.h>
 #include <hbdocumentloader.h>
 #include <hblistviewitem.h>
-#include <HbAnchorLayout.h>
+#include <hbanchorlayout.h>
 #include <hbicon.h>
 #include <QStandardItem>
-#include <QTranslator.h>
+#include <qtranslator.h>
 #include <QSortFilterProxyModel>
 #include <QModelIndex>
 #include <wlansdkpskeys.h>
@@ -42,7 +42,7 @@
 #include <centralrepository.h>
 #include <hbglobal.h>
 #include <etelpckt.h>
-#include <Etel3rdparty.h>
+#include <etel3rdparty.h>
 #include <etelmm.h>
 #include <etel.h>
 #include "serversettingsview.h"

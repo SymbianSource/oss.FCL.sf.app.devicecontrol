@@ -16,7 +16,7 @@
 */
 #include <hbinstance.h>
 #include <hbapplication.h>
-#include "DMTelServiceHandler.h"
+#include "DmTelServiceHandler.h"
 
 int main(int argc, char **argv)
 {

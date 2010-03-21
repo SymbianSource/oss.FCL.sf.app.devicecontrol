@@ -24,13 +24,12 @@
 #include <collate.h>
 #include <StringLoader.h>
 #include <avkon.rsg>
-
 #include <SettingEnforcementInfo.h> // VSettingEnforcementInfo
-
-#include "NSmlDMdef.h"
-#include "NSmlDMSyncUtil.h"
-#include "NSmlDMSyncDebug.h"
 #include <featmgr.h>
+#include "nsmldmdef.h"
+#include "nsmldmsyncutil.h"
+#include "nsmldmsyncdebug.h"
+
 
 /*****************************************************************************
  * class TUtil

@@ -23,7 +23,7 @@
 //  INCLUDES
 
 #include <e32base.h>
-#include "NSmlDMSyncProfileItem.h"
+#include "nsmldmsyncprofileitem.h"
 
 // FORWARD DECLARATIONS
 class TNSmlDMSyncProfileItem;

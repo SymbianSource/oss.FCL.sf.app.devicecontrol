@@ -26,8 +26,8 @@
 #include <DevManInternalCRKeys.h>
 #include <centralrepository.h>
 #include <featmgr.h>
-#include "NSmlDMSyncHandler.h"
-#include "NSmlDMSyncDebug.h"
+#include "nsmldmsynchandler.h"
+#include "nsmldmsyncdebug.h"
 #include "nsmldmsyncinternalpskeys.h"
 
 // -----------------------------------------------------------------------------

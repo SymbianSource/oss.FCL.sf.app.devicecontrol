@@ -22,7 +22,7 @@
 
 // INCLUDES
 #include <e32cmn.h>
-#include <MSVAPI.H>
+#include <msvapi.h>
 #include "CWPBootstrap.h"
 
 class CWPEngine;

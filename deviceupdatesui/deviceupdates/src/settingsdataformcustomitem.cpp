@@ -20,8 +20,9 @@
 #include <hbdataformmodelitem.h>
 #include <hblineedit.h>
 #include <hbinputeditorinterface.h>
-#include <QGraphicsLinearLayout.h>
+#include <qgraphicslinearlayout.h>
 #include <hblabel.h>
+
 SettingsDataFormCustomItem::SettingsDataFormCustomItem(QGraphicsItem *parent) :
 HbDataFormViewItem(parent)
 {

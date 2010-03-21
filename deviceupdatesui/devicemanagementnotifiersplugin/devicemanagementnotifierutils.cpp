@@ -15,16 +15,16 @@
 *
 */
 
-#include "devicemanagementnotifierutils.h"
 #include <hbdocumentloader.h>
 #include <hbdialog.h>
 #include <hblabel.h>
 #include <hbmessagebox.h>
-#include <HbAction.h>
-#include <e32Property.h>
-#include "syncmlnotifierparams.h"
+#include <hbaction.h>
+#include <e32property.h>
+#include <qdebug.h>
+#include "SyncMLNotifierParams.h"
 #include "PnpUtilLogger.h"
-#include <QDebug.h>
+#include "devicemanagementnotifierutils.h"
 
  enum TSyncmlHbNotifierKeys 
 		{

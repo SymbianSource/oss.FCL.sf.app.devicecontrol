@@ -18,7 +18,7 @@
 #include <hbinstance.h>
 #include <dmfotaview.h>
 #include <hbapplication.h>
-#include <QDebug.h>
+#include <qdebug.h>
 #include "nsmldmsyncprivatecrkeys.h"
 
 int main(int argc, char *argv[])
