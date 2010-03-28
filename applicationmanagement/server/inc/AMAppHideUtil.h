@@ -75,7 +75,7 @@ namespace NApplicationManagement
         /**
          * Creates new CAMAppHideUtil instance
          */
-        static CAMAppHideUtil* CAMAppHideUtil::NewL();
+        static CAMAppHideUtil* NewL();
 
         /**
          * Adds uid to list, and updates the repository if needed

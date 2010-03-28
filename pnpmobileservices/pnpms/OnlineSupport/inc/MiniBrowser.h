@@ -114,7 +114,7 @@ private:
     Called from HttpGetL.
     @see HttpGetL
     */
-    void CMiniBrowser::DoHttpGetL(
+    void DoHttpGetL(
         const TDesC& aUri,
         const TBool aUseProxy,
         const TDesC& aProxyAddress,

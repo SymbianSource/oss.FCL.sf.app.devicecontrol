@@ -31,7 +31,7 @@ class CIdleSoftkeysAppTargetManager : public CBase
     public:
 
     
-    CIdleSoftkeysAppTargetManager::CIdleSoftkeysAppTargetManager(MSmlDmCallback *& aCallBack);
+    CIdleSoftkeysAppTargetManager(MSmlDmCallback *& aCallBack);
     ~CIdleSoftkeysAppTargetManager();
     
     //

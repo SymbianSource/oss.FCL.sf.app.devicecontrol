@@ -117,7 +117,7 @@ private: // internal functions
     *   @return ETrue - If dialog was dismissed by end user.
     *       EFalse - If dialog was deleted.
     */
-    TBool CDiagHeadsetCableTestEngine::DisplayQueryDialogWithHeaderL( 
+    TBool DisplayQueryDialogWithHeaderL( 
             TInt aDialogResourceId,
             TInt& aUserResponse );                               
     

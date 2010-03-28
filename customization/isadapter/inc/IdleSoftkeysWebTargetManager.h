@@ -32,7 +32,7 @@ class CIdleSoftkeysWebTargetManager : public CBase
     {
     public:
 
-    CIdleSoftkeysWebTargetManager::CIdleSoftkeysWebTargetManager(
+    CIdleSoftkeysWebTargetManager(
         MSmlDmCallback *& aCallBack,
         RFavouritesDb   & aFavDbSrv );
         

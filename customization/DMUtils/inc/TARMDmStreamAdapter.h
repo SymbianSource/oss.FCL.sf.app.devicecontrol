@@ -76,7 +76,7 @@ public:
             TInt iResultRef;
             CTARMDmStreamAdapterBuffer::TTARMDMAction iAction; 
         public:
-            CTARMDmStreamAdapterBuffer::CTARMDmStreamAdapterBuffer()
+            CTARMDmStreamAdapterBuffer()
                 : iURI( 0 )
                 , iLUID( 0 )
                 , iType( 0 )
@@ -85,7 +85,7 @@ public:
                 , iAction( CTARMDmStreamAdapterBuffer::ETARMActionNone )
                 {
                 }
-             static CTARMDmStreamAdapterBuffer* CTARMDmStreamAdapterBuffer::NewL(
+             static CTARMDmStreamAdapterBuffer* NewL(
                         const TDesC8 &aURI,
                         const TDesC8 &aLUID,
                         const TDesC8 &aType,
@@ -103,33 +103,33 @@ public:
                 newObject->iAction = aAction;
                 return newObject;
                 }
-            CTARMDmStreamAdapterBuffer::~CTARMDmStreamAdapterBuffer()
+            ~CTARMDmStreamAdapterBuffer()
                 {
                 delete iURI;
                 delete iLUID;
                 delete iType;
                 }
-            const TDesC8& CTARMDmStreamAdapterBuffer::URI() const
+            const TDesC8& URI() const
                 {
                 return *iURI;
                 }
-            const TDesC8& CTARMDmStreamAdapterBuffer::LUID() const
+            const TDesC8& LUID() const
                 {
                 return *iLUID;
                 }
-            const TDesC8& CTARMDmStreamAdapterBuffer::Type() const
+            const TDesC8& Type() const
                 {
                 return *iType;
                 }
-            TInt CTARMDmStreamAdapterBuffer::StatusRef() const
+            TInt StatusRef() const
                 {
                 return iStatusRef;
                 }
-            TInt CTARMDmStreamAdapterBuffer::ResultRef() const
+            TInt ResultRef() const
                 {
                 return iResultRef;
                 }
-            CTARMDmStreamAdapterBuffer::TTARMDMAction CTARMDmStreamAdapterBuffer::Action() const
+            CTARMDmStreamAdapterBuffer::TTARMDMAction Action() const
                 {
                 return iAction;
                 }
