@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2005-2006 Nokia Corporation and/or its subsidiary(-ies). 
+* Copyright (c) 2005-2010 Nokia Corporation and/or its subsidiary(-ies). 
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -241,5 +241,12 @@
 //      
 #define qtn_fota_list_release	"Release"
 
+//d: Message text shown when the user attempts to initiate a FOTA session but is restricted because not enough time has elapsed.
+//d: %0N is replaced with the number of hours which the user is restricted to attempt a FOTA session.
+//d: %1N is replaced with the number of hours remaining until the next allowed FOTA session.
+//d: %2N is replaced with the number of minutes remaining until the next allowed FOTA session.
+//l: popup_note_window
+//r: 5.2
+#define qtn_fota_note_time_restriction	"Sorry. %0N hours has not elapsed since you made your last request for a software update. Time before you can make a new request: %1N hr %2N min"
 
 // End of File

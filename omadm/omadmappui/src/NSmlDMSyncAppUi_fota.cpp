@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2005-2006 Nokia Corporation and/or its subsidiary(-ies). 
+* Copyright (c) 2005-2010 Nokia Corporation and/or its subsidiary(-ies). 
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -44,6 +44,13 @@
 #include <hlplch.h>
 #include <csxhelp/dm.hlp.hrh>
 
+#include <aknmessagequerydialog.h>     // For CAknMessageQueryDialog
+
+// For KCalenHoursInDay = 24 and other time-related constants.
+#include <calenconstants.h>           
+
+// Array granuality for displaying R_QTN_FOTA_NOTE_TIME_RESTRICTION note.
+const TInt KNSmlDMFotaNoteArrayGranuality = 3;
 
 // ============================ MEMBER FUNCTIONS ==============================
 //
@@ -415,6 +422,18 @@ void CNSmlDMSyncAppUi::StartSyncL(
 			return;
 			}
 		}
+
+    // If Fota check limitation feature is enabled, users are allowed to check
+    // updates only once within the limitation set in the CenRep
+    // (24 hours by default).
+    if ( FeatureManager::FeatureSupported( KFeatureIdFfFotaCheckLimitation ) 
+        && !IsUpdateAllowedL( *profile ) )
+        {
+        FLOG( "[OMADM] CNSmlDMSyncAppUi::StartSyncL Checking update is limited.\
+            Can not proceed sync." );
+        iSyncAppEngine->CloseProfile();
+        return;
+        }
 
     iSyncAppEngine->CloseProfile();		
     TRAPD( error, iSyncAppEngine->SynchronizeL( serverName, 
@@ -876,4 +895,134 @@ void CNSmlDMSyncAppUi::CheckAMDlL()
      		} 
   	
   }
+
+TBool CNSmlDMSyncAppUi::IsUpdateAllowedL( CNSmlDMSyncProfile& aProfile )
+    {
+    FLOG( "CNSmlDMSyncAppUi::IsUpdateAllowedL : Start" );
+
+    // Get the last successful sync time. It's a UTC time.
+    // Note: LastSuccessSync() returns the time when the last successful check
+    // for Fota update.
+    TTime utcLastSuccessSync = aProfile.LastSuccessSync();
+
+    // If utcLastSuccessSync is 0, there is no log available. Continue
+    // sync.
+    // Note: CNSmlDMSyncProfile::LastSuccessSync() returns 0 not Time::NullTTime().
+    if ( utcLastSuccessSync.Int64() == 0 )
+        {
+        FLOG( "[OMADM] CNSmlDMSyncAppUi::IsUpdateAllowedL() LastSuccessSync is 0." );
+        return ETrue;
+        }
+
+#ifdef _DEBUG
+    TDateTime dt = utcLastSuccessSync.DateTime();
+    FTRACE( FPrint(
+        _L("[OMADM] CNSmlDMSyncAppUi::IsUpdateAllowedL() utcLastSuccessSync \
+        %04d-%02d-%02d %02d:%02d:%02d"),
+        dt.Year(), dt.Month(), dt.Day(), dt.Hour(), dt.Minute(), dt.Second() ) );
+#endif
+
+    // Read Fota check limitation value in hours from CenRep.
+    // If failed to get the value, the default value is 24 hours.
+    TInt fotaCheckLimitation( KCalenHoursInDay );
+    CRepository* cenrep = CRepository::NewL( KCRUidNSmlDMSyncApp );
+    cenrep->Get( KNsmlDmFotaCheckLimitation, fotaCheckLimitation );
+    delete cenrep;
+    FTRACE( FPrint(
+        _L("[OMADM] CNSmlDMSyncAppUi::IsUpdateAllowedL() Fota check limitation = %d"),
+        fotaCheckLimitation ) );
+
+    // Check the get value.
+    if ( fotaCheckLimitation <= 0 )
+        {
+        // Something wrong with the value.  Set it to the default value.
+        fotaCheckLimitation = KCalenHoursInDay;
+        }
+
+    // Read the current time for comparison. Also universal time.
+    TTime utcCurrentTime;
+    utcCurrentTime.UniversalTime();
+
+#ifdef _DEBUG
+    dt = utcCurrentTime.DateTime();
+    FTRACE( FPrint(
+        _L("[OMADM] CNSmlDMSyncAppUi::IsUpdateAllowedL() utcCurrentTime \
+        %04d-%02d-%02d %02d:%02d:%02d"),
+        dt.Year(), dt.Month(), dt.Day(), dt.Hour(), dt.Minute(), dt.Second() ) );
+#endif
+
+    // Calculate the remainig time for the next available update check.
+    TTimeIntervalMinutes passedMinutes;
+    utcCurrentTime.MinutesFrom( utcLastSuccessSync, passedMinutes );
+    FTRACE( FPrint(
+        _L("[OMADM] CNSmlDMSyncAppUi::IsUpdateAllowedL() passedMinutes.Int() = %d"), 
+        passedMinutes.Int() ) );
+
+    // If Fota check limit is passed or passedMinutes is invalid, return EFalse
+    // to proceed sync process.
+    if ( passedMinutes.Int() > fotaCheckLimitation * KCalenMinutesInHour
+        || passedMinutes.Int() < 0 )
+        {
+        FLOG( "[OMADM] CNSmlDMSyncAppUi::IsUpdateAllowedL() Proceed sync process." );
+        return ETrue;
+        }
+
+    // Calculate the next available update check time.
+    TInt remainingMinutes ( ( fotaCheckLimitation * KCalenMinutesInHour ) 
+        - passedMinutes.Int() );
+    TInt remainingHours( remainingMinutes / KCalenMinutesInHour );
+        remainingMinutes -= remainingHours * KCalenMinutesInHour;
+    FTRACE( FPrint(
+        _L("[OMADM] CNSmlDMSyncAppUi::IsUpdateAllowedL() \
+        remainingHours = %d, remainingMinutes = %d"), 
+        remainingHours, remainingMinutes ) );
+    __ASSERT_DEBUG( ( remainingHours >= 0 ) && ( remainingMinutes >= 0 ), 
+        _L("CNSmlDMSyncAppUi::IsUpdateAllowedL - Problem with Remaining \
+        time calculation.") );
+
+    // If calculated remaining time is valid, show the sorry note with
+    // remaining time until next available time for checking update then
+    // return ETrue to stop sync process.
+    if ( remainingHours > 0 || remainingMinutes > 0 )
+        {
+        CArrayFix< TInt >* timeArray = 
+            new( ELeave ) CArrayFixFlat< TInt >( KNSmlDMFotaNoteArrayGranuality );
+        CleanupStack::PushL( timeArray );
+
+        timeArray->AppendL( fotaCheckLimitation );
+        timeArray->AppendL( remainingHours );
+        timeArray->AppendL( remainingMinutes );
+
+        HBufC* stringHolder =
+            StringLoader::LoadLC( R_QTN_FOTA_NOTE_TIME_RESTRICTION, 
+            *timeArray, iEikonEnv );
+
+        CAknMessageQueryDialog* infoDialog = 
+            CAknMessageQueryDialog::NewL( *stringHolder );
+ 
+        // infoDialog is added to the cleanup stack in PrepareLC().
+        // And the dialog is popped and destroyed in RunLD().
+        infoDialog->PrepareLC( R_AVKON_MESSAGE_QUERY_DIALOG );
+
+        // Only OK button should be shown since this is just a note.
+        infoDialog->ButtonGroupContainer().MakeCommandVisible( 
+            EAknSoftkeyCancel, EFalse );
+
+        // Return value of RunLD() is ignored.
+        infoDialog->RunLD();
+  
+        CleanupStack::PopAndDestroy( stringHolder );
+        CleanupStack::PopAndDestroy( timeArray );
+ 
+        // Return EFalse to stop sync process.
+        FLOG( "CNSmlDMSyncAppUi::IsUpdateAllowedL : End - EFalse" );
+        return EFalse;
+        }
+
+    // No remaining time left (or invalid calculation).
+    // Proceed checking update process.
+    FLOG( "CNSmlDMSyncAppUi::IsUpdateAllowedL : End - ETrue" );
+    return ETrue;
+    }
+
 // End of File

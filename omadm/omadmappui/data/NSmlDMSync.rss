@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2005-2006 Nokia Corporation and/or its subsidiary(-ies). 
+* Copyright (c) 2005-2010 Nokia Corporation and/or its subsidiary(-ies). 
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -1270,6 +1270,6 @@ RESOURCE TBUF r_qtn_product_code                               { buf = "\t"qtn_d
 RESOURCE TBUF r_qtn_browser_version                            { buf = "\t"qtn_dm_list_browser_version"\t%U\t"; }
 RESOURCE TBUF r_qtn_java_version                               { buf = "\t"qtn_dm_list_java_version"\t%U\t"; }
 RESOURCE TBUF r_qtn_flash_version                              { buf = "\t"qtn_dm_list_flash_version"\t%U\t"; }
-
+RESOURCE TBUF r_qtn_fota_note_time_restriction                 { buf = qtn_fota_note_time_restriction; }
 
 // End of File

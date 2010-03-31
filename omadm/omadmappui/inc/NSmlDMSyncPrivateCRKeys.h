@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2005-2006 Nokia Corporation and/or its subsidiary(-ies). 
+* Copyright (c) 2005-2010 Nokia Corporation and/or its subsidiary(-ies). 
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -76,6 +76,13 @@ const TUint32 KNsmlDmManualCheckAllowed = 0x00000007;
 // CenRep key that can be used to allow to show runtime versions
 // or not.Default value is 0 which makes it off 
 const TUint32 KNsmlDmRuntimeVerSupport = 0x00000008;
+
+// CenRep key that limits how often users may initiate a FOTA check.  
+// The value is specified in hours and should be bigger than 0.  
+// The default value is 24 hours.  This key only has an effect when 
+// FF_FOTA_CHECK_LIMITATION is configured ON in the product's 
+// configuration.
+const TUint32 KNsmlDmFotaCheckLimitation = 0x00000009;
 
 #endif // NSMLDMSYNCAPP_PRIVATE_CR_KEYS_H
             
