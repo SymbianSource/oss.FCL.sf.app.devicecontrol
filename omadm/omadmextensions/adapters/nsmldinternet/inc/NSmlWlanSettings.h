@@ -126,4 +126,4 @@ private:
     };
 
 
-#endif __NSMLWLANSETTINGS_H__
+#endif // __NSMLWLANSETTINGS_H__

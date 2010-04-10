@@ -362,4 +362,4 @@ private:
 
         };
 
-#endif __NSMLWLANADAPTER_H__
+#endif // __NSMLWLANADAPTER_H__
