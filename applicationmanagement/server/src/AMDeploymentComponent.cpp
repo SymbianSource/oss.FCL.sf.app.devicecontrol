@@ -28,6 +28,9 @@
 #include <CMenuClient.h>
 #endif
 #include "amsmlhelper.h"
+#include "APGCLI.H"
+#include "APMREC.h"
+#include "APMSTD.H"
 
 using namespace NApplicationManagement;
 
@@ -703,9 +706,27 @@ void CDeploymentComponent::SuccessStatusUpdateL(const TDesC &aDlFileName,
     {
     RDEBUG( "CDeploymentComponent::SuccessStatusUpdateL : start");
     SetDataL(aDlFileName, aDlMimeType);
-
+    
+    TBuf<256> FileType;
+    TBuf8<256> FileType8;
+    
+    RApaLsSession RSession;      
+    if(RSession.Connect() == KErrNone)        
+        {           
+        TDataRecognitionResult FileDataType;         
+        RSession.RecognizeData(aDlFileName,iData->Data(),*&FileDataType);        
+              
+            FileType.Copy(FileDataType.iDataType.Des());          
+                  
+        }
+    RSession.Close();
+    
+    FileType8.Copy(FileType);
+    
+    SetDataL(FileType8);
+    
     // Set PkgID same as MiME type of downloaded content
-    SetPkgTypeL(aDlMimeType);
+    SetPkgTypeL(FileType8);
 
     CDeploymentComponent* conflict( NULL);
     TBool dlOk(ETrue);
@@ -719,7 +740,7 @@ void CDeploymentComponent::SuccessStatusUpdateL(const TDesC &aDlFileName,
     else
         {
         RDEBUG( "CDeploymentComponent::StatusUpdateL - WARNING cannot detect uid" );
-        if (IsJavaMimeL(aDlMimeType) ||IsSisMimeL(aDlMimeType) )
+        if (IsJavaMimeL(FileType8) ||IsSisMimeL(FileType8) )
             {
             RDEBUG( "CDeploymentComponent::StatusUpdateL - Ignoring prev warning because it's java" );
             }

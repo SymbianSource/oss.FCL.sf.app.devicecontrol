@@ -1111,6 +1111,22 @@ CSmlDmAdapter::TError CNSmlDmFotaAdapter::DoFetchObjectL( const TDesC8& aURI,
             RFotaEngineSession::TState state = iFotaEngine.GetState( id );
             data = HBufC8::NewL( KNSmlFwMgmtObjectIntegerLength );
             data->Des().AppendNum( state );
+            
+            TInt configFlags( KErrNone );        
+           CRepository* centrep = NULL;
+           TRAPD( err, centrep = CRepository::NewL( KCRUidDeviceManagementInternalKeys ) );        
+           if ( err == KErrNone && centrep ) 
+               {
+               configFlags = 2; //means fota operation
+               centrep->Set( KDevManSessionType, configFlags );
+               delete centrep;
+               centrep = NULL;
+               }
+           else
+               {
+               User::Leave( err );
+               }
+        
             }
         
         // if data is fetched ok, set results

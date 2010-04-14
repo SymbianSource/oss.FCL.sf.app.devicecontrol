@@ -123,6 +123,7 @@ LIBRARY         platformenv.lib
  LIBRARY 				nsmldmtreedbclient.lib connmon.lib commonengine.lib
  LIBRARY     		nsmltransporthandler.lib
 LIBRARY     		nsmltransport.lib cone.lib javaregistryclient.lib avkon.lib eikcore.lib  apparc.lib
+LIBRARY					apmime.lib
 #endif // __TARM_SYMBIAN_CONVERGENCY
 
 #ifdef __JAVA_MIDP20
