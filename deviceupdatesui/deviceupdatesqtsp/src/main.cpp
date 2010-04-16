@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies). 
+* Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -11,17 +11,17 @@
 *
 * Contributors:
 *
-* Description: Implementation of devicecontrol component
-* 	This is part of devicecontrol.
+* Description:
 *
 */
+#include <hbinstance.h>
+#include <hbapplication.h>
+#include "DmTelServiceHandler.h"
 
-// Application layer
-// Device control ADO
+int main(int argc, char **argv)
+{
+    HbApplication a( argc, argv );
+    DmTelServiceHandler srvcHndlr;
+    return a.exec();
+}
 
-//Componets:
-
-
-
-//omadm
-#include "../deviceupdatesui/adapters/bld/bld.inf"
