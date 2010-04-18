@@ -30,6 +30,7 @@ public:
     ~SettingsDataFormCustomItem();
 
     virtual HbAbstractViewItem* createItem();
+     bool canSetModelIndex( const QModelIndex& aIndex ) const; 
 
 protected:
     virtual HbWidget* createCustomWidget();

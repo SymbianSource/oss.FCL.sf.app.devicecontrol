@@ -69,7 +69,7 @@ _LIT( KHttpSep,     "://" );
 _LIT( KSlash,       "/" );
 _LIT( KSmlEOL,      "\n" );
 _LIT( KNSmlTab,     "\t" );
-
+_LIT( KBackSlash,       "\\" );
 _LIT( KZDrive, "z:" );
 
 #ifdef __SCALABLE_ICONS

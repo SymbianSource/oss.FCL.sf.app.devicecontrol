@@ -57,3 +57,9 @@ HbWidget* SettingsDataFormCustomItem::createCustomWidget()
             return 0;
     }
 }
+
+ bool SettingsDataFormCustomItem::canSetModelIndex( const QModelIndex& aIndex ) const
+ {
+     int itemType = aIndex.data(HbDataFormModelItem::ItemTypeRole).toInt();
+     return itemType == HbDataFormModelItem::CustomItemBase;
+ }
