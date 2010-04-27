@@ -712,18 +712,23 @@ void CDeploymentComponent::SuccessStatusUpdateL(const TDesC &aDlFileName,
     
     RApaLsSession RSession;      
     if(RSession.Connect() == KErrNone)        
-        {           
-        TDataRecognitionResult FileDataType;         
-        RSession.RecognizeData(aDlFileName,iData->Data(),*&FileDataType);        
-              
-            FileType.Copy(FileDataType.iDataType.Des());          
-                  
+        {  
+        TUid uid;
+        TDataType datatype;
+        RSession.AppForDocument(aDlFileName,uid, datatype );
+         
+        FileType.Copy(datatype.Des()); 
+            
+           
         }
     RSession.Close();
     
     FileType8.Copy(FileType);
     
     SetDataL(FileType8);
+
+    RDEBUG8_2( "CDeploymentComponent::Pkg MIME: '%S' ", &FileType8);
+
     
     // Set PkgID same as MiME type of downloaded content
     SetPkgTypeL(FileType8);

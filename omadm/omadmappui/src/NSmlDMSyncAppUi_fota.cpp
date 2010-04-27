@@ -46,11 +46,13 @@
 
 #include <aknmessagequerydialog.h>     // For CAknMessageQueryDialog
 
+#include <fotaconst.h>
 // For KCalenHoursInDay = 24 and other time-related constants.
 #include <calenconstants.h>           
 
 // Array granuality for displaying R_QTN_FOTA_NOTE_TIME_RESTRICTION note.
 const TInt KNSmlDMFotaNoteArrayGranuality = 3;
+
 
 // ============================ MEMBER FUNCTIONS ==============================
 //
@@ -236,15 +238,19 @@ void CNSmlDMSyncAppUi::HandleCommandL( TInt aCommand )
 	    case EAknSoftkeyExit: //For independent .exe app launch from file browser
 		case EAknCmdExit:
         case EEikCmdExit:		// quit application
-			{
-			TApaTaskList taskList(CEikonEnv::Static()->WsSession());
-	        TApaTask task1(taskList.FindApp( KFotaServerAppUid));
+			{   
 			TInt value=-1;
             TInt r1=RProperty::Set(KPSUidNSmlDMSyncApp,KNSmlDMSyncUiLaunchKey,value);
-	        if(task1.Exists())
-	        	{
-	        	task1.EndTask();
-	        	}
+	        
+        	TBool val (EFalse);
+        	TInt err = RProperty::Get(TUid::Uid(KOmaDMAppUid), KFotaDownloadActive, val );
+        		if(val == 1)
+        			{
+        			TApaTaskList taskList(CEikonEnv::Static()->WsSession());
+        			TApaTask task1(taskList.FindApp( KFotaServerAppUid));
+        			if(task1.Exists())
+        				task1.EndTask();
+        			}	
 			Exit();
 			}
 		    break;

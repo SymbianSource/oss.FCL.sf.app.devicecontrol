@@ -1075,6 +1075,7 @@ void CNSmlInternetAdapter::AddLeafObjectL( const TDesC8& aURI,
                       _DBG_FILE("CNSmlInternetAdapter::AddLeafObjectL: network found, update name");
                       checknetView->WriteTextL(TPtrC(COMMDB_NAME), ConvertTo16LC(aObject));
                       _DBG_FILE("CNSmlInternetAdapter::AddLeafObjectL: network name updated");
+                      checknetView->PutRecordChanges();
                       CleanupStack::PopAndDestroy(); //ConvertTo16LC
                       }
                     // writing failed for some reason
@@ -2985,12 +2986,12 @@ CSmlDmAdapter::TError CNSmlInternetAdapter::FetchLeafObjectL(
         { // Name + NAPAddr + DNSAddrL
         if(aURI.Match(_L8("AP/*/Networks/*/Name"))!= KErrNotFound ) // Networks-name
             {
-            TUint32 iapID8 = IntLUID(aLUID);
+           // TUint32 iapID8 = IntLUID(aLUID);
 
             //  IAP-table NetworkId Fetch
             CCommsDbTableView* networkView = iDatabase->OpenViewMatchingUintLC(TPtrC(IAP),
                                                                                TPtrC(COMMDB_ID),
-                                                                               iapID8);
+                                                                               iapID);
             networkView->GotoFirstRecord();
             TRAPD(leavecode,networkView->ReadUintL(TPtrC(IAP_NETWORK), iISPId));
             CleanupStack::PopAndDestroy(); // networkView
@@ -5021,7 +5022,7 @@ void CNSmlInternetAdapter::AddNodeObjectL( const TDesC8& aURI,
         TPtrC qDB    = TPtrC(COMMDB_ID);
 
     //Check if URI is /AP/*/NAPDef/* then it should be check IAP ID in DB not IAPService
-    if(( iIAPId > 0 ) && ((aURI.Match(_L8("AP/*/NAPDef/*"  ))!= KErrNotFound) || (aURI.Match(_L8("AP/*/NAPDef/*/Bearer/*"  ))!= KErrNotFound)))
+    if(( iIAPId >= 0 ) && ((aURI.Match(_L8("AP/*/NAPDef/*"  ))!= KErrNotFound) || (aURI.Match(_L8("AP/*/NAPDef/*/Bearer/*"  ))!= KErrNotFound) || (aURI.Match(_L8("AP/*"  ))!= KErrNotFound) ||(aURI.Match(_L8("AP/*/NAPDef"  ))!= KErrNotFound)))
     {
       //Get parent UID and check if that exist if not add 
       iIAPId = GetAPIdFromURIL(aURI);
@@ -7204,7 +7205,16 @@ void CNSmlInternetAdapter::ExecuteBufferL(const TDesC8& aURI, const TBool aCompl
                 iBuffer->At(iExecutionIndex).iLuid = iISPId;
                 }
 
-            iBuffer->At(iExecutionIndex).iNodeBuf->At(cmd).iDone = ETrue;
+            TInt uidValue = IntLUID(addLUID);  
+            if(( iBuffer->At(iExecutionIndex).iNodeBuf->At(cmd).iUri->Des().Match( _L8( "AP/*/NAPDef/*/NAPAddr" ) ) != KErrNotFound ) && (uidValue == KErrNone))
+                {
+                iBuffer->At(iExecutionIndex).iNodeBuf->At(cmd).iDone = EFalse;
+                }
+            else
+                {
+                iBuffer->At(iExecutionIndex).iNodeBuf->At(cmd).iDone = ETrue;
+                }
+     
             }
 
         }

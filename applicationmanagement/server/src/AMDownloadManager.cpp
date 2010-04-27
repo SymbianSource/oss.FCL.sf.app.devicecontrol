@@ -408,7 +408,9 @@ void CAMDownloadManager::SetIAPL(CDeploymentComponent *aComponent)
         {
         iap = opts.iIAP;
         }
-    if (iap == -1)
+    RDEBUG_2( "CAMDownloadManager::SetIAPL: Set IAP Id value to (%d) ", iap);
+    
+    if (iap <= -1)
         {
         iap = 0; //as DL mgr treats 0 (zero) as "Always Ask"
         }
@@ -424,7 +426,7 @@ void CAMDownloadManager::SetIAPL(CDeploymentComponent *aComponent)
         }
 
 #ifdef _DEBUG
-    TInt err(iDownloadMgr.SetIntAttribute(EDlMgrIap, 11) );
+    TInt err(iDownloadMgr.SetIntAttribute(EDlMgrIap, 0) );
     RDEBUG_2( "CAMDownloadManager::SetIAPL (debug only): WARNING Overriding IAP Id to 11 results %d", err );
 #endif		
     }

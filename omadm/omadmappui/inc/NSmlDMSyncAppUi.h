@@ -41,6 +41,11 @@ class CNSmlDMFotaModel;
 class CNSmlDMDbNotifier;
 class CNSmlDMFotaView;
 
+
+/** If download is active this P&S key is set to ETrue, otherwise EFalse. 
+ * The key is owned by omadmappui**/
+const TUint32 KFotaDownloadActive = 0x0000008;
+
 /**
 * Application UI class.
 * Provides support for the following features:

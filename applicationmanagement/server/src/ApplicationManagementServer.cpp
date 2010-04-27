@@ -956,7 +956,7 @@ TBool CApplicationManagementServer::PrepareInstallL(
         RDEBUG_2( "CApplicationManagementServer::PrepareInstallL - ERROR leaving cannot connect installer: %d", err );
         User::LeaveIfError(err);
         }
-    CleanupClosePushL(iInstaller);
+    
 #endif
 
     RDEBUG( "CApplicationManagementServer::PrepareInstallL - connected to installer" );
@@ -1067,9 +1067,6 @@ TBool CApplicationManagementServer::PrepareInstallL(
         RDEBUG( "CApplicationManagementServer::PrepareInstallL - ERROR size of source file is 0!" );
         }
 
-#ifndef __AM_CONNECT_INSTALLER_ONSTARTUP_
-    CleanupStack::Pop( &iInstaller);
-#endif
 
     RDEBUG( "CApplicationManagementServer::PrepareInstallL end" );
     return res;
