@@ -21,6 +21,7 @@ SYMBIAN_PLATFORMS = WINSCW \
     :BLD_INF_RULES.prj_exports += "./rom/deviceupdates.iby CORE_APP_LAYER_IBY_EXPORT_PATH(deviceupdates.iby)"
     :BLD_INF_RULES.prj_exports += "./rom/deviceupdates_resources.iby LANGUAGE_APP_LAYER_IBY_EXPORT_PATH(deviceupdates_resources.iby)"
     :BLD_INF_RULES.prj_exports += "./conf/101F6DE5.txt /epoc32/data/z/private/10202be9/101F6DE5.txt"    
+    :BLD_INF_RULES.prj_exports += "./conf/101F6DE5.txt /epoc32/winscw/c/private/10202be9/101F6DE5.txt"  
 TARGET.UID2 = 0x100039CE
 TARGET.UID3 = 0x101F6DE5
 TARGET.CAPABILITY = CAP_APPLICATION 
@@ -38,7 +39,8 @@ TARGET.CAPABILITY = CAP_APPLICATION
         -lsysversioninfo\
         -letel3rdparty\
 		-letelpckt\
-		-lcmmanager
+		-lcmmanager\
+		-lsisregistryclient
 	}
 TEMPLATE = app
 TARGET = deviceupdates

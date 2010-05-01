@@ -24,6 +24,7 @@
 #include <etel.h>
 #include <featmgr.h>
 #include <etelmm.h>
+#include <hbnotificationdialog.h>
 #include <centralrepository.h>
 #include <sysversioninfo.h>
 #include "nsmldmsyncprivatecrkeys.h"
@@ -92,7 +93,7 @@ bool DMFotaView::addFotaView()
     exit->setText(QString("txt_common_menu_exit"));
     QObject::connect(exit, SIGNAL(triggered()), this, SLOT(OnExit()));
     
-    mSoftKeyBackAction = new HbAction(Hb::BackAction ,this);
+    mSoftKeyBackAction = new HbAction(Hb::BackNaviAction ,this);
     mSoftKeyBackAction->setText("Back");
     connect(mSoftKeyBackAction, SIGNAL(triggered()), this, SLOT(backtoMainWindow()));
         
@@ -122,7 +123,7 @@ bool DMFotaView::addFotaView()
 
 
     //Product Release
-    TBuf< 1024 > prodrelease;
+    TBuf< KSysUtilVersionTextLength > prodrelease;
     prodrelease.Zero();
     if(SysUtil::GetPRInformation(prodrelease)==KErrNone)
         {
@@ -280,28 +281,35 @@ bool DMFotaView::addFotaView()
 //
 void DMFotaView::CheckforUpdate()
  {
-    // if(no default profile defined)
-    HbDocumentLoader loader;
-    bool ok = false;
-    loader.load(":/xml/updatedialog.docml", &ok);
-    QString val;
-    // Exit if the file format is invalid
-    Q_ASSERT_X(ok, "Device Manager", "Invalid docml file");
-    HbDialog* dialog = qobject_cast<HbDialog*>(loader.findWidget("UpdateDialog"));
-    
-    label=qobject_cast<HbLabel*>(loader.findWidget("DialogText"));
-    val = hbTrId("txt_device_update_info_no_server_configured_to_get");
-    label->setPlainText(val);
-    dialog->setDismissPolicy(HbPopup::TapAnywhere);
-    dialog->setTimeout(HbPopup::StandardTimeout);
-    dialog->setAttribute(Qt::WA_DeleteOnClose, true);
-    dialog->exec();
-    //Else connect
-    /*TInt iProfileId= 1000000;
-    iSession.OpenL();
-    profile.OpenL(iSession,iProfileId);
-    //openconnection
-    iSyncJob.CreateL( iSession, iProfileId );*/
+    /*TInt profileId=NULL;
+    if(mainDmInfo==0)
+        {
+        if(!profilesView)
+            {
+            mainDmInfo = new DmInfo();
+            mainDmInfo->refreshProfileList();
+            }
+        else 
+            {
+            mainDmInfo = profilesView->dminfo;
+            }
+        }
+    if((profileId = mainDmInfo->DefaultFotaProfileIdL())==KErrNotFound)
+        {*/
+
+        HbNotificationDialog* note = new HbNotificationDialog();
+        QString val = hbTrId("txt_device_update_info_no_server_configured_to_get");
+        note->setTitle(val);
+        note->setTitleTextWrapping(Hb::TextWordWrap);
+        note->setDismissPolicy(HbPopup::TapAnywhere);
+        note->setTimeout(HbPopup::StandardTimeout);
+        note->setAttribute(Qt::WA_DeleteOnClose, true);
+        note->open();
+       /* }
+    else
+        {
+        mainDmInfo->sync(profileId);
+        }*/
  }
 
 // -----------------------------------------------------------------------------
@@ -315,22 +323,23 @@ void DMFotaView::AdvancedDeviceManager()
     qDebug("omadm DeviceManagerUi::AdvancedDeviceManager");
     if(!profilesView)
         {
-    qDebug("omadm DeviceManagerUi::AdvancedDeviceManager 1");
-    profilesView = new DmAdvancedView(mMainWindow,this);
-    qDebug("omadm DeviceManagerUi::AdvancedDeviceManager 2");
+        qDebug("omadm DeviceManagerUi::AdvancedDeviceManager 1");
+        profilesView = new DmAdvancedView(mMainWindow,this);
+        qDebug("omadm DeviceManagerUi::AdvancedDeviceManager 2");
         bool loadingok = profilesView->displayItems();
         if(loadingok)
-            {qDebug("omadm DeviceManagerUi::AdvancedDeviceManager 3");
-        mMainWindow->addView(profilesView);
-        qDebug("omadm DeviceManagerUi::AdvancedDeviceManager 4");
-        profilesView->setBackBehavior();  
-        qDebug("omadm DeviceManagerUi::AdvancedDeviceManager 5");
-        mMainWindow->setCurrentView(profilesView);
-        qDebug("omadm DeviceManagerUi::AdvancedDeviceManager 6");
+            {
+            qDebug("omadm DeviceManagerUi::AdvancedDeviceManager 3");
+            mMainWindow->addView(profilesView);
+            qDebug("omadm DeviceManagerUi::AdvancedDeviceManager 4");
+            profilesView->setBackBehavior();  
+            qDebug("omadm DeviceManagerUi::AdvancedDeviceManager 5");
+            mMainWindow->setCurrentView(profilesView);
+            qDebug("omadm DeviceManagerUi::AdvancedDeviceManager 6");
             }
         else
             {
-        qFatal("omadm Unable to read groupbox.docml");
+            qFatal("omadm Unable to read groupbox.docml");
         
             }
         }

@@ -91,6 +91,9 @@ public slots:
     void serversListGroupClicked(bool state);
     void reLayout(Qt::Orientation layoutType);
     void backButtonClicked();
+    void defaultMenuItemSelected();
+    void deleteMenuItemSelected();
+    void connectMenuItemSelected();
     
 private:        
     HbGroupBox *serversListGroup;
@@ -98,7 +101,6 @@ private:
     HbListView* list;
     HbListView* otherdetailslist;
     HbLabel *label; 
-    HbMenu* csmenu;
     HbMenu* viewspecificmenu;
     HbAction* help;
     HbAction* exit;
@@ -126,6 +128,10 @@ private:
     RTelServer iServer;
     RTelServer::TPhoneInfo info;	
 	RMobilePhone::TMobilePhoneNetworkSecurity idispSecurity;
+	int currentselecteditem;
+	//This item should not be deleted,it just refer an item and deletion
+	//will be taken care by List view
+	QStandardItem *modelItem;
 };
 
 #endif // DMADVANCEDVIEW_H

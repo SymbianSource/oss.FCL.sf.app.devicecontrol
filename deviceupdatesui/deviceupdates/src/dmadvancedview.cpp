@@ -15,7 +15,7 @@
 * Description:  Methods for DmAdvancedView.
 *
 */
-
+#include <hbnamespace.h>
 #include "dmadvancedview.h"
 #include "serversettingsview.h"
 
@@ -32,6 +32,7 @@ DmAdvancedView::DmAdvancedView(HbMainWindow *mainWindow, HbView *mainView, QGrap
     currentview = 0;
     connectionRequested = false;    
     backbehaviorset = false;
+    currentselecteditem = -1;
     }
 
 DmAdvancedView::~DmAdvancedView()
@@ -46,61 +47,38 @@ DmAdvancedView::~DmAdvancedView()
 
 void DmAdvancedView::handleLongPress(HbAbstractViewItem* item , QPointF coOrdinates)
     {
-    if(connectionRequested)
+    if (connectionRequested)
         return;
-    int itemnum = 0;
-    if (item) 
+    if (item)
         {
-    QStandardItem *modelItem = model->itemFromIndex(item->modelIndex());
-    itemnum = modelItem->row();
+        modelItem = model->itemFromIndex(item->modelIndex());
+        currentselecteditem = modelItem->row();
 
-
-    csmenu = new HbMenu();
-    HbAction *defaultprofileAction = 0;
-    HbAction *deleteaction= 0;
-    HbAction *connectaction= 0;
-    if(!dminfo->Isdefaultprofile(itemnum))
-        {
-        defaultprofileAction = csmenu->addAction(hbTrId("txt_device_update_menu_set_as_default"));
-        }
-    if(!dminfo->Isprofilelocked(itemnum))
-        {
-        deleteaction = csmenu->addAction(hbTrId("txt_device_update_menu_delete"));
-        }
-    connectaction = csmenu->addAction(hbTrId("txt_device_update_menu_connect"));
-    HbAction *selectedAction = csmenu->exec(coOrdinates);
-    if(selectedAction)
-        {
-        if(selectedAction == defaultprofileAction )
+        HbMenu *csmenu = new HbMenu();
+        csmenu->setAttribute( Qt::WA_DeleteOnClose);
+        HbAction *defaultprofileAction = 0;
+        HbAction *deleteaction = 0;
+        HbAction *connectaction = 0;
+        if (!dminfo->Isdefaultprofile(currentselecteditem))
             {
-            dminfo->setDefaultProfile(itemnum);
-            updateEarlierdefaultProfileIcon();
-            modelItem->setIcon(defaultprofileicon);
-            currentdefaultprofile = itemnum;        
+            defaultprofileAction = csmenu->addAction(hbTrId(
+                    "txt_device_update_menu_set_as_default"));
+            connect(defaultprofileAction, SIGNAL(triggered()), this,
+                    SLOT(defaultMenuItemSelected()));
             }
-        else if (selectedAction == deleteaction )
+        if (!dminfo->Isprofilelocked(currentselecteditem))
             {
-            dminfo->DisableDbNotifications(true);
-            //check currentdefaultprofile is current item
-            if(itemnum == currentdefaultprofile) // deleting default profile
-                currentdefaultprofile = -1;
-            if(dminfo->DeleteProfile(itemnum) >=0 )
-                {
-                //Update the profile list
-                model->removeRow(itemnum);
-                }
-            dminfo->DisableDbNotifications(false);
+            deleteaction = csmenu->addAction(hbTrId(
+                    "txt_device_update_menu_delete"));
+            connect(deleteaction, SIGNAL(triggered()), this,
+                    SLOT(deleteMenuItemSelected()));
             }
-        else if( selectedAction == connectaction )
-            {
-            dminfo->synchronize(itemnum);
-            connectionRequested = true;
-            }
-        else
-            {    
-            }
-        }
-    delete csmenu;
+        connectaction = csmenu->addAction(hbTrId(
+                "txt_device_update_menu_connect"));
+        connect(connectaction, SIGNAL(triggered()), this,
+                SLOT(connectMenuItemSelected()));
+        csmenu->setPreferredPos(coOrdinates);
+        csmenu->open();
         }
     }
 
@@ -113,8 +91,8 @@ void DmAdvancedView::handleClicked(QModelIndex index)
     dminfo->DisableDbNotifications(true);
     //If profile is not locked then take to edit server view
     int itemnum = 0;
-    QStandardItem *modelItem = model->itemFromIndex(index);
-    itemnum = modelItem->row();                  
+    QStandardItem *selectedItem = model->itemFromIndex(index);
+    itemnum = selectedItem->row();                  
     if(itemnum >= 0 && !dminfo->Isprofilelocked(itemnum))
         {        
         //read profile items
@@ -262,17 +240,17 @@ void DmAdvancedView::updateEarlierdefaultProfileIcon()
     {
     if(currentdefaultprofile >= 0)
         {
-        QStandardItem *modelItem = model->item(currentdefaultprofile);
+        QStandardItem *earlierDefaultProfile = model->item(currentdefaultprofile);
         //Find the transport type & set the icon
         int transporttype = 0;
         dminfo->profileTransport(currentdefaultprofile,transporttype);
         if(transporttype == 0)//Internet
             {
-            modelItem->setIcon(internet);
+            earlierDefaultProfile->setIcon(internet);
             }
         else
             {
-            modelItem->setIcon(bluetooth);
+            earlierDefaultProfile->setIcon(bluetooth);
             }        
         }
     }
@@ -666,5 +644,33 @@ void DmAdvancedView::syncCompleted(int jobstatus)
     Q_UNUSED(jobstatus);
     connectionRequested = false;    
     updateListview();
+    }
+	
+void DmAdvancedView::defaultMenuItemSelected()
+    {
+    dminfo->setDefaultProfile(currentselecteditem);
+    updateEarlierdefaultProfileIcon();
+    modelItem->setIcon(defaultprofileicon);
+    currentdefaultprofile = currentselecteditem;
+    }
+
+void DmAdvancedView::deleteMenuItemSelected()
+    {
+    dminfo->DisableDbNotifications(true);
+    //check currentdefaultprofile is current item
+    if(currentselecteditem == currentdefaultprofile) // deleting default profile
+        currentdefaultprofile = -1;
+    if(dminfo->DeleteProfile(currentselecteditem) >=0 )
+        {
+    //Update the profile list
+    model->removeRow(currentselecteditem);
+        }
+    dminfo->DisableDbNotifications(false);
+    }
+
+void DmAdvancedView::connectMenuItemSelected()
+    {
+    dminfo->synchronize(currentselecteditem);
+    connectionRequested = true;
     }
 	
