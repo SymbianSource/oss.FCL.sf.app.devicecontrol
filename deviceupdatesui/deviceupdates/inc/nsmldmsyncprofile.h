@@ -24,7 +24,7 @@
 #include <e32base.h>
 #include <SyncMLClient.h>
 #include <SyncMLClientDM.h>
-#include "NSmlDMdef.h"
+#include "nsmldmdef.h"
 
 //#include "NSmlDMSyncApp.h"
 
@@ -259,6 +259,16 @@ NONSHARABLE_CLASS (CNSmlDMSyncProfile) : public CBase
 		* @return None
         */
         void SetHostAddressL( const TDesC& aText, const TInt aPort );
+        
+        
+        /**
+         * converts backslash in host address to forward slash 
+         * @param aUrl host address with out backslash
+         * @param aModifiedUrl host address with out backslash
+         * @return None
+         */
+        void convertBackslashinUrl( const TDesC& aUrl, TDes& aModifiedUrl );
+        
         
         /**
 		* Get port number 

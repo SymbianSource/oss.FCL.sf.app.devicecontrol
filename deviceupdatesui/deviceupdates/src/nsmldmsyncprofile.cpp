@@ -617,14 +617,17 @@ void CNSmlDMSyncProfile::SetHostAddressL( const TDesC& aText, const TInt aPort )
     	{
     	return;
     	}
+    TBuf<KBufSize256> newUrl;
+    convertBackslashinUrl(aText,newUrl);
+    
 	if (BearerType() != EAspBearerInternet)
 		{
 		// port number handling is for internet bearer only 
-		TUtil::StrCopy(iBuf, aText); 
+		TUtil::StrCopy(iBuf, newUrl); 
 		}
 	else
 		{
-		TURIParser parser(aText);
+		TURIParser parser(newUrl);
 	    parser.GetUri(iBuf, aPort);
 		}
 	
@@ -632,6 +635,23 @@ void CNSmlDMSyncProfile::SetHostAddressL( const TDesC& aText, const TInt aPort )
 	iConnection.SetServerURIL( iBuf8 );
 	}
 
+void CNSmlDMSyncProfile::convertBackslashinUrl(const TDesC& aUrl, TDes& aModifiedUrl )
+    {    
+    TBuf<KBufSize16> backSlash(KBackSlash);  
+    TBuf<KBufSize16> forwardSlash(KSlash);
+    for (TInt i = 0; i < aUrl.Length(); i++)
+        {
+        TChar ch = aUrl[i];        
+        if (ch == backSlash[0] )
+            {
+            aModifiedUrl.Append(forwardSlash[0]);
+            }
+        else
+            {
+            aModifiedUrl.Append(ch);
+            }
+        }   
+    }
 // -----------------------------------------------------------------------------
 // CNSmlDMSyncProfile::GetUserNameL
 // -----------------------------------------------------------------------------

@@ -42,8 +42,10 @@ void ServerSettingsView::constructview(QString& header)
         {
         //custom prototype    
         form = new HbDataForm();
+        QList <HbAbstractViewItem*> protos = form->itemPrototypes();
         customPrototype = new SettingsDataFormCustomItem(form);
-        form->setItemPrototype(customPrototype);        
+        protos.append(customPrototype);
+        form->setItemPrototypes(protos);
         dataformmodel =  new HbDataFormModel();    
         makeviewItemsVisible(header);
         form->setModel(dataformmodel); 
