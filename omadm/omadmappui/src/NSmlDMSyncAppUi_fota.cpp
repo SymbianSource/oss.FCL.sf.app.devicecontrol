@@ -46,7 +46,7 @@
 
 #include <aknmessagequerydialog.h>     // For CAknMessageQueryDialog
 
-#include <fotaconst.h>
+#include <fotaConst.h>
 // For KCalenHoursInDay = 24 and other time-related constants.
 #include <calenconstants.h>           
 

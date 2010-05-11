@@ -28,9 +28,9 @@
 #include <CMenuClient.h>
 #endif
 #include "amsmlhelper.h"
-#include "APGCLI.H"
-#include "APMREC.h"
-#include "APMSTD.H"
+#include "apgcli.h"
+#include "apmrec.h"
+#include "apmstd.h"
 
 using namespace NApplicationManagement;
 
