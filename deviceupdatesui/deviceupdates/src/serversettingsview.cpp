@@ -17,6 +17,7 @@
 
 #include <hblineedit.h>
 #include <hbmessagebox.h>
+#include <hbnamespace.h>
 #include "serversettingsview.h"
 #include "dmadvancedview.h"
 #include "settingsdataformcustomitem.h"
@@ -160,12 +161,12 @@ void ServerSettingsView::backButtonClicked()
         }
     else
         {
-        HbMessageBox note(HbMessageBox::MessageTypeInformation);
-        note.setText(hbTrId(
+        HbMessageBox *note = new HbMessageBox(HbMessageBox::MessageTypeInformation);
+        note->setText(hbTrId(
                 "txt_device_update_dialog_enter_mandatory_field_values"));
-        note.setPrimaryAction(new HbAction("OK"));
-        note.setTimeout(HbPopup::NoTimeout);
-        note.exec();
+        note->setAttribute( Qt::WA_DeleteOnClose);         
+        note->setTimeout(HbPopup::NoTimeout);
+        note->open();
         }        
     }
 
@@ -175,10 +176,11 @@ void ServerSettingsView::checkServerIdvalue()
     if(serversView->checkServerId(srvid))
         {
     serverid->setContentWidgetData(QString("text"), QString("")); 
-    HbMessageBox note(HbMessageBox::MessageTypeInformation);
-           note.setText(hbTrId("txt_device_update_dialog_invalid_server_id"));           
-           note.setTimeout(HbPopup::NoTimeout);
-           note.exec();         
+    HbMessageBox *note= new HbMessageBox(HbMessageBox::MessageTypeInformation);
+           note->setText(hbTrId("txt_device_update_dialog_invalid_server_id")); 
+           note->setAttribute( Qt::WA_DeleteOnClose);                   
+           note->setTimeout(HbPopup::NoTimeout);
+           note->open();         
         }          
     }
 

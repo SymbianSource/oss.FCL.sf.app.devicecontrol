@@ -49,8 +49,8 @@ HbWidget* SettingsDataFormCustomItem::createCustomWidget()
             HbLineEdit* mLineEdit = new HbLineEdit();
             mLineEdit->setText(QString("8080"));
             HbEditorInterface editorInterface(mLineEdit);
-            editorInterface.setInputMode(HbInputModeNumeric); 
-            editorInterface.setConstraints(HbEditorConstraintFixedInputMode);            
+            editorInterface.setMode(HbInputModeNumeric); 
+            editorInterface.setInputConstraints(HbEditorConstraintFixedInputMode);            
             return mLineEdit;            
             }                
         default:
