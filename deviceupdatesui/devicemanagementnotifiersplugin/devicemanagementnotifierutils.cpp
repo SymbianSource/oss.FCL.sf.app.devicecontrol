@@ -186,11 +186,11 @@ void syncmlnotifier::createserverinitnotifier(int profileid, int uimode,
         contentbody->setPlainText(serverinitmessage);
 
         //set softkeys
-        HbAction *primaryAction = dialog->primaryAction();
+        HbAction *primaryAction = (HbAction *) dialog->actions().first();
         QString softkeyok = hbTrId("txt_common_button_ok");
         primaryAction->setText(softkeyok);
 
-        HbAction *secondaryAction = dialog->secondaryAction();
+        HbAction *secondaryAction = (HbAction *) dialog->actions().at(1);
         QString softkeyCancel = hbTrId("txt_common_button_cancel");
         secondaryAction->setText(softkeyCancel);
 
@@ -313,11 +313,11 @@ void syncmlnotifier::createserveralertconfirmative(const QString &string)
     contentbody->setPlainText(string);
 
     //set softkeys
-    HbAction *primaryAction = dialog->primaryAction();
+    HbAction *primaryAction = (HbAction *) dialog->actions().first();
     QString softkeyok = hbTrId("txt_common_button_yes");
     primaryAction->setText(softkeyok);
 
-    HbAction *secondaryAction = dialog->secondaryAction();
+    HbAction *secondaryAction = (HbAction *) dialog->actions().at(1);
     QString softkeyCancel = hbTrId("txt_common_button_no");
     secondaryAction->setText(softkeyCancel);
 

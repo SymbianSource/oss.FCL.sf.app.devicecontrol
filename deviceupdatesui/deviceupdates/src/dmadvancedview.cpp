@@ -416,7 +416,7 @@ void DmAdvancedView::backButtonClicked()
 void DmAdvancedView::mainCalltoUpdateView()
 {   
     int IndicatorCount =6;
-    otherdetailsmodel = new QStandardItemModel(IndicatorCount,0);
+    otherdetailsmodel = new QStandardItemModel();
     TInt i=0;
     TRequestStatus status;
     QStringList liststr;
@@ -549,6 +549,31 @@ void DmAdvancedView::mainCalltoUpdateView()
     liststr << str;
     item->setData(liststr , Qt::DisplayRole);
     otherdetailsmodel->setItem(i++, item);
+	
+	    
+    TBuf<KSysUtilVersionTextLength> Langversion; 
+    TBuf<KSysUtilVersionTextLength> lversion;
+
+	    //lang variant version
+    Langversion.Zero();
+    if( SysUtil::GetLangSWVersion(Langversion ) == KErrNone )
+        {
+        int len = Langversion.Length();
+        TInt pos1 = Langversion.Find( KSmlEOL );
+        if( pos1 != KErrNotFound && len > pos1 )
+            {
+            lversion.Zero();
+            lversion.Append( Langversion.Left( pos1 ) );
+            }
+         str = QString::fromUtf16(lversion.Ptr(), lversion.Length());
+         item = new QStandardItem();
+         val = hbTrId("txt_device_update_dblist_language_variant_version");
+         liststr.clear();
+         liststr << val;
+         liststr << str;
+         item->setData(liststr , Qt::DisplayRole);
+         otherdetailsmodel->appendRow(item);
+        }
     
     otherdetailslist->setModel(otherdetailsmodel);
 		
