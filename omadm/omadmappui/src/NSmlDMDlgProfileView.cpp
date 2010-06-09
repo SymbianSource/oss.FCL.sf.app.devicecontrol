@@ -88,7 +88,6 @@ CNSmlDMDlgProfileView::CNSmlDMDlgProfileView( CNSmlDMSyncDocument* aDoc,
                                               iConnUtilResourceOffset(KErrNotFound)
 	{
 	FLOG( "[OMADM] CNSmlDMDlgProfileView::CNSmlDMDlgProfileView" );
-	
 	}
 
 // -----------------------------------------------------------------------------
@@ -126,8 +125,9 @@ CNSmlDMDlgProfileView::~CNSmlDMDlgProfileView()
 //
 TBool CNSmlDMDlgProfileView::OkToExitL( TInt aButtonId )
 	{
-	FLOG( "[OMADM] CNSmlDMDlgProfileView::OkToExitL:" );
-    
+	FLOG( "[OMADM] CNSmlDMDlgProfileView::OkToExitL:" );    
+	
+	
     if ( aButtonId == EAknSoftkeyChange )
         {
     	HandleOKL();
@@ -142,37 +142,48 @@ TBool CNSmlDMDlgProfileView::OkToExitL( TInt aButtonId )
 		TInt retValue = CheckMandatoryFieldsL();
 		if ( retValue != KErrNotFound ) 
 			{
-			if ( ShowConfirmationNoteL( R_NSML_SETTINGS_SAVE_ANYWAY ) )
-				{
-				if ( iEditMode == ESmlCopyProfile  )
-					{
-					iDoc->MoveIndexToProfile( iProfileId );
-			        // This deletes the source profile
-			        //iDoc->DeleteProfile( index );
-			        iDoc->AppEngine()->DeleteProfileL( iProfileId );
-			        iDoc->MoveIndexToProfile( iOldProfileId );
-					}
-				else if ( iEditMode == ESmlNewProfile )
-				    {
-				    iDoc->AppEngine()->DeleteProfileL( iProfileId );
-				    }
-				//For CP stored umcompleted message
-				else if ( iEditMode == ESmlEditProfile )
-				    {
-				    iDoc->AppEngine()->DeleteProfileL( iProfileId );
-				    iDoc->RefreshProfileListL();
-				    iDoc->MoveIndexToProfile( iProfileId );
-				    }
-				//For CP umcompleted message
-				saveProfile = EFalse;
-				}
-			else
-				{
-				closeDlg = EFalse;
-				iProfileListBox->SetCurrentItemIndexAndDraw( retValue );
-				saveProfile = EFalse;
-				}
+            if(CheckUniqueFieldsL()== ENSmlServerId )
+                {
+			    STATIC_CAST( CNSmlDMSyncAppUi*,
+			                     iEikonEnv->EikAppUi())->ShowResourceErrorNoteL(R_QTN_DM_CONF_SET_DUP_SERVER_ID );
+                closeDlg = EFalse;
+                iProfileListBox->SetCurrentItemIndexAndDraw( retValue );
+                saveProfile = EFalse;
+			    }			
+		  else if(ShowConfirmationNoteL( R_NSML_SETTINGS_SAVE_ANYWAY ))
+                {
+			    
+                if ( iEditMode == ESmlCopyProfile  )
+                    {
+                    iDoc->MoveIndexToProfile( iProfileId );
+                    // This deletes the source profile
+                    //iDoc->DeleteProfile( index );
+                    iDoc->AppEngine()->DeleteProfileL( iProfileId );
+                    iDoc->MoveIndexToProfile( iOldProfileId );
+                    }
+                else if ( iEditMode == ESmlNewProfile )
+                    {
+                    iDoc->AppEngine()->DeleteProfileL( iProfileId );
+                    }
+                //For CP stored umcompleted message
+                else if ( iEditMode == ESmlEditProfile )
+                    {
+                    iDoc->AppEngine()->DeleteProfileL( iProfileId );
+                    iDoc->RefreshProfileListL();
+                    iDoc->MoveIndexToProfile( iProfileId );
+                    }
+                //For CP umcompleted message
+                saveProfile = EFalse;
+                }
+            else
+                {
+                closeDlg = EFalse;
+                iProfileListBox->SetCurrentItemIndexAndDraw( retValue );
+                saveProfile = EFalse;
+                }
+              
 			}
+			
 		if ( saveProfile )
 			{
 			SaveProfileL();	
@@ -244,6 +255,10 @@ void CNSmlDMDlgProfileView::ProcessCommandL( TInt aCommandId )
 					{
 					iDoc->AppEngine()->DeleteProfileL( iProfileId );
 					}
+				else if ( iEditMode == ESmlNewProfile )
+                    {
+                    iDoc->AppEngine()->DeleteProfileL( iProfileId );
+                    }
 				}
 			TApaTaskList taskList(CEikonEnv::Static()->WsSession());
 	        TApaTask task1(taskList.FindApp( KFotaServerAppUid));
@@ -662,7 +677,7 @@ TInt CNSmlDMDlgProfileView::CheckUniqueFieldsL()
 			{
 			if ( iSyncAppEngine->ServerIdFoundL( item->Value()->Des(),
 			                                     iProfileId ) )
-				{		
+				{			    
 				returnValue = ENSmlServerId;
 				}
 			}

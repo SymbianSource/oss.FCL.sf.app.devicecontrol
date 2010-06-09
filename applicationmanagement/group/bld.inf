@@ -25,6 +25,7 @@ PRJ_EXPORTS
 //../rom/1020781c.txt /epoc32/RELEASE/winscw/UREL/z/private/10202be9/1020781c.txt
 
 ../rom/appmgmt.iby	CORE_APP_LAYER_IBY_EXPORT_PATH(appmgmt.iby)
+../rom/appmgmtresources.iby			LANGUAGE_MW_LAYER_IBY_EXPORT_PATH(appmgmtresources.iby)
 // Generic configuration interface for component cenrep settings  
 ../conf/application_management.confml                        APP_LAYER_CONFML(application_management.confml)
 ../conf/application_management_1020781C.crml 	        APP_LAYER_CRML(application_management_1020781C.crml)
