@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2006 Nokia Corporation and/or its subsidiary(-ies). 
+* Copyright (c) 2008 Nokia Corporation and/or its subsidiary(-ies). 
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -11,17 +11,22 @@
 *
 * Contributors:
 *
-* Description: Implementation of devicecontrol component
-* 	This is part of devicecontrol.
+* Description:   build info file for globalwlanadapter
 *
 */
 
-// Application layer
-// Device control ADO
-
-//Componets:
 
 
+#include <platform_paths.hrh>
 
-//omadmadapters
-#include "../omadmadapters/bld/bld.inf"
+PRJ_PLATFORMS
+DEFAULT
+
+PRJ_EXPORTS
+
+
+PRJ_MMPFILES
+./globalwlanadapter.mmp
+
+
+

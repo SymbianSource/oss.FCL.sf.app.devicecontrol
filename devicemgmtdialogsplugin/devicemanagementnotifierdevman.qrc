@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/xml">
+        <file>resources/dialog.docml</file>
+        <file>resources/dialoginformative.docml</file>
+        <file>resources/dialogserverpushconfirm.docml</file>
+        <file>resources/PIN.docml</file>
+    </qresource>
+    <qresource prefix="/devman_icon" >
+    	<file>resources/iconnotifier.svg</file>
+    </qresource>
+</RCC>

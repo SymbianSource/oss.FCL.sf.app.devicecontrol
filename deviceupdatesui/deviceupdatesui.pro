@@ -15,7 +15,7 @@
 #
 TEMPLATE = subdirs
 
-SUBDIRS  += deviceupdates  deviceupdatesplugin  deviceupdatesqtsp  cpqtsp devicemanagementnotifiersplugin
+SUBDIRS  += deviceupdates  deviceupdatesplugin  deviceupdatesqtsp   
 
 CONFIG += ordered
 
