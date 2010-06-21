@@ -52,9 +52,6 @@ CNSmlDMSyncDocument::~CNSmlDMSyncDocument()
     TInt err = RProperty::Delete(KPSUidNSmlDMSyncApp,KServerAlertType);
     FTRACE( FPrint(
             _L("CNSmlDMSyncDocument::~CNSmlDMSyncDocument KServerAlertType key deletion with error err = %d"),err ) );
-    err = RProperty::Delete(KPSUidNSmlDMSyncApp, KFotaDLStatus);
-    FTRACE( FPrint(
-            _L("CNSmlDMSyncDocument::~CNSmlDMSyncDocumentKFotaDLStatus key deletion with error err = %d"),err ) );
    //IAD****
    
    err = RProperty::Delete(KPSUidNSmlDMSyncApp, KDMIdle);         
@@ -151,15 +148,15 @@ FTRACE( FPrint(
 			_L("KDMIdle setting err = %d, err1 = %d"),err, err1 ) );			
 			  
 
-	err  = RProperty::Define( KPSUidNSmlDMSyncApp,
+	/*err  = RProperty::Define( KPSUidNSmlDMSyncApp,
 			KFotaDLStatus,
-			RProperty::EInt,KReadPolicy,KWritePolicy1); 
+			RProperty::EInt,KReadPolicy,KWritePolicy2); 
 	err1 =  RProperty::Set( KPSUidNSmlDMSyncApp,
-			KFotaDLStatus,KErrNotFound );   
+			KFotaDLStatus,KErrNotFound );  */ 
 
     FLOG( "[OMADM] CNSmlDMSyncDocument::ConstructL() completed" );
-	FTRACE( FPrint(
-			_L("KFotaDLStatus setting err = %d, err1 = %d"),err, err1 ) );
+	//FTRACE( FPrint(
+		//	_L("KFotaDLStatus setting err = %d, err1 = %d"),err, err1 ) );
 	err  = RProperty::Define( KPSUidNSmlDMSyncApp,
 			KDmJobCancel,
 			RProperty::EInt,KReadPolicy,KWritePolicy1); 

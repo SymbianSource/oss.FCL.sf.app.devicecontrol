@@ -334,6 +334,41 @@ void CApplicationManagementServer::DownloadCompleteL(
                     KSyncNotifier, EOwnerThread);
             User::LeaveIfError(r);
 
+            TBuf8<256> targetURI;
+
+            TDeploymentComponentState state = aComponent->State();
+
+            if (state == EDCSDownload)
+                {
+                targetURI.Append(KDownloadState);
+                targetURI.Append(aComponent->UserId());
+                }
+            else
+                if (state == EDCSDelivered)
+                    {
+                    targetURI.Append(KDeliveredState);
+                    targetURI.Append(aComponent->UserId());
+
+                    }
+                else
+                    if (state == EDCSActive|| state == EDCSInactive)
+                        {
+                        targetURI.Append(KDeployedState);
+                        targetURI.Append(aComponent->UserId());
+                        }
+
+						//Set Targeturi to cenrep
+		
+						CRepository* cenrep = NULL;
+  					TInt errr(KErrNone);
+	  				TRAP(errr, cenrep = CRepository::NewL( KCRUidDeviceManagementInternalKeys ));	  	
+	  				if(errr == KErrNone)
+	  				{
+    					errr = cenrep->Set( KNSmlDMSCOMOTargetRef, targetURI );    	
+    					delete cenrep;
+    					cenrep = NULL;
+    				}
+
             TInt err = counter.Set(KErrCancel);
             User::LeaveIfError(err);
             counter.Close();
@@ -2789,6 +2824,8 @@ void CApplicationManagementSession::DeactivateL(const RMessage2& aMessage) const
     RDEBUG_2( "ApplicationManagementSession: DeactivateL id is %d", id );
     CDeploymentComponent &compo = Server().Storage()->ComponentL(id);
     Server().Storage()->DeactivateL(compo);
+    
+    SetSCOMOTargetURI(compo.UserId());
     }
 
 // -------------------------------------------------------------------------------------------------------------------
@@ -2805,6 +2842,8 @@ void CApplicationManagementSession::ActivateL(const RMessage2& aMessage) const
     RDEBUG_2( "ApplicationManagementSession: ActivateL id is %d", id );
     CDeploymentComponent &compo = Server().Storage()->ComponentL(id);
     Server().Storage()->ActivateL(compo);
+    
+    SetSCOMOTargetURI(compo.UserId());
     }
 
 // -------------------------------------------------------------------------------------------------------------------
@@ -2822,6 +2861,36 @@ void CApplicationManagementSession::GetUserIdL(const RMessage2& aMessage) const
     CDeploymentComponent &compo = Server().Storage()->ComponentL(id);
 
     aMessage.Write( 1, compo.UserId() );
+    }
+
+void CApplicationManagementSession::SetSCOMOTargetURI(const TDesC8& aURI) const
+    {
+    _LIT8( KAMSeparator8, "/" );
+    _LIT8( KAMStateValueNodeName, "State" );
+    TBuf8<256> targetStateURI(KDeployedState);
+    
+    targetStateURI.Append(aURI);
+    
+    targetStateURI.Append(KAMSeparator8);
+    targetStateURI.Append(KAMStateValueNodeName);
+            
+    CRepository* cenrep = NULL;
+    TInt errr(KErrNone);
+
+    TRAP(errr, cenrep = CRepository::NewL( KCRUidDeviceManagementInternalKeys ));
+
+    if(errr == KErrNone)
+    {
+    errr = cenrep->Set(KNSmlDMSCOMOTargetRef, targetStateURI);
+    }
+    
+    if(cenrep)
+        {
+        delete cenrep;
+        cenrep = NULL;
+        }
+    
+   
     }
 
 // -------------------------------------------------------------------------------------------------------------------
@@ -2991,7 +3060,30 @@ void CApplicationManagementSession::InstallL(const RMessage2& aMessage) const
     CDeploymentComponent &compo = Server().Storage()->ComponentL(id);
     if (compo.State() == EDCSDelivered)
         {
-        Server().DoTheInstallL(compo) ;
+        TInt err(KErrNone);
+	  		TRAP(err, Server().DoTheInstallL(compo)) ;
+        TBuf8<256> targetURI;
+        TDeploymentComponentState state = compo.State();
+        if( state == EDCSDelivered)
+        	{
+        			targetURI.Append(KDeliveredState);
+              targetURI.Append(compo.UserId());
+          }
+          else if (state == EDCSActive|| state == EDCSInactive)
+          {
+          		targetURI.Append(KDeployedState);
+              targetURI.Append(compo.UserId());  
+        	} 
+        	
+        	//Set Targeturi to cenrep
+        	CRepository* cenrep = NULL;
+	  			TRAP(err, cenrep = CRepository::NewL( KCRUidDeviceManagementInternalKeys ));
+	  			if(err == KErrNone)
+	  			{		  				
+    				err = cenrep->Set( KNSmlDMSCOMOTargetRef, targetURI );    				
+    				delete cenrep;
+    				cenrep = NULL;
+    			} 
         }
     else
         {
@@ -3654,7 +3746,7 @@ void CApplicationManagementSession::StateChangeComponentIdsCountL(
         const RMessage2& aMessage) const
     {
     RDEBUG( "CApplicationManagementSession: StateChangeComponentIdsCountL" );
-                RPointerArray<TPreInstalledAppParams> preInstalledAppParams;
+               RPointerArray<TPreInstalledAppParams> preInstalledAppParams;
                 CAMPreInstallApp* preInstallApp = CAMPreInstallApp::NewL();
                 preInstallApp->GetPreInstalledAppsL(preInstalledAppParams);
                 TInt count = 0;

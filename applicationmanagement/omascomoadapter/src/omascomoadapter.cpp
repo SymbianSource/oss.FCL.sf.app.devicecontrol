@@ -957,14 +957,14 @@ void CSCOMOAdapter::SendPendingGenericAlertL()
     		HBufC8 *data = HBufC8::NewL(1024);
             
             TPtr8 ptr = data->Des();
-            ptr.Append(KDataStart);
+            //ptr.Append(KDataStart);
             ptr.Append(KResultCodeStart);
             ptr.Append(dataresult);
             ptr.Append(KResultCodeEnd);
             ptr.Append(KIdentifierStart);
             ptr.Append(mapping);
             ptr.Append(KIdentifierEnd);
-            ptr.Append(KDataEnd);
+            //ptr.Append(KDataEnd);
 
             HBufC8 *sourceuri = genericalerts[i]->iSourceURI;
     		

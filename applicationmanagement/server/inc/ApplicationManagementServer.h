@@ -434,6 +434,8 @@ private:
         void GenericAlertSentForIdL(const RMessage2& aMessage) const;
 
         void CheckStatusNodesValuesL();
+        
+        void SetSCOMOTargetURI(const TDesC8& aURI) const;
 
 private:
         void LookupSisRegistryL();

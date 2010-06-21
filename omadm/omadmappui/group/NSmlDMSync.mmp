@@ -26,7 +26,10 @@ TARGETTYPE      exe
 UID             0x100039CE  0x101F6DE5
 EPOCSTACKSIZE   0x5000
 
+/*#if 0
 CAPABILITY      CAP_APPLICATION
+#endif*/
+CAPABILITY      DiskAdmin LocalServices Location NetworkServices ReadDeviceData ReadUserData SwEvent UserEnvironment WriteDeviceData WriteUserData
 VENDORID        VID_DEFAULT
 
 

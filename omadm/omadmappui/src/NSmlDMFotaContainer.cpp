@@ -161,7 +161,7 @@ TKeyResponse CNSmlDMFotaContainer::OfferKeyEventL( const TKeyEvent& aKeyEvent,
 			{
 			FLOG( "[OMADM]\t entered in to first if loop of keys" );
 			TBool value (EFalse);
-			TInt err = RProperty::Get( KPSUidNSmlDMSyncApp, KFotaDLStatus, value );
+			TInt err = RProperty::Get( KFotaServerAppUid, KFotaDLStatus, value );
 			if (!err && value == 1)
 				{
 				FLOG( "[OMADM]\t Ongoing Fota operation identified." );

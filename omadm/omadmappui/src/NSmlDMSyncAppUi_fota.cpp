@@ -45,8 +45,6 @@
 #include <csxhelp/dm.hlp.hrh>
 
 #include <aknmessagequerydialog.h>     // For CAknMessageQueryDialog
-
-#include <fotaConst.h>
 // For KCalenHoursInDay = 24 and other time-related constants.
 #include <calenconstants.h>           
 
@@ -243,7 +241,7 @@ void CNSmlDMSyncAppUi::HandleCommandL( TInt aCommand )
             TInt r1=RProperty::Set(KPSUidNSmlDMSyncApp,KNSmlDMSyncUiLaunchKey,value);
 	        
         	TBool val (EFalse);
-        	TInt err = RProperty::Get(TUid::Uid(KOmaDMAppUid), KFotaDownloadActive, val );
+        	TInt err = RProperty::Get(KFotaServerAppUid, KFotaDLStatus, val );
         		if(val == 1)
         			{
         			TApaTaskList taskList(CEikonEnv::Static()->WsSession());
@@ -823,7 +821,7 @@ void CNSmlDMSyncAppUi::CheckFotaDlL()
 		{
 		//When Download is going on
 	    TInt value = KErrNotFound, err = KErrNotFound;
-	    err = RProperty::Get(KPSUidNSmlDMSyncApp,KFotaDLStatus,value);
+	    err = RProperty::Get(KFotaServerAppUid,KFotaDLStatus,value);
 	    FTRACE( FPrint( _L("[OMADM]\t CNSmlDMSyncAppUi::CheckFotaDl() \
 	    KFotaDLStatus val = %d & err = %d"),
 	    value,err ) );

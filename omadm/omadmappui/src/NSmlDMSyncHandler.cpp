@@ -527,7 +527,7 @@ void CNSmlDMSyncHandler::OnSyncMLSessionEvent( TEvent aEvent,
     	    
     	 
     	TInt value =EFalse; 
-    	TInt r=RProperty::Get( KPSUidNSmlDMSyncApp, KFotaDLStatus, value );	  
+    	TInt r=RProperty::Get( KFotaServerAppUid, KFotaDLStatus, value );	  
     	FTRACE( FPrint(
 					_L("KFotaDLStatus = %d"),r ) );  
 					
