@@ -13,7 +13,7 @@
 # Contributors:
 #
 # Description: 
-#     Pro file of devicemanagementnotifiersplugin
+#     Pro file of devicemgmtdialogsplugin
 #
 #
 
@@ -23,6 +23,7 @@ CONFIG += hb \
           plugin        
 INCLUDEPATH += .
 DEPENDPATH += .
+INCLUDEPATH += $$APP_LAYER_SYSTEMINCLUDE
 
 DESTDIR = $${HB_BUILD_DIR}/plugins/devicedialogs
 
@@ -54,6 +55,10 @@ symbian: {
     pluginstub.path = /resource/plugins/devicedialogs
     DEPLOYMENT += pluginstub
     MMP_RULES += "LIBRARY syncmlclientapi.lib centralrepository.lib flogger.lib"
+    
+    BLD_INF_RULES.prj_exports += \
+  	"$${LITERAL_HASH}include <platform_paths.hrh>" \
+  	"rom/devicemgmtdialogsplugin.iby             CORE_APP_LAYER_IBY_EXPORT_PATH(devicemgmtdialogsplugin.iby)"
 }
 !local {
     target.path = $${HB_PLUGINS_DIR}/devicedialogs
