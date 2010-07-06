@@ -22,9 +22,11 @@
 #include <hbinputeditorinterface.h>
 #include <qgraphicslinearlayout.h>
 #include <hblabel.h>
+#include <hbabstractitemview.h>
+#include <hbdataformmodel.h>
 
 SettingsDataFormCustomItem::SettingsDataFormCustomItem(QGraphicsItem *parent) :
-HbDataFormViewItem(parent)
+HbDataFormViewItem(parent),mLineEdit(NULL)
 {
 }
 
@@ -45,9 +47,8 @@ HbWidget* SettingsDataFormCustomItem::createCustomWidget()
     switch (itemType)
     {
       case HbDataFormModelItem::CustomItemBase :
-            {             
-            HbLineEdit* mLineEdit = new HbLineEdit();
-            mLineEdit->setText(QString("8080"));
+            {            
+            mLineEdit = new HbLineEdit();            
             HbEditorInterface editorInterface(mLineEdit);
             editorInterface.setMode(HbInputModeNumeric); 
             editorInterface.setInputConstraints(HbEditorConstraintFixedInputMode);            
@@ -62,4 +63,19 @@ HbWidget* SettingsDataFormCustomItem::createCustomWidget()
  {
      int itemType = aIndex.data(HbDataFormModelItem::ItemTypeRole).toInt();
      return itemType == HbDataFormModelItem::CustomItemBase;
+ }
+
+ void SettingsDataFormCustomItem::restore()
+  {  
+     HbDataFormViewItem::restore();    
+     HbDataFormModelItem::DataItemType itemType = static_cast<HbDataFormModelItem::DataItemType>(
+         modelIndex().data(HbDataFormModelItem::ItemTypeRole).toInt());
+     if( itemType == HbDataFormModelItem::CustomItemBase  ) {
+         QModelIndex itemIndex = modelIndex();
+         HbDataFormModelItem *modelItem = static_cast<HbDataFormModelItem*>(
+         static_cast<HbDataFormModel*>(itemView()->model())->itemFromIndex(itemIndex));
+         QString port = modelItem->contentWidgetData("text").toString();         
+         qDebug("port is %d",port.toInt());        
+         mLineEdit->setText(port);        
+     }     
  }

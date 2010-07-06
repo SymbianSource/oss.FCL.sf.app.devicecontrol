@@ -60,24 +60,26 @@ syncmlnotifier(devicemanagementnotifierwidget* ptr);
 virtual ~syncmlnotifier();
 public:
      void launchDialog(const QVariantMap &parameters);
-     void createserverinitnotifier(int profileid, int uimode,QString& servername);
+     void createserverinitnotifier(int& profileid, int& uimode,QString& servername,
+             bool& defaultprofile, int& timeout);
      void createserveralertinformative(const QString &string);
      void createserveralertconfirmative(const QString &string);
-
+     void createscomonotifier(QString notifiertype, QString name=NULL,QString size=NULL, QString format=NULL);
 public slots:
     void okSelected();
     void cancelSelected(); 
     void infoNoteOkSelected();
     void conirmNoteOkSelected();
     void conirmNoteCancelSelected();
-      
+    void noteTimedOut(HbAction* action);  
 
 signals:
     void servertextmessage(const QString &string);
  
 private:
   syncmlnotifierprivate* msymnotifier;
- devicemanagementnotifierwidget* iPtr;
+  devicemanagementnotifierwidget* iPtr;
+  bool mDefaultServerPkgZero;
 
 };
     

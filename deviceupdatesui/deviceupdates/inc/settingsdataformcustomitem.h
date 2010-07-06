@@ -21,6 +21,7 @@
 
 #include <hbdataformviewitem.h>
 
+class HbLineEdit;
 class SettingsDataFormCustomItem : public HbDataFormViewItem
 {
 Q_OBJECT
@@ -34,6 +35,12 @@ public:
 
 protected:
     virtual HbWidget* createCustomWidget();
+    
+public slots:
+virtual void restore();
+
+private:
+HbLineEdit* mLineEdit;
 };
 
 #endif // SETTINGS_DATAFORM_CUSTOMITEM_H

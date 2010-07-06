@@ -483,6 +483,15 @@ void DmInfo::synchronize(int& itemnum)
     if(error == KErrNone)   {}             
     }
 
+void DmInfo::sync(int aProfileId)
+    {
+    int itemNum = findProfile(aProfileId);
+    if(itemNum!=KErrNotFound)
+        {
+        synchronize(itemNum);
+        }
+    }
+
 void DmInfo::synccomplete(int jobstatus)
     {
     if (jobstatus == ENSmlSyncComplete)
@@ -491,7 +500,10 @@ void DmInfo::synccomplete(int jobstatus)
         //Update profile list
         refreshProfileList();
         }
-    serversView->syncCompleted(jobstatus);
+    if(serversView!=NULL)
+        {
+        serversView->syncCompleted(jobstatus);
+        }
     iDbEventsBlocked = EFalse;
     }
 
@@ -543,3 +555,14 @@ void DmInfo::DisableDbNotifications(TBool aEvent)
     FLOG( "[OMADM] DmInfo::DisableDbNotifications() completed" );
     }
 
+TInt DmInfo::findProfile(TInt aProfileId)
+    {
+    for(TInt i=0;i<iProfileList->Count();i++)
+        {
+        if(iProfileList->At(i).iProfileId == aProfileId)
+            {
+            return i;
+            }
+        }
+    return KErrNotFound;
+    }

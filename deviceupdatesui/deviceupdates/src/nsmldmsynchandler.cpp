@@ -29,6 +29,7 @@
 #include "nsmldmsynchandler.h"
 #include "nsmldmsyncdebug.h"
 #include "nsmldmsyncinternalpskeys.h"
+#include "nsmldmsyncprivatecrkeys.h"
 
 // -----------------------------------------------------------------------------
 // CNSmlDMSyncHandler::NewL
@@ -64,6 +65,12 @@ CNSmlDMSyncHandler::~CNSmlDMSyncHandler()
 	    TRAP_IGNORE( iSyncJob.StopL() );
         iSyncJob.Close();
 	    }
+	if(iPrimaryAction)
+	    iPrimaryAction->deleteLater();
+	
+	if(iDialog)
+	    iDialog->deleteLater();
+	
 	  FeatureManager::UnInitializeLib();
 	FLOG( "CNSmlDMSyncHandler::~CNSmlDMSyncHandler() completed" );
     }
@@ -226,6 +233,53 @@ void CNSmlDMSyncHandler::SynchronizeCompletedL( TInt aError )
 	iSyncRunning = EFalse;
 	iSyncError = aError;    
     iCheckUpdate = EFalse;        	
+
+#ifndef NO_UPDATE 
+        CRepository* centrep = NULL;
+        TRAPD( err, centrep = CRepository::NewL( KCRUidNSmlDMSyncApp ) );
+	TInt profileId;
+	centrep->Get( KNSmlDMDefaultFotaProfileKey, profileId );
+	//FLOG( "CNSmlDMSyncHandler::SynchronizeCompletedL profileId = %d", profileId );
+	delete centrep;
+	if ( profileId ==  iProfileId )
+        {
+        
+	//FLOG( "CNSmlDMSyncHandler::SynchronizeCompletedL - connected witrh default profile ID" );
+        TInt configFlags( 0 );
+        //TInt SetGenValue(0);
+        TRAPD( err, centrep = CRepository::NewL( KCRUidDeviceManagementInternalKeys ) );
+        if ( centrep )
+            {
+
+	  //  FLOG( "CNSmlDMSyncHandler::SynchronizeCompletedL Centrep is defined" );
+	       if( err == KErrNone )
+        	{
+	        centrep->Get( KDevManSessionType, configFlags );
+	    //	FLOG( "CNSmlDMSyncHandler::SynchronizeCompletedL DevManSessiontype = %d", configFlags );
+             	}
+	       centrep->Set( KDevManSessionType, 0 );
+	    	//FLOG( "CNSmlDMSyncHandler::SynchronizeCompletedL KDevManSessionType getting reset" );
+	        delete centrep;
+            } 
+        // configFlags=2 for FOTA Package not downloaded case ,1- successful download
+        if ( (aError == KErrNone) 
+        			&& configFlags == 2 )
+            {
+            //FLOG( "[OMADM]\t CNSmlDMSyncHandler::SynchronizeCompletedL(): No changes in FW Update states." );
+        iDialog = new HbDialog();
+        iDialog->setHeadingWidget(new HbLabel(hbTrId("txt_device_update_title_phone_uptodate")));
+        iDialog->setContentWidget(new HbLabel(hbTrId("txt_device_update_dpopinfo_your_phone_is_already_u")));
+        iPrimaryAction = new HbAction();
+        iPrimaryAction->setText(hbTrId("OK"));
+	    iDialog->setPrimaryAction(iPrimaryAction);
+	    iDialog->setTimeout(HbPopup::NoTimeout);
+	    iDialog->setDismissPolicy(HbPopup::NoDismiss);
+	    iDialog->show();
+            // show the dialog
+            }
+
+        }  
+#endif
 
 	iUseFotaProgressNote = EFalse;
     iSyncJob.Close();

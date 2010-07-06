@@ -22,6 +22,7 @@
 #include "devicemanagementnotifierplugin_p.h"
 #include "devicemanagementnotifierwidget_p.h"
 #include "omacppinquerydialog.h"
+#include "fotadevicedialogs.h"
 
 
 Q_EXPORT_PLUGIN2(devicemanagementnotifiersplugin, devicemanagementnotifierplugin)
@@ -87,6 +88,12 @@ HbDeviceDialogInterface *devicemanagementnotifierplugin::createDeviceDialog(
             {
             // Return specific object for showing appropriate dialog
             return new omacppinquerydialog(parameters);
+            }
+           
+        if (dialogtype >= EFwDLNeedMoreMemory && dialogtype <= EFwUpdResumeUpdate)
+            {
+            // Return specific object for showing appropriate dialog
+            return new fotadevicedialogs(parameters);
             }
 
         }

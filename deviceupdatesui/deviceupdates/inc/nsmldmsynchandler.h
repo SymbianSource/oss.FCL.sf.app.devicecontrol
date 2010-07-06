@@ -27,6 +27,9 @@
 #include "nsmldmsyncutil.h"
 #include "nsmldmsyncprofile.h"
 #include "nsmldmsyncappengine.h"
+#include <hbdialog.h>
+#include <hblabel.h>
+#include <hbaction.h>
 // FORWARD DECLARATIONS
 class CNSmlDMSyncState;
 class CNSmlDMActiveCaller;
@@ -280,6 +283,10 @@ NONSHARABLE_CLASS (CNSmlDMSyncHandler) : public CBase,
         
         // Identifies Fota progress note launched or not
         TBool iFotaProgressLaunched;
+        
+        HbDialog * iDialog;
+        
+        HbAction * iPrimaryAction;
 	};
 
 #endif  // NSMLDMSYNCHANDLER_H

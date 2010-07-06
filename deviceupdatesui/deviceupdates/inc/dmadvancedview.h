@@ -67,13 +67,14 @@
 #define PORTRAIT "portrait"
 
 const TInt KWlanMacAddrLength = 100;
-const TInt KBTAddrLength = 64; 
+const TInt KBTAddrLength = 64;
+class DMFotaView;
 class DmAdvancedView : public HbView
 {
     Q_OBJECT
 
 public:
-    explicit DmAdvancedView(HbMainWindow *mainWindow, HbView *mainView, QGraphicsItem *parent=0);
+    explicit DmAdvancedView(HbMainWindow *mainWindow, DMFotaView *mainView,DmInfo *info=NULL, QGraphicsItem *parent=0);
     virtual ~DmAdvancedView();   
     bool displayItems();
     void saveProfile(QStringList& itemdata, bool& sessmode, QString& currap,unsigned int& portnum, bool& nauth );
@@ -84,7 +85,8 @@ public:
     void NetworkBand(RMobilePhone::TMobilePhoneNetworkBandInfo val, QString& string); 
     void NetworkCiphering(RMobilePhone::TMobilePhoneNetworkSecurity val, QString& string);  
     void mainCalltoUpdateView();
-    
+    void addVersionInfo();
+    void addOtherDetails();
 private:
     void updateEarlierdefaultProfileIcon();
     void updateListview();
@@ -115,9 +117,8 @@ private:
     HbPushButton* newserverprofile;
     int count;
     QTranslator *translator;
-    DmInfo* dminfo;
     QStandardItemModel *model;
-    QStandardItemModel *otherdetailsmodel;
+    QStandardItemModel *m_otherdetailsmodel;
     int currentdefaultprofile;
     bool connectionRequested;
     bool backbehaviorset;
@@ -128,7 +129,8 @@ private:
     ServerSettingsView* serverSetView;
     HbAnchorLayout* layout;
     int currentview;
-    HbView* iMainView;
+    //HbView* iMainView;
+    DMFotaView* iMainView;
     HbAction* backaction;
     RMobilePhone imobPhone;
     RTelServer iServer;
@@ -138,6 +140,8 @@ private:
 	//This item should not be deleted,it just refer an item and deletion
 	//will be taken care by List view
 	QStandardItem *modelItem;
+public:
+    DmInfo* dminfo;
 };
 
 #endif // DMADVANCEDVIEW_H

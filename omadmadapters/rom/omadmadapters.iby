@@ -56,8 +56,8 @@ ECOM_PLUGIN(nsmldmmmsadapter.dll,nsmldmmmsadapter.rsc)
 #endif // __SYNCML_DM_MMS
 
 #ifdef __SYNCML_DM_FOTA // SyncML device management Firmware update plug-in
-REM ECOM_PLUGIN(nsmldmfotaadapter.dll,nsmldmfotaadapter.rsc)
-REM data=ABI_DIR\BUILD_DIR\z\private\100012a5\policy\101F9A02.SPD		private\100012a5\policy\101F9A02.SPD
+ECOM_PLUGIN(nsmldmfotaadapter.dll,nsmldmfotaadapter.rsc)
+data=ABI_DIR\BUILD_DIR\z\private\100012a5\policy\101F9A02.SPD		private\100012a5\policy\101F9A02.SPD
 #endif // __SYNCML_DM_FOTA
 
 
@@ -65,7 +65,7 @@ REM data=ABI_DIR\BUILD_DIR\z\private\100012a5\policy\101F9A02.SPD		private\10001
 // old internet adapter is not used in that case for access point provisioning.
 ECOM_PLUGIN(connmoadapter.dll,connmoadapter.rsc)
 #else
-REM ECOM_PLUGIN(nsmlinternetadapter.dll,nsmlinternetadapter.rsc)
+ECOM_PLUGIN(nsmlinternetadapter.dll,nsmlinternetadapter.rsc)
 #endif FF_DM_CONNMO_ADAPTER
 
 #ifdef __SYNCML_DM_WLAN 
@@ -79,7 +79,7 @@ ECOM_PLUGIN( nsmldmalwaysonadapter.dll, nsmldmalwaysonadapter.rsc )
 ECOM_PLUGIN( nsmldmbmadapter.dll, nsmldmbmadapter.rsc )
 
 #ifdef FF_RUNTIME_DEVICE_CAPABILITY_CONFIGURATION
-REM ECOM_PLUGIN(dcmodmadapter.dll,dcmodmadapter.rsc)
+ECOM_PLUGIN(dcmodmadapter.dll,dcmodmadapter.rsc)
 #endif
 
 #endif //__SYNCML_DM

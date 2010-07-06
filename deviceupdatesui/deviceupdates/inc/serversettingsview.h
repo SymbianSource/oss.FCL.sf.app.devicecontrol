@@ -53,6 +53,7 @@ public slots:
     void backButtonClicked();
     void checkServerIdvalue();    
     void accessPointItemChanged(int apindex);
+    void portItemChanged(QString port);
 
 public:    
     HbMainWindow *iMainWindow;        
@@ -78,7 +79,8 @@ public:
     SettingsDataFormCustomItem* customPrototype;
     int currentiapindex;
     QStringList apnameslist;
-    bool backbehaviorset;    
+    bool backbehaviorset; 
+    unsigned int iPort;
 };
 
 #endif /* SERVERSETTINGSVIEW_H_ */

@@ -17,22 +17,30 @@
 */
 #include <hbnamespace.h>
 #include "dmadvancedview.h"
+#include "dmfotaview.h"
 #include "serversettingsview.h"
 
-DmAdvancedView::DmAdvancedView(HbMainWindow *mainWindow, HbView *mainView, QGraphicsItem *parent):HbView(parent),
+DmAdvancedView::DmAdvancedView(HbMainWindow *mainWindow,DMFotaView *mainView, DmInfo *info, QGraphicsItem *parent):HbView(parent),
     bluetooth(":/icons/qgn_prop_sml_bt.svg"),
     internet(":/icons/qgn_prop_sml_http.svg"), 
     defaultprofileicon(":/icons/qtg_large_avatar.svg")                
     {
+    qDebug("omadm DeviceManagerUi::DmAdvancedView >>");
     iMainWindow = mainWindow;
     serverSetView = NULL;
     iMainView = mainView;
-    dminfo = new DmInfo(this);
+    if(info==NULL)
+        {
+        dminfo = new DmInfo(this);
+        }
+    else 
+        dminfo = info;
     currentdefaultprofile = -1;
     currentview = 0;
     connectionRequested = false;    
     backbehaviorset = false;
     currentselecteditem = -1;
+    qDebug("omadm DeviceManagerUi::DmAdvancedView >>");
     }
 
 DmAdvancedView::~DmAdvancedView()
@@ -47,7 +55,8 @@ DmAdvancedView::~DmAdvancedView()
 
 void DmAdvancedView::handleLongPress(HbAbstractViewItem* item , QPointF coOrdinates)
     {
-    if (connectionRequested)
+    qDebug("omadm DeviceManagerUi::handleLongPress >>");
+    if(connectionRequested)
         return;
     if (item)
         {
@@ -80,11 +89,13 @@ void DmAdvancedView::handleLongPress(HbAbstractViewItem* item , QPointF coOrdina
         csmenu->setPreferredPos(coOrdinates);
         csmenu->open();
         }
+    qDebug("omadm DeviceManagerUi::handleLongPress >>");
     }
 
 
 void DmAdvancedView::handleClicked(QModelIndex index)
     {
+    qDebug("omadm DeviceManagerUi::handleClicked >>");
     if(connectionRequested)
         return;
     //Stop listening DB events for profile addition
@@ -117,10 +128,12 @@ void DmAdvancedView::handleClicked(QModelIndex index)
         iMainWindow->setCurrentView(serverSetView);
   
         }
+    qDebug("omadm DeviceManagerUi::handleClicked >>");
     }
 
 bool DmAdvancedView::displayItems()
     {    	
+    qDebug("omadm DeviceManagerUi::displayItems >>");
     docmlLoader = new HbDocumentLoader;
     bool ok ;    
     docmlLoader->load( DOCML_FILE_NAME,  &ok  );
@@ -233,11 +246,13 @@ bool DmAdvancedView::displayItems()
         {
         qDebug("omadm docml section loading failed");
         }    
+    qDebug("omadm DeviceManagerUi::displayItems >>");
     return ok;
     }
 
 void DmAdvancedView::updateEarlierdefaultProfileIcon()
     {
+    qDebug("omadm DeviceManagerUi::updateEarlierdefaultProfileIcon >>");
     if(currentdefaultprofile >= 0)
         {
         QStandardItem *earlierDefaultProfile = model->item(currentdefaultprofile);
@@ -253,10 +268,12 @@ void DmAdvancedView::updateEarlierdefaultProfileIcon()
             earlierDefaultProfile->setIcon(bluetooth);
             }        
         }
+    qDebug("omadm DeviceManagerUi::updateEarlierdefaultProfileIcon >>");
     }
 
 void DmAdvancedView::createNewProfile()
     {
+    qDebug("omadm DeviceManagerUi::createNewProfile >>");
     if(dminfo->createNewprofile())
         {
         //Open server settings view    
@@ -286,18 +303,22 @@ void DmAdvancedView::createNewProfile()
         {
         qDebug("OMADM New server profile creation failed");
         }
+    qDebug("omadm DeviceManagerUi::createNewProfile >>");
     }
 
 void DmAdvancedView::saveProfile(QStringList& itemdata, bool& sessmode, QString& currap,unsigned int& portnum, bool& nauth )
     {
+    qDebug("omadm DeviceManagerUi::saveProfile >>");
     dminfo->DisableDbNotifications(true);
     dminfo->saveProfile(itemdata,sessmode,currap,portnum,nauth);
     updateListview();
     dminfo->DisableDbNotifications(false);
+    qDebug("omadm DeviceManagerUi::saveProfile >>");
     }
 
 void DmAdvancedView::updateListview()
     {
+    qDebug("omadm DeviceManagerUi::updateListview >>");
     model->clear();
     int IndicatorCount =dminfo->profilescount();    
     for (int i = 0; IndicatorCount > 0 && i < IndicatorCount; ++i) {    
@@ -342,34 +363,41 @@ void DmAdvancedView::updateListview()
     model->setItem(i, item);    
     }    
     model->sort(0);
+    qDebug("omadm DeviceManagerUi::updateListview >>");
     }
 
 void DmAdvancedView::serversListGroupClicked(bool state)
     {
+    qDebug("omadm DeviceManagerUi::serversListGroupClicked >>");
     Q_UNUSED(state);
     if(serversListGroup->isCollapsed())
         otherDetailsGroup->setCollapsed(false);
     else
         otherDetailsGroup->setCollapsed(true);
+    qDebug("omadm DeviceManagerUi::serversListGroupClicked >>");
     }
 
 void DmAdvancedView::otherDetailsGroupClicked(bool state)
     {
+    qDebug("omadm DeviceManagerUi::otherDetailsGroupClicked >>");
     Q_UNUSED(state);
     if(otherDetailsGroup->isCollapsed())
         serversListGroup->setCollapsed(false);
     else
         serversListGroup->setCollapsed(true);
+    qDebug("omadm DeviceManagerUi::otherDetailsGroupClicked >>");
     }
 
 bool DmAdvancedView::checkServerId(QString& serverid)
     {
+    qDebug("omadm DeviceManagerUi::CheckforUpdate >>");
     return dminfo->checksrvid(serverid);
+    qDebug("omadm DeviceManagerUi::CheckforUpdate >>");
     }
 
 void DmAdvancedView::reLayout(Qt::Orientation orientation)
-    {
-    qDebug("OMADM servers view DmAdvancedView::reLayout");
+    {   
+    qDebug("OMADM servers view DmAdvancedView::reLayout <<");
     if(orientation == Qt::Horizontal)
         {
         qDebug("OMADM servers view landscape");
@@ -381,12 +409,12 @@ void DmAdvancedView::reLayout(Qt::Orientation orientation)
         bool ok;
         docmlLoader->load( DOCML_FILE_NAME,  PORTRAIT, &ok  );
         }
-    
-    
+    qDebug("OMADM servers view DmAdvancedView::reLayout >>");
     }
 
 void DmAdvancedView::setBackBehavior()
     {
+    qDebug("OMADM servers view DmAdvancedView::setBackBehavior <<");
     if (!backbehaviorset)
         {
         qDebug("OMADM servers view back behavior setting");
@@ -396,11 +424,12 @@ void DmAdvancedView::setBackBehavior()
         setNavigationAction(backaction);
         backbehaviorset = true;
         }
-    qDebug("OMADM servers view back behavior setting done");
+    qDebug("OMADM servers view back behavior setting done setBackBehavior >>");
     }
 
 void DmAdvancedView::backButtonClicked()
     {    
+    qDebug("OMADM servers view DmAdvancedView::backButtonClicked <<");
     QList <HbView*> views = iMainWindow->views();    
     if(iMainWindow->orientation()==Qt::Vertical)
             {
@@ -410,151 +439,374 @@ void DmAdvancedView::backButtonClicked()
             {
             iMainWindow->setCurrentView(views[1]);
             }    
+    qDebug("OMADM servers view DmAdvancedView::backButtonClicked >>");
     }
 
-
-void DmAdvancedView::mainCalltoUpdateView()
-{   
-    int IndicatorCount =6;
-    otherdetailsmodel = new QStandardItemModel();
-    TInt i=0;
-    TRequestStatus status;
+void DmAdvancedView::addVersionInfo()
+    {
+    qDebug("OMADM servers view DmAdvancedView::addVersionInfo <<");
     QStringList liststr;
     QStandardItem* item;
     QString val;
     QString str;
-    
-    iServer.Connect();
-    iServer.GetPhoneInfo(0, info);
-    imobPhone.Open(iServer, info.iName);
-    //Bands supported
-    
-    RMobilePhone::TMobilePhoneNetworkInfoV1 nwInfov1;
-    RMobilePhone::TMobilePhoneNetworkInfoV1Pckg nwInfov1Pckg(nwInfov1);						
-    imobPhone.GetCurrentNetwork(status, nwInfov1Pckg);
-    User::WaitForRequest( status );
-    status = KRequestPending;
-    nwInfov1 = nwInfov1Pckg();
-    NetworkBand(nwInfov1.iBandInfo, str);
-    item = new QStandardItem();
-    val = hbTrId("txt_device_update_dblist_gsm_bands");
-    liststr << val;
-    liststr << str;
-    item->setData(liststr , Qt::DisplayRole);
-    otherdetailsmodel->setItem(i++, item);
-    
-    //Packet Service
-    
-    TInt packetsrvc =0;
-    RMobilePhone::TMobilePhoneNetworkInfoV5 nwInfov5;
-    RMobilePhone::TMobilePhoneNetworkInfoV5Pckg nwInfov5Pckg(nwInfov5);
-    imobPhone.GetCurrentNetwork( status, nwInfov5Pckg );
-    User::WaitForRequest( status );
-    status = KRequestPending;
-    nwInfov5 = nwInfov5Pckg();
-    
-    if(nwInfov5.iHsdpaAvailableIndicator) packetsrvc =1;
-    
-    if(nwInfov5.iEgprsAvailableIndicator) packetsrvc =2;
-    
-    if(!packetsrvc)
+    TInt runtimesupport(0);
+        CRepository* cenrep = NULL;
+        TRAPD( error, cenrep = CRepository::NewL( KCRUidNSmlDMSyncApp ) );  
+        if(error)
+           {     
+           FLOG( "[OMADM] CNSmlDMFotaContainer::FormatListboxL() cenrep problem" );
+           }    
+        if ( cenrep )
+           {
+           cenrep->Get( KNsmlDmRuntimeVerSupport, runtimesupport );
+           delete cenrep; cenrep = NULL;
+           }
+        //Browser version
+        Swi::RSisRegistrySession sisses ;
+        TInt r( sisses.Connect() );
+        CleanupClosePushL( sisses );
+        if (r== KErrNone && runtimesupport)
+            {           
+             Swi::RSisRegistryEntry sientry;
+             TInt oerr = sientry.Open(sisses, browseruid);
+             TVersion bversion;
+             TBuf <255> browserversion;
+             if(oerr == KErrNone)
+                 {
+                 TRAPD(err2,bversion= sientry.VersionL());     
+                 if (err2 == KErrNone)
+                     {
+                     browserversion.AppendNum(bversion.iMajor);
+                     browserversion.Append(_L("."));
+                     browserversion.AppendNum(bversion.iMinor);
+                     if( browserversion.Length()>0 )
+                         {                                
+                         str = QString::fromUtf16(browserversion.Ptr(), browserversion.Length());
+                         item = new QStandardItem();
+                         val = hbTrId("txt_device_update_dblist_browser_version");
+                         liststr.clear();
+                         liststr << val;
+                         liststr << str;
+                         item->setData(liststr , Qt::DisplayRole);
+                         //m_otherdetailsmodel->setItem(i++, item);
+                         m_otherdetailsmodel->appendRow(item);
+                         }
+                     }
+                 }
+            }
+        
+        //flash version
+        if (r== KErrNone&& runtimesupport)
+            {           
+              Swi::RSisRegistryEntry sientry;
+              TInt oerr = sientry.Open(sisses, flashuid);
+              TVersion fversion;
+              TBuf <255> flashversion;
+              if(oerr == KErrNone)
+                  {
+                  TRAPD(err2,fversion= sientry.VersionL());         
+                  if (err2 == KErrNone)
+                      {
+                      flashversion.AppendNum(fversion.iMajor);
+                      flashversion.Append(_L("."));
+                      flashversion.AppendNum(fversion.iMinor); 
+                      if( flashversion.Length()>0 )
+                          {                               
+                          str = QString::fromUtf16(flashversion.Ptr(), flashversion.Length());
+                          item = new QStandardItem();
+                          val = hbTrId("txt_device_update_dblist_flash_version");
+                          liststr.clear();
+                          liststr << val;
+                          liststr << str;
+                          item->setData(liststr , Qt::DisplayRole);
+                          //m_otherdetailsmodel->setItem(i++, item);
+                          m_otherdetailsmodel->appendRow(item);
+                          }                                   
+                      }      
+                  }
+            }
+               
+         if (r== KErrNone&& runtimesupport)
+             {            
+              Swi::RSisRegistryEntry sientry;
+              TInt oerr = sientry.Open(sisses, javauid);
+              TVersion jversion;
+              TBuf <255> javaversion;
+              if(oerr == KErrNone)
+                  {       
+                  TRAPD(err2,jversion= sientry.VersionL());     
+                  if (err2 == KErrNone)
+                      {
+                      javaversion.AppendNum(jversion.iMajor);
+                      javaversion.Append(_L("."));
+                      javaversion.AppendNum(jversion.iMinor);  
+                      if( javaversion.Length()>0 )
+                          { 
+                          str = QString::fromUtf16(javaversion.Ptr(), javaversion.Length());
+                          item = new QStandardItem();
+                          val = hbTrId("txt_device_update_dblist_java_version");
+                          liststr.clear();
+                          liststr << val;
+                          liststr << str;
+                          item->setData(liststr , Qt::DisplayRole);
+                          m_otherdetailsmodel->appendRow(item);
+                          } 
+                      }            
+                  }            
+             } 
+        CleanupStack::PopAndDestroy(1);
+        qDebug("OMADM servers view DmAdvancedView::addVersionInfo >>");
+    }
+
+void DmAdvancedView::addOtherDetails()
     {
-        RMobilePhone::TMobilePhoneNetworkInfoV8 nwInfov8;
-        RMobilePhone::TMobilePhoneNetworkInfoV8Pckg nwInfov8Pckg(nwInfov8);
-        imobPhone.GetCurrentNetwork( status, nwInfov8Pckg );
+        qDebug("OMADM servers view DmAdvancedView::addOtherDetails >>");
+        TRequestStatus status;
+        QStringList liststr;
+        QStandardItem* item;
+        QString val;
+        QString str;
+        TInt error(iServer.Connect());
+        if ( error != KErrNone )
+        	return;
+        iServer.GetPhoneInfo(0, info);
+        error = imobPhone.Open(iServer, info.iName);
+        if ( error != KErrNone )
+        {
+        	iServer.Close();
+        	return;
+        }
+        //Bands supported
+        
+        RMobilePhone::TMobilePhoneNetworkInfoV1 nwInfov1;
+        RMobilePhone::TMobilePhoneNetworkInfoV1Pckg nwInfov1Pckg(nwInfov1);                     
+        imobPhone.GetCurrentNetwork(status, nwInfov1Pckg);
         User::WaitForRequest( status );
         status = KRequestPending;
-        nwInfov8 = nwInfov8Pckg();
-        if(nwInfov8.iHsupaAvailableIndicator) packetsrvc =3;
-    }	  
-    liststr.clear();
-    val = hbTrId("txt_device_update_dblist_wcdma_uldl_data_rates");
-    liststr << val;
-    item = new QStandardItem();
-    PacketService(packetsrvc, str);
-    liststr << str;
-    item->setData(liststr , Qt::DisplayRole);
-    otherdetailsmodel->setItem(i++, item);
-				
-    // Ciphering
-    
-    liststr.clear();
-    item = new QStandardItem();
-    val = hbTrId("txt_device_update_dblist_gsm_cipherings");
-    liststr << val;
-    imobPhone.GetNetworkSecurityLevel(status,idispSecurity);
-    User::WaitForRequest( status );
-    NetworkCiphering(idispSecurity, str);
-    liststr << str;
-    item->setData(liststr, Qt::DisplayRole);
-    otherdetailsmodel->setItem(i++, item);
-    
-    // WLAN MAC
-    
-    TUint KPhoneWlanSeparator (':');
-    _LIT( KWLanMACDataFormat, "%02x");  
-    // Fetch WLAN MAC address
-    TBuf<KWlanMacAddrLength> address;
-    RProperty::Get( KPSUidWlan, KPSWlanMacAddress, address );   
-    // Format fetched address
-    TBuf<KWlanMacAddrLength> wlanMACAddress;        
-    for ( TInt i( 0 ); i < address.Length(); i++ )
-        {
-        // Set separator
-        if( i > 0 )
-            {
-            wlanMACAddress.Append( KPhoneWlanSeparator );
-            }
-        // Set data
-        TBuf<50> tmp;
-        tmp.Format( KWLanMACDataFormat, address[i] );
-        wlanMACAddress.Append( tmp );
-        } 
-    liststr.clear();
-    item = new QStandardItem();
-    val = hbTrId("txt_device_update_dblist_wlan_mac_address");
-    liststr << val;
-    str = QString::fromUtf16(wlanMACAddress.Ptr(), wlanMACAddress.Length());
-    liststr << str;
-    item->setData(liststr, Qt::DisplayRole);
-    otherdetailsmodel->setItem(i++, item);
-      
-    // BT MAC
-      
-    TBuf<KBTAddrLength> addressBuffer;
-    // Fetch from Cenrep
-    CRepository* repository = NULL;
-    TRAPD( err, repository = CRepository::NewL( KCRUidBluetoothLocalDeviceAddress ) );
-    if ( err == KErrNone )
-        {
-        qDebug("KCRUidBluetoothLocalDeviceAddress errnone");
-        err = repository->Get( KBTLocalDeviceAddress, addressBuffer );
+        nwInfov1 = nwInfov1Pckg();
+        NetworkBand(nwInfov1.iBandInfo, str);
+        item = new QStandardItem();
+        val = hbTrId("txt_device_update_dblist_gsm_bands");
+        liststr.clear();
+        liststr << val;
+        liststr << str;
+        item->setData(liststr , Qt::DisplayRole);
+        m_otherdetailsmodel->appendRow(item);
         
-        if (err == KErrNone)
-        	qDebug("KBTLocalDeviceAddress errnone");
+        //Packet Service
+        
+        TInt packetsrvc =0;
+        RMobilePhone::TMobilePhoneNetworkInfoV5 nwInfov5;
+        RMobilePhone::TMobilePhoneNetworkInfoV5Pckg nwInfov5Pckg(nwInfov5);
+        imobPhone.GetCurrentNetwork( status, nwInfov5Pckg );
+        User::WaitForRequest( status );
+        status = KRequestPending;
+        nwInfov5 = nwInfov5Pckg();
+        
+        if(nwInfov5.iHsdpaAvailableIndicator) packetsrvc =1;
+        
+        if(nwInfov5.iEgprsAvailableIndicator) packetsrvc =2;
+        
+        if(!packetsrvc)
+        {
+            RMobilePhone::TMobilePhoneNetworkInfoV8 nwInfov8;
+            RMobilePhone::TMobilePhoneNetworkInfoV8Pckg nwInfov8Pckg(nwInfov8);
+            imobPhone.GetCurrentNetwork( status, nwInfov8Pckg );
+            User::WaitForRequest( status );
+            status = KRequestPending;
+            nwInfov8 = nwInfov8Pckg();
+            if(nwInfov8.iHsupaAvailableIndicator) packetsrvc =3;
+        }     
+        liststr.clear();
+        val = hbTrId("txt_device_update_dblist_wcdma_uldl_data_rates");
+        liststr << val;
+        item = new QStandardItem();
+        PacketService(packetsrvc, str);
+        liststr << str;
+        item->setData(liststr , Qt::DisplayRole);
+        m_otherdetailsmodel->appendRow(item);
+                    
+        // Ciphering
+        
+        liststr.clear();
+        item = new QStandardItem();
+        val = hbTrId("txt_device_update_dblist_gsm_cipherings");
+        liststr << val;
+        imobPhone.GetNetworkSecurityLevel(status,idispSecurity);
+        User::WaitForRequest( status );
+        NetworkCiphering(idispSecurity, str);
+        liststr << str;
+        item->setData(liststr, Qt::DisplayRole);
+        m_otherdetailsmodel->appendRow(item);
+        
+        // WLAN MAC
+        
+        TUint KPhoneWlanSeparator (':');
+        _LIT( KWLanMACDataFormat, "%02x");  
+        // Fetch WLAN MAC address
+        TBuf<KWlanMacAddrLength> address;
+        RProperty::Get( KPSUidWlan, KPSWlanMacAddress, address );   
+        // Format fetched address
+        TBuf<KWlanMacAddrLength> wlanMACAddress;        
+        for ( TInt i( 0 ); i < address.Length(); i++ )
+            {
+            // Set separator
+            if( i > 0 )
+                {
+                wlanMACAddress.Append( KPhoneWlanSeparator );
+                }
+            // Set data
+            TBuf<50> tmp;
+            tmp.Format( KWLanMACDataFormat, address[i] );
+            wlanMACAddress.Append( tmp );
+            } 
+        liststr.clear();
+        item = new QStandardItem();
+        val = hbTrId("txt_device_update_dblist_wlan_mac_address");
+        liststr << val;
+        str = QString::fromUtf16(wlanMACAddress.Ptr(), wlanMACAddress.Length());
+        liststr << str;
+        item->setData(liststr, Qt::DisplayRole);
+        m_otherdetailsmodel->appendRow(item);
+          
+        // BT MAC
+          
+        TBuf<KBTAddrLength> addressBuffer;
+        // Fetch from Cenrep
+        CRepository* repository = NULL;
+        TRAPD( err, repository = CRepository::NewL( KCRUidBluetoothLocalDeviceAddress ) );
+        if ( err == KErrNone )
+            {
+            qDebug("KCRUidBluetoothLocalDeviceAddress errnone");
+            err = repository->Get( KBTLocalDeviceAddress, addressBuffer );
+            
+            if (err == KErrNone)
+                qDebug("KBTLocalDeviceAddress errnone");
+            else
+                qDebug("KBTLocalDeviceAddress Error");
+                
+            delete repository;
+            }
         else
-        	qDebug("KBTLocalDeviceAddress Error");
-        	
-        delete repository;
+            {
+                qDebug("KCRUidBluetoothLocalDeviceAddress Error openin cenrep");
+            }
+        liststr.clear();
+        val = hbTrId("txt_device_update_dblist_bt_mac_address");
+        liststr << val;
+        item = new QStandardItem();
+        str = QString::fromUtf16(addressBuffer.Ptr(), addressBuffer.Length());
+        liststr << str;
+        item->setData(liststr , Qt::DisplayRole);
+        m_otherdetailsmodel->appendRow(item);
+        
+        imobPhone.Close();
+        iServer.Close();
+
+    }
+void DmAdvancedView::mainCalltoUpdateView()
+{   
+    qDebug("OMADM servers view DmAdvancedView::mainCalltoUpdateView >>");
+    m_otherdetailsmodel = new QStandardItemModel();
+    TInt i=0;
+    
+    QStringList liststr;
+    QStandardItem* item;
+    QString val;
+    QString str;
+    //1. Device Updated
+
+    
+    addVersionInfo();
+    
+    addOtherDetails();
+
+    //sw version date
+    TBuf< KSysUtilVersionTextLength > swversiondate;
+    TBuf< KSysUtilVersionTextLength > version;
+    version.Zero();
+    swversiondate.Zero();
+    if( SysUtil::GetSWVersion(version)==KErrNone)
+        {
+        TInt len= version.Length();
+        TInt pos1 = version.Find(KSmlEOL);
+             if( pos1 != KErrNotFound && len > pos1 )
+                {
+                 TBuf<KSysUtilVersionTextLength> version1;
+                 version1.Zero();
+                 version1.Append( version.Right( len-pos1-1 ));
+                 len= version1.Length();
+                 pos1 = version1.Find(KSmlEOL);
+                 if( pos1 != KErrNotFound  && len > pos1 )
+                     {
+                     swversiondate.Append(version1.Left( pos1 ));
+                     }
+                }
+            val = hbTrId("txt_device_update_dblist_sw_version_date");
+            item = new QStandardItem();
+            str = QString::fromUtf16(swversiondate.Ptr(), swversiondate.Length());
+            liststr.clear();
+            liststr << val;
+            liststr << str;
+            item->setData(liststr , Qt::DisplayRole);
+            m_otherdetailsmodel->appendRow(item);
+            }
+            
+    //Custom version and date
+    //SysVersionInfo::TVersionInfoType x = SysVersionInfo::EOPVersion;
+    TBuf< KNSmlMaxTextLength64 >  customsw;
+    TBuf< KNSmlMaxTextLength64 >  customswdate;
+    version.Zero();
+    if( SysVersionInfo::GetVersionInfo(SysVersionInfo::EOPVersion,version) == KErrNone )
+      {
+         TInt len= version.Length();
+         TInt pos1 = version.Find(KSmlEOL);
+         if( pos1 != KErrNotFound  && len > pos1 )
+          {        
+          customsw.Append( version.Left(pos1));
+          customswdate.Append( version.Right( len-pos1-1 ));         
+          }
+      } 
+    
+    if(customsw.Length()>0)
+        {
+        str = QString::fromUtf16(customsw.Ptr(), customsw.Length());
+        item = new QStandardItem();
+        val = hbTrId("txt_device_update_dblist_custom_version");
+        liststr.clear();
+        liststr << val;
+        liststr << str;
+        item->setData(liststr , Qt::DisplayRole);
+        m_otherdetailsmodel->appendRow(item);
         }
-    else
-    	{
-    		qDebug("KCRUidBluetoothLocalDeviceAddress Error openin cenrep");
-    	}
-    liststr.clear();
-    val = hbTrId("txt_device_update_dblist_bt_mac_address");
-    liststr << val;
-    item = new QStandardItem();
-    str = QString::fromUtf16(addressBuffer.Ptr(), addressBuffer.Length());
-    liststr << str;
-    item->setData(liststr , Qt::DisplayRole);
-    otherdetailsmodel->setItem(i++, item);
-	
-	    
+    if(customswdate.Length()>0)
+        {
+        str = QString::fromUtf16(customswdate.Ptr(), customswdate.Length());
+        item = new QStandardItem();
+        val = hbTrId("txt_device_update_dblist_custom_version_date");
+        liststr.clear();
+        liststr << val;
+        liststr << str;
+        item->setData(liststr , Qt::DisplayRole);
+        m_otherdetailsmodel->appendRow(item);
+        }
+    
     TBuf<KSysUtilVersionTextLength> Langversion; 
     TBuf<KSysUtilVersionTextLength> lversion;
+    if( SysUtil::GetLangVersion(Langversion ) == KErrNone )
+      {
+        str = QString::fromUtf16(Langversion.Ptr(), Langversion.Length());
+        item = new QStandardItem();
+        val = hbTrId("txt_device_update_dblist_language_set");
+        liststr.clear();
+        liststr << val;
+        liststr << str;
+        item->setData(liststr , Qt::DisplayRole);
+        m_otherdetailsmodel->appendRow(item);
+      }
+    
 
-	    //lang variant version
+    //lang variant version
     Langversion.Zero();
     if( SysUtil::GetLangSWVersion(Langversion ) == KErrNone )
         {
@@ -572,15 +824,17 @@ void DmAdvancedView::mainCalltoUpdateView()
          liststr << val;
          liststr << str;
          item->setData(liststr , Qt::DisplayRole);
-         otherdetailsmodel->appendRow(item);
+         m_otherdetailsmodel->appendRow(item);
         }
-    
-    otherdetailslist->setModel(otherdetailsmodel);
+     
+    otherdetailslist->setModel(m_otherdetailsmodel);
+    qDebug("OMADM servers view DmAdvancedView::mainCalltoUpdateView <<");
 		
 }
 
 void DmAdvancedView::PacketService(TInt val, QString& string)
     {
+    qDebug("OMADM servers view DmAdvancedView::PacketService >>");
      switch (val)
          {
          case (0):
@@ -603,11 +857,13 @@ void DmAdvancedView::PacketService(TInt val, QString& string)
                  string = hbTrId("txt_device_update_dblist_wcdma_uldl_data_val_l5");
                  break;
          }
+     qDebug("OMADM servers view DmAdvancedView::PacketService <<");
      }
 
 
 void DmAdvancedView::NetworkCiphering(RMobilePhone::TMobilePhoneNetworkSecurity val, QString& string)
     {
+    qDebug("OMADM servers view DmAdvancedView::NetworkCiphering >>");
      switch (val)
          {
          case (RMobilePhone::ECipheringGSM):
@@ -624,10 +880,12 @@ void DmAdvancedView::NetworkCiphering(RMobilePhone::TMobilePhoneNetworkSecurity 
                  string = hbTrId("txt_device_update_dblist_gsm_cipherings_val_l1");
                  break;
          }
+     qDebug("OMADM servers view DmAdvancedView::NetworkCiphering <<");
     }
     
 void DmAdvancedView::NetworkBand(RMobilePhone::TMobilePhoneNetworkBandInfo val, QString& string)
     {
+    qDebug("OMADM servers view DmAdvancedView::NetworkBand >>");
     switch (val)
         {
         case (RMobilePhone::E800BandA):
@@ -662,25 +920,32 @@ void DmAdvancedView::NetworkBand(RMobilePhone::TMobilePhoneNetworkBandInfo val, 
                 string = hbTrId("txt_device_update_dblist_gsm_bands_val_l1");
                 break;
         }   
+    qDebug("OMADM servers view DmAdvancedView::NetworkBand <<");
     }
 
 void DmAdvancedView::syncCompleted(int jobstatus)
     {
+    qDebug("OMADM servers view DmAdvancedView::syncCompleted >>");
     Q_UNUSED(jobstatus);
     connectionRequested = false;    
     updateListview();
+    iMainView->enableButtons();
+    qDebug("OMADM servers view DmAdvancedView::syncCompleted <<");
     }
 	
 void DmAdvancedView::defaultMenuItemSelected()
     {
+    qDebug("OMADM servers view DmAdvancedView::defaultMenuItemSelected >>");
     dminfo->setDefaultProfile(currentselecteditem);
     updateEarlierdefaultProfileIcon();
     modelItem->setIcon(defaultprofileicon);
     currentdefaultprofile = currentselecteditem;
+    qDebug("OMADM servers view DmAdvancedView::defaultMenuItemSelected <<");
     }
 
 void DmAdvancedView::deleteMenuItemSelected()
     {
+    qDebug("OMADM servers view DmAdvancedView::deleteMenuItemSelected >>");
     dminfo->DisableDbNotifications(true);
     //check currentdefaultprofile is current item
     if(currentselecteditem == currentdefaultprofile) // deleting default profile
@@ -691,11 +956,16 @@ void DmAdvancedView::deleteMenuItemSelected()
     model->removeRow(currentselecteditem);
         }
     dminfo->DisableDbNotifications(false);
+    qDebug("OMADM servers view DmAdvancedView::deleteMenuItemSelected <<");
     }
 
 void DmAdvancedView::connectMenuItemSelected()
     {
-    dminfo->synchronize(currentselecteditem);
+    qDebug("OMADM servers view DmAdvancedView::connectMenuItemSelected >>");
+    iMainView->displayNoteAndDisableButtons();
+    backButtonClicked();
+    dminfo->synchronize(currentselecteditem);    
     connectionRequested = true;
+    qDebug("OMADM servers view DmAdvancedView::connectMenuItemSelected <<");
     }
 	
