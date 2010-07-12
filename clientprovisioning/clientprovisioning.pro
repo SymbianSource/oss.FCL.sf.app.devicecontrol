@@ -15,10 +15,8 @@
 #
 TEMPLATE = subdirs
 
-SUBDIRS  += devicemgmtdialogsplugin \
-            deviceupdatesui \
-	    			clientprovisioning
-
+SUBDIRS  += cpqtsp          
+	    
 CONFIG += ordered
 
 symbian: {
