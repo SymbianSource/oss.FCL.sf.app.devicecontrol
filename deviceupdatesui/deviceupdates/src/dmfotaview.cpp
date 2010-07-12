@@ -30,6 +30,9 @@
 #include "nsmldmsyncprivatecrkeys.h"
 #include "dmadvancedview.h"
 #include "dmfotaview.h"
+#include <xqconversions.h>
+#include "deviceupdatemoniter.h"
+#include "DeviceUpdateDebug.h"
 // ============================ MEMBER FUNCTIONS ===============================
     
 // -----------------------------------------------------------------------------
@@ -37,10 +40,13 @@
 // -----------------------------------------------------------------------------
 //
 DMFotaView::DMFotaView(HbMainWindow *mainWindow):
-    mMainWindow(mainWindow),profilesView(NULL)
+    mMainWindow(mainWindow),profilesView(NULL),Connected(EFalse)
 {
+    qDebug("DMFotaView::DMFotaView >>");
     fotaPortraitView=0;
     fotaLandscapeView=0;
+    mainDmInfo=0;
+    qDebug("DMFotaView::DMFotaView <<");
 }
 
 // -----------------------------------------------------------------------------
@@ -49,7 +55,20 @@ DMFotaView::DMFotaView(HbMainWindow *mainWindow):
 // -----------------------------------------------------------------------------
 //
 DMFotaView::~DMFotaView()
-{ 
+{
+    qDebug("DMFotaView::~DMFotaView >>");
+    if(mainDmInfo)
+        delete mainDmInfo;
+    
+    if (iFotaEngine.Handle())
+        iFotaEngine.Close();
+
+    if (iMoniter)
+        {
+        iMoniter->Cancel();
+        delete iMoniter;
+        }
+    qDebug("DMFotaView::~DMFotaView <<");
 }
 
 // -----------------------------------------------------------------------------
@@ -59,6 +78,7 @@ DMFotaView::~DMFotaView()
 //
 bool DMFotaView::addFotaView()
     {
+    qDebug("DMFotaView::addFotaView >>");
     connect( mMainWindow, SIGNAL( orientationChanged(Qt::Orientation) ), this, SLOT( readSection(Qt::Orientation) ) );
         
     bool ok = false;
@@ -107,12 +127,7 @@ bool DMFotaView::addFotaView()
     label->setPlainText(val);
     label2->setPlainText(val);
     
-    //Setting help text for update button
-    label = qobject_cast<HbLabel*> (loader.findWidget("p:updatelabel"));
-    label2 = qobject_cast<HbLabel*> (loader2.findWidget("l:updatelabel"));
-    val = hbTrId("txt_device_update_setlabel_to_update_your_device_s");
-    label->setPlainText(val);
-    label2->setPlainText(val);
+    
     
     HbScrollArea* area = qobject_cast<HbScrollArea*> (loader.findWidget("scrollArea"));
     area->setVerticalScrollBarPolicy(HbScrollArea::ScrollBarAlwaysOn);
@@ -203,10 +218,10 @@ bool DMFotaView::addFotaView()
     TBuf <50> imei;
     if (status==KErrNone)
     {
+    TBuf<100> phoneName;
     imei.Copy(telid.iSerialNumber);
     }
     phone.Close();
-    
     telServer.Close();
 
     //type
@@ -253,24 +268,83 @@ bool DMFotaView::addFotaView()
         FormatList(val,str);
         }
 
+   
+    iFotaState = FotaEngineL().GetState(-1);
     
-    val = hbTrId("txt_device_update_button_update");
-    HbPushButton *updateButton = qobject_cast<HbPushButton*>(loader.findWidget("p:update"));
-    updateButton->setText(val);
-    QObject::connect(updateButton, SIGNAL(clicked()), this, SLOT(CheckforUpdate()));
-    updateButton = qobject_cast<HbPushButton*>(loader2.findWidget("l:update"));
-    updateButton->setText(val);
-    QObject::connect(updateButton, SIGNAL(clicked()), this, SLOT(CheckforUpdate()));
+    TBuf8<80> Name;
+    TBuf8<80> Version;
+    TInt Size;
+    
+    if(iFotaState == RFotaEngineSession::EDownloadComplete || iFotaState == RFotaEngineSession::EStartingUpdate
+            || iFotaState == RFotaEngineSession::EStartingDownload || iFotaState == RFotaEngineSession::EDownloadProgressing)
+        {
+        label = qobject_cast<HbLabel*> (loader.findWidget("p:updatelabel"));
+        label2 = qobject_cast<HbLabel*> (loader2.findWidget("l:updatelabel"));
+        FotaEngineL().GetCurrentFirmwareDetailsL(Name, Version, Size);
+        
+        const QString
+        name =
+                QString::fromUtf8(
+                        reinterpret_cast<const char*> (Name.Ptr()),
+                                Name.Length());
+        const QString
+        ver =
+                QString::fromUtf8(
+                        reinterpret_cast<const char*> (Version.Ptr()),
+                                Version.Length());
+        
+        TInt sizeKB = Size / 1024;
+        if(sizeKB < 1024)
+            {
+            val = hbTrId("txt_device_update_setlabel_the_last_update_1_2_kb").arg(name)
+                    .arg(ver).arg(sizeKB);
+            }
+        else
+            {
+            TInt sizeMB = sizeKB / 1024;
+            val = hbTrId("txt_device_update_setlabel_the_last_update_1_2_mb").arg(name)
+                    .arg(ver).arg(sizeMB);
+            }
+        label->setPlainText(val);
+        label2->setPlainText(val);
+		
+		val = hbTrId("txt_device_update_button_resume_update");
+    
+        updateButton = qobject_cast<HbPushButton*>(loader.findWidget("p:update"));
+        updateButton->setText(val);
+        QObject::connect(updateButton, SIGNAL(clicked()), this, SLOT(ResumeUpdate()));
+        updateButtonLandscape = qobject_cast<HbPushButton*>(loader2.findWidget("l:update"));
+        updateButtonLandscape->setText(val);
+		QObject::connect(updateButtonLandscape, SIGNAL(clicked()), this, SLOT(ResumeUpdate()));
+		Connected = ETrue;
+        }
+    else
+        {
+        //Setting help text for update button
+        label = qobject_cast<HbLabel*> (loader.findWidget("p:updatelabel"));
+        label2 = qobject_cast<HbLabel*> (loader2.findWidget("l:updatelabel"));
+        val = hbTrId("txt_device_update_setlabel_to_update_your_device_s");
+        label->setPlainText(val);
+        label2->setPlainText(val);
+        
+        val = hbTrId("txt_device_update_button_update");
+        updateButton = qobject_cast<HbPushButton*>(loader.findWidget("p:update"));
+        updateButton->setText(val);
+        QObject::connect(updateButton, SIGNAL(clicked()), this, SLOT(CheckforUpdate()));
+        updateButtonLandscape = qobject_cast<HbPushButton*>(loader2.findWidget("l:update"));
+        updateButtonLandscape->setText(val);
+        QObject::connect(updateButtonLandscape, SIGNAL(clicked()), this, SLOT(CheckforUpdate()));
+        Connected = ETrue;
+        }
     
     val = hbTrId("txt_device_update_button_advanced");
-    HbPushButton *advancedButton = qobject_cast<HbPushButton*>(loader.findWidget("p:advanced")); 
+    advancedButton = qobject_cast<HbPushButton*>(loader.findWidget("p:advanced")); 
     advancedButton->setText(val);
     QObject::connect(advancedButton, SIGNAL(clicked()), this, SLOT(AdvancedDeviceManager()));
-    advancedButton = qobject_cast<HbPushButton*>(loader2.findWidget("l:advanced"));
-    advancedButton->setText(val);
-    QObject::connect(advancedButton, SIGNAL(clicked()), this, SLOT(AdvancedDeviceManager()));
-
-    
+    advancedButtonLandscape = qobject_cast<HbPushButton*>(loader2.findWidget("l:advanced"));
+    advancedButtonLandscape->setText(val);
+    QObject::connect(advancedButtonLandscape, SIGNAL(clicked()), this, SLOT(AdvancedDeviceManager()));
+    fotaSupportEnabled();
     mMainWindow->addView(fotaPortraitView);
     mMainWindow->addView(fotaLandscapeView);
     
@@ -278,6 +352,10 @@ bool DMFotaView::addFotaView()
             mMainWindow->setCurrentView(fotaPortraitView);
         else
             mMainWindow->setCurrentView(fotaLandscapeView);
+    
+    iMoniter = CDeviceUpdateMoniter::NewL(this);
+    //iMoniter->StartMoniter();
+    qDebug("DMFotaView::addFotaView <<");
     return ETrue;
     }
 
@@ -288,21 +366,23 @@ bool DMFotaView::addFotaView()
 //
 void DMFotaView::CheckforUpdate()
  {
-    /*TInt profileId=NULL;
+    qDebug("omadm DeviceManagerUi::CheckforUpdate >>");
+    
+    TInt profileId=NULL;
     if(mainDmInfo==0)
         {
         if(!profilesView)
             {
-            mainDmInfo = new DmInfo();
-            mainDmInfo->refreshProfileList();
+            bool launchview = false;
+            AdvancedDeviceManager(launchview);
+           /* mainDmInfo = new DmInfo();
+            mainDmInfo->refreshProfileList();*/
             }
-        else 
-            {
-            mainDmInfo = profilesView->dminfo;
-            }
+       // else 
+        mainDmInfo = profilesView->dminfo;      
         }
     if((profileId = mainDmInfo->DefaultFotaProfileIdL())==KErrNotFound)
-        {*/
+        {
 
         HbNotificationDialog* note = new HbNotificationDialog();
         QString val = hbTrId("txt_device_update_info_no_server_configured_to_get");
@@ -312,26 +392,94 @@ void DMFotaView::CheckforUpdate()
         note->setTimeout(HbPopup::StandardTimeout);
         note->setAttribute(Qt::WA_DeleteOnClose, true);
         note->open();
-       /* }
+        }
     else
         {
         mainDmInfo->sync(profileId);
-        }*/
+        //Connecting note to be displayed
+        //Buttons to be disabled
+        displayNoteAndDisableButtons();
+        
+        }
+    qDebug("omadm DeviceManagerUi::CheckforUpdate >>");
  }
+
+
+void DMFotaView::ResumeUpdate()
+    {
+    qDebug("omadm DeviceManagerUi::ResumeUpdate >>");
+    
+    
+    if(iFotaState == RFotaEngineSession::EDownloadComplete || iFotaState == RFotaEngineSession::EStartingUpdate)
+        {
+        qDebug("Calling resuming of update");
+        FotaEngineL().Update(-1,(TSmlProfileId)1, _L8(""), _L8(""));
+        }
+    else if(iFotaState == RFotaEngineSession::EStartingDownload || iFotaState == RFotaEngineSession::EDownloadProgressing)
+        {
+        qDebug("Calling resuming of download");
+        FotaEngineL().TryResumeDownload(EFalse);        
+        }
+    
+    qDebug("omadm DeviceManagerUi::ResumeUpdate <<");
+    }
+
+// -----------------------------------------------------------------------------
+// DMFotaView::displayNoteAndDisableButtons
+// Displays the connecting note and disable all buttons
+// -----------------------------------------------------------------------------
+//
+void DMFotaView::displayNoteAndDisableButtons()
+    {
+    qDebug("DMFotaView::displayNoteAndDisableButtons >>");
+    updateButton->setEnabled(false);
+    advancedButton->setEnabled(false);
+    updateButtonLandscape->setEnabled(false);
+    advancedButtonLandscape->setEnabled(false);
+    HbNotificationDialog* note = new HbNotificationDialog();
+    //QString val = hbTrId("txt_device_update_dpophead_device_update");
+    note->setTitle(hbTrId("txt_device_update_dpophead_device_update"));
+    note->setTitleTextWrapping(Hb::TextWordWrap);
+    note->setText(hbTrId("txt_device_update_info_connecting"));
+    HbIcon icon1;
+    icon1.setIconName(":/icons/qgn_prop_sml_http.svg");
+    note->setIcon(icon1);
+    note->setAttribute(Qt::WA_DeleteOnClose, true);
+    note->open();
+    qDebug("DMFotaView::displayNoteAndDisableButtons <<");
+    }
+
+// -----------------------------------------------------------------------------
+// DMFotaView::enableButtons
+// Enables checkupdate and Advancedsetting buttons
+// -----------------------------------------------------------------------------
+//
+void DMFotaView::enableButtons()
+    {
+    qDebug("DMFotaView::enableButtons >>");
+    TInt value (0);
+    RProperty::Get(TUid::Uid(KOmaDMAppUid), KFotaServerActive, value);
+    if (!value)
+        {
+        fotaSupportEnabled();
+        advancedButtonLandscape->setEnabled(true);
+        advancedButton->setEnabled(true);
+        }
+    qDebug("DMFotaView::enableButtons <<");
+    }
 
 // -----------------------------------------------------------------------------
 // DMFotaView::AdvancedDeviceManager
 // Displays the Profiles view
 // -----------------------------------------------------------------------------
 //
-void DMFotaView::AdvancedDeviceManager()
- {
-    
+void DMFotaView::AdvancedDeviceManager(bool launchadvanceview)
+ { 
     qDebug("omadm DeviceManagerUi::AdvancedDeviceManager");
     if(!profilesView)
         {
         qDebug("omadm DeviceManagerUi::AdvancedDeviceManager 1");
-        profilesView = new DmAdvancedView(mMainWindow,this);
+        profilesView = new DmAdvancedView(mMainWindow,this,mainDmInfo);
         qDebug("omadm DeviceManagerUi::AdvancedDeviceManager 2");
         bool loadingok = profilesView->displayItems();
         if(loadingok)
@@ -341,6 +489,7 @@ void DMFotaView::AdvancedDeviceManager()
             qDebug("omadm DeviceManagerUi::AdvancedDeviceManager 4");
             profilesView->setBackBehavior();  
             qDebug("omadm DeviceManagerUi::AdvancedDeviceManager 5");
+            if(launchadvanceview)
             mMainWindow->setCurrentView(profilesView);
             qDebug("omadm DeviceManagerUi::AdvancedDeviceManager 6");
             }
@@ -355,6 +504,7 @@ void DMFotaView::AdvancedDeviceManager()
         profilesView->setBackBehavior();                
         mMainWindow->setCurrentView(profilesView);   
         }
+    qDebug("DMFotaView::AdvancedDeviceManager <<");
  }
 
 // -----------------------------------------------------------------------------
@@ -364,6 +514,7 @@ void DMFotaView::AdvancedDeviceManager()
 //
 void DMFotaView::FormatList(QString val,QString str)
     {
+    qDebug("DMFotaView::FormatList >>");
     label = qobject_cast<HbLabel*> (loader.findWidget(list1[i]));
     label2 = qobject_cast<HbLabel*> (loader2.findWidget(list2[i++]));         
     label3 = qobject_cast<HbLabel*> (loader.findWidget(list1[i]));
@@ -376,6 +527,17 @@ void DMFotaView::FormatList(QString val,QString str)
     label2->setVisible(ETrue);
     label3->setVisible(ETrue);
     label4->setVisible(ETrue);
+    qDebug("DMFotaView::FormatList <<");
+    }
+
+
+inline RFotaEngineSession & DMFotaView::FotaEngineL()
+    {
+    qDebug("DMFotaView::FotaEngineL >>");
+    if (!iFotaEngine.Handle())
+        iFotaEngine.OpenL();
+    qDebug("DMFotaView::FotaEngineL <<");
+    return iFotaEngine;
     }
 // -----------------------------------------------------------------------------
 // DMFotaView::backtoMainWindow
@@ -384,7 +546,9 @@ void DMFotaView::FormatList(QString val,QString str)
 //
 void DMFotaView::backtoMainWindow()
     {
+    qDebug("DMFotaView::backtoMainWindow >>");
         qApp->quit();
+        qDebug("DMFotaView::backtoMainWindow <<");
     }
 
 // -----------------------------------------------------------------------------
@@ -402,11 +566,14 @@ void DMFotaView::OnHelp()
 //
 void DMFotaView::OnExit()
 {
+    qDebug("DMFotaView::OnExit >>");
     qApp->quit();
+    qDebug("DMFotaView::OnExit <<");
 }
 
 void DMFotaView::readSection( Qt::Orientation orientation )
 {
+    qDebug("DMFotaView::readSection >>");
     if(mMainWindow->currentView() == fotaPortraitView || mMainWindow->currentView() == fotaLandscapeView)
         {
         if( orientation == Qt::Vertical ) {
@@ -422,8 +589,122 @@ void DMFotaView::readSection( Qt::Orientation orientation )
         {
         profilesView->reLayout(orientation);
         }
+    qDebug("DMFotaView::readSection <<");
 
 }   
 
 
+void DMFotaView::UpdateDMUI(TBool aVal)
+    {
+    qDebug("DMFotaView::UpdateDMUI >>");
+    qDebug("DMFotaView::UpdateDMUI >>");
+	    QString val;
+    if (aVal == 1)
+        {
+        qDebug("DMFotaView::aVal == 1 >>");
+        if(Connected)
+            {
+            qDebug("DMFotaView::Connected >>");
+            QObject::disconnect(updateButton,0,0,0);
+            QObject::disconnect(updateButtonLandscape,0,0,0);
+            Connected = EFalse;
+            }
+    
+        iFotaState = FotaEngineL().GetState(-1);
+
+        if (iFotaState == RFotaEngineSession::EDownloadComplete || iFotaState
+                == RFotaEngineSession::EStartingUpdate || iFotaState
+                == RFotaEngineSession::EStartingDownload || iFotaState
+                == RFotaEngineSession::EDownloadProgressing)
+            {
+            qDebug("CDeviceUpdateMoniter::Resume >>");
+            QString value = hbTrId("txt_device_update_button_resume_update");
+            //updateButton = qobject_cast<HbPushButton*>(loader.findWidget("p:update");
+            updateButton->setText(value);
+            QObject::connect(updateButton, SIGNAL(clicked()), this,SLOT(ResumeUpdate()));
+            //updateButtonLandscape = qobject_cast<HbPushButton*>(loader2.findWidget("l:update");
+            updateButtonLandscape->setText(value);
+		QObject::connect(updateButtonLandscape, SIGNAL(clicked()), this, SLOT(ResumeUpdate()));
+		Connected = ETrue;
+
+		TBuf8<80> Name;
+		TBuf8<80> Version;
+		TInt Size;
+
+		FotaEngineL().GetCurrentFirmwareDetailsL(Name, Version, Size);
+        
+        	const QString
+	        name =
+        	        QString::fromUtf8(
+	                        reinterpret_cast<const char*> (Name.Ptr()),
+                                Name.Length());
+	        const QString
+	        ver =
+        		QString::fromUtf8(
+                        reinterpret_cast<const char*> (Version.Ptr()),
+                                Version.Length());
+        
+        	TInt sizeKB = Size / 1024;
+	        if(sizeKB < 1024)
+	            {
+	            val = hbTrId("txt_device_update_setlabel_the_last_update_1_2_kb").arg(name)
+	                    .arg(ver).arg(sizeKB);
+	            }
+	        else
+	            {
+	            TInt sizeMB = sizeKB / 1024;
+	            val = hbTrId("txt_device_update_setlabel_the_last_update_1_2_mb").arg(name)
+        	            .arg(ver).arg(sizeMB);
+	            }
+	        
+	        label->setPlainText(val);
+	        label2->setPlainText(val);
+	    }
+        else
+	    {
+        qDebug("DMFotaView::Update >>");
+        val = hbTrId("txt_device_update_setlabel_to_update_your_device_s");
+	    label->setPlainText(val);
+	    label2->setPlainText(val);
+	    val = hbTrId("txt_device_update_button_update");
+	    updateButton = qobject_cast<HbPushButton*>(loader.findWidget("p:update"));
+	    updateButton->setText(val);
+	    QObject::connect(updateButton, SIGNAL(clicked()), this, SLOT(CheckforUpdate()));
+	    updateButtonLandscape = qobject_cast<HbPushButton*>(loader2.findWidget("l:update"));
+	    updateButtonLandscape->setText(val);
+	    QObject::connect(updateButtonLandscape, SIGNAL(clicked()), this, SLOT(CheckforUpdate()));
+	    Connected = ETrue;
+	    }
+	}
+    fotaSupportEnabled();
+    if(fotaValue == 1 && aVal == 0)
+    {
+    	updateButton->setEnabled(aVal);
+      updateButtonLandscape->setEnabled(aVal);
+    }
+    advancedButton->setEnabled(aVal);
+    advancedButtonLandscape->setEnabled(aVal);
+    qDebug("DMFotaView::UpdateDMUI <<");
+    qDebug("DMFotaView::UpdateDMUI <<");
+}
+
+void DMFotaView::fotaSupportEnabled()
+    { 
+    fotaValue = 1;	
+    CRepository* centrep( NULL);
+    TUid uidValue = {0x101F9A08}; // KCRFotaAdapterEnabled
+    TInt err = KErrNone;
+    TRAP(err,centrep = CRepository::NewL( uidValue)); 
+    if(centrep && err == KErrNone )
+    {  
+        centrep->Get( 1 , fotaValue ); // KCRFotaAdapterEnabled     
+        delete centrep;
+    }
+    if(fotaValue == 0 || fotaValue == 1)
+        {
+        updateButton->setEnabled(fotaValue);
+        updateButtonLandscape->setEnabled(fotaValue);
+        }
+    }
+    
 

@@ -31,6 +31,7 @@ ServerSettingsView::ServerSettingsView(HbMainWindow* mainWindow, DmAdvancedView*
     exit = viewspecificmenu->addAction(hbTrId("txt_common_menu_exit"));
     connect(exit, SIGNAL(triggered()), QCoreApplication::instance(), SLOT(quit()));    
     setMenu(viewspecificmenu);
+    iPort = 0;
     }
 ServerSettingsView::~ServerSettingsView()
     {
@@ -86,8 +87,10 @@ int ServerSettingsView::setProfileValues(QStringList& settingdatalist,
         else
             accesspoint->setContentWidgetData(QString("currentIndex"), apdata.count()-1); 
         form->addConnection(accesspoint, SIGNAL(currentIndexChanged  (int  ) ),this, SLOT(accessPointItemChanged(int)));                
-        hostaddress->setContentWidgetData(QString("text"),settingdatalist[3]);        
-        port->setContentWidgetData(QString("text"),portnum);//Integer only setting needs to be done                   
+        hostaddress->setContentWidgetData(QString("text"),settingdatalist[3]);  
+        iPort = portnum;
+        port->setContentWidgetData(QString("text"),iPort);//Integer only setting needs to be done    
+        form->addConnection(port, SIGNAL(textChanged  (QString) ),this, SLOT(portItemChanged(QString)));
         username->setContentWidgetData(QString("text"),settingdatalist[4]);        
         userpwd->setContentWidgetData(QString("echoMode"),HbLineEdit::Password );
         userpwd->setContentWidgetData(QString("text"),settingdatalist[5]);                
@@ -147,13 +150,11 @@ void ServerSettingsView::backButtonClicked()
     if ((itemlist[0].length() > 0) && (itemlist[1].length() > 0)
             && (itemlist[3].length() > 0) && (itemlist[4].length() > 0))
         {
-        serversView->saveProfile(itemlist, sessmode, curriap, portval,
-                netauthval);
-        qDebug("omadm before crash");
+        serversView->saveProfile(itemlist, sessmode, curriap, iPort,
+                netauthval);        
         form->removeConnection(accesspoint,
                 SIGNAL(currentIndexChanged (int ) ), this,
-                SLOT(accessPointItemChanged(int)));
-        qDebug("omadm after crash");
+                SLOT(accessPointItemChanged(int)));        
         iMainWindow->setCurrentView(serversView);
         //Form wk08 soft key owned by view
         //iMainWindow->removeSoftKeyAction(Hb::SecondarySoftKey,backaction);
@@ -161,12 +162,35 @@ void ServerSettingsView::backButtonClicked()
         }
     else
         {
+        TInt x = itemlist.count();
+        TInt valSet=0;
+        int i=0;
+        for(i=0;i<x;i++)
+            {
+            if(itemlist[i].length()>0)
+                {
+                valSet=1;
+                break;
+                }
+            }
+        if(valSet==1)
+            {
         HbMessageBox *note = new HbMessageBox(HbMessageBox::MessageTypeInformation);
         note->setText(hbTrId(
                 "txt_device_update_dialog_enter_mandatory_field_values"));
         note->setAttribute( Qt::WA_DeleteOnClose);         
         note->setTimeout(HbPopup::NoTimeout);
         note->open();
+            }
+        else
+            {
+            form->removeConnection(accesspoint,SIGNAL(currentIndexChanged (int ) ), this,SLOT(accessPointItemChanged(int)));
+            iMainWindow->setCurrentView(serversView);
+        //Form wk08 soft key owned by view
+        //iMainWindow->removeSoftKeyAction(Hb::SecondarySoftKey,backaction);
+            dataformmodel->clear();   
+            }
+        
         }        
     }
 
@@ -251,3 +275,8 @@ void ServerSettingsView::accessPointItemChanged(int apindex)
     qDebug("omadm iap changed");        
     }
 
+void ServerSettingsView::portItemChanged(QString port)
+    {    
+    iPort = port.toInt();
+    qDebug("omadm new port value is %d ",iPort);
+    }

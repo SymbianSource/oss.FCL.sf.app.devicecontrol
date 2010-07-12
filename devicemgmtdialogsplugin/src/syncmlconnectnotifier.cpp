@@ -25,15 +25,13 @@ syncmlConnectNotifier::syncmlConnectNotifier(devicemanagementnotifierwidget* ptr
     QTranslator *translator = new QTranslator();
     QString lang = QLocale::system().name();
     QString path = "Z:/resource/qt/translations/";
-    bool fine = translator->load("deviceupdates_en.qm", path);
+    bool fine = translator->load("deviceupdates_" + lang, path);
     if (fine)
         qApp->installTranslator(translator);
-
     QTranslator *commontranslator = new QTranslator();
-
     fine = commontranslator->load("common_" + lang, path);
     if (fine)
-        qApp->installTranslator(commontranslator);   
+        qApp->installTranslator(commontranslator);
     pDialog = NULL;
     }
 
@@ -41,9 +39,10 @@ void syncmlConnectNotifier::launchDialog(const QVariantMap &parameters)
     {    
     qDebug("devicemanagementnotifierutils syncmlConnectNotifier launchDialog");        
     pDialog = new HbProgressDialog(HbProgressDialog::ProgressDialog);
-       HbAction *action = new HbAction(pDialog->tr("Cancel"), pDialog);
-       pDialog->setText("Connecting");
-       pDialog->actions().at(0)->setText(pDialog->tr("Hide"));
+       HbAction *action = new HbAction(hbTrId("txt_common_button_cancel"),
+       												 pDialog);
+       pDialog->setText(hbTrId("txt_device_update_info_connecting"));
+       pDialog->actions().at(0)->setText(hbTrId("txt_common_button_hide"));
        pDialog->setMaximum(0);
        pDialog->setMinimum(0);    
        pDialog->addAction(action);

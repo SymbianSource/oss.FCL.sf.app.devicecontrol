@@ -33,12 +33,15 @@ SOURCES += src/devicemanagementnotifierutils.cpp
 SOURCES += src/syncmlnotifierprivate.cpp
 SOURCES += src/omacppinquerydialog.cpp
 SOURCES += src/syncmlconnectnotifier.cpp
+SOURCES += src/fotadevicedialogs.cpp
 
 HEADERS += inc/devicemanagementnotifierplugin_p.h
 HEADERS += inc/devicemanagementnotifierwidget_p.h
 HEADERS += inc/devicemanagementnotifierutils.h 
 HEADERS += inc/syncmlnotifierprivate.h
 HEADERS += inc/omacppinquerydialog.h
+HEADERS += inc/fotadevicedialogs.h
+
 RESOURCES = devicemanagementnotifierdevman.qrc
 #TRANSLATIONS += deviceupdates_en.ts
 

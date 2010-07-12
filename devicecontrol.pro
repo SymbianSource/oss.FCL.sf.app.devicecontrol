@@ -16,8 +16,10 @@
 TEMPLATE = subdirs
 
 SUBDIRS  += devicemgmtdialogsplugin \
+            devicemgmtindicatorsplugin \
             deviceupdatesui \
-	    			clientprovisioning
+	    			clientprovisioning \
+				applicationmanagement
 
 CONFIG += ordered
 

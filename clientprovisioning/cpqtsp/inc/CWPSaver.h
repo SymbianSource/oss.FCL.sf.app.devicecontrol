@@ -3,7 +3,7 @@
 *  Name        : CWPSaver.h
 *  Part of     : Provisioning / ProvisioningBC
 *  Description : Settings saver with progress note.
-*  Version     : %version: 1 % << Don't touch! Updated by Synergy at check-out.
+*  Version     : %version: 2 % << Don't touch! Updated by Synergy at check-out.
 *
 *  Copyright © 2002-2006 Nokia.  All rights reserved.
 *  This material, including documentation and any related computer
@@ -20,15 +20,12 @@
 #define CWPSAVER_H
 
 // INCLUDES
-#include <aknprogressdialog.h>
-#include <activeapdb.h>
-#include <favouritesdbobserver.h>
-#include <FavouritesDb.h>
+
 #include <HbProgressDialog>
 
 // FORWARD DECLARATIONS
 class CWPEngine;
-class CActiveFavouritesDbNotifier;
+//class CActiveFavouritesDbNotifier;
 
 // CLASS DECLARATION
 
@@ -36,10 +33,8 @@ class CActiveFavouritesDbNotifier;
  * Helper class for saving Provisioning settings. Provides a progress note.
  * @since 2.0
  */
-class CWPSaver : public CActive, 
-                 private MProgressDialogCallback,
-                 private MActiveApDbObserver, 
-                 private MFavouritesDbObserver
+class CWPSaver : public CActive
+                 
     {
     public:
         /**
@@ -75,40 +70,13 @@ class CWPSaver : public CActive,
         void RunL();
         TInt RunError( TInt aError );
 
-    private: // From MProgressDialogCallback
-
-        void DialogDismissedL( TInt aButtonId );
-
-    private: // from MActiveApDbObserver
-
-        void HandleApDbEventL( TEvent anEvent );
-
-    private: // from MFavouritesDbObserver
-
-        void HandleFavouritesDbEventL( RDbNotifier::TEvent aEvent );
-
     private:
         /**
         * Complete the request so that RunL() gets called.
         */
         void CompleteRequest();
-
-        /**
-        * Complete the request so that Timeout() gets called after
-        * a delay. Leaves with KErrTimeout if retry count is 
-        * exceeded.
-        */
-        void DelayedCompleteRequestL();
-
-        /**
-        * Retry save now.
-        */
         void Retry();
 
-        /**
-        * Timer timed-out.
-        */
-        static TInt Timeout(TAny* aSelf);
 
     private:
         /// The engine used for performing the save. Refs.
@@ -123,18 +91,6 @@ class CWPSaver : public CActive,
         /// Contains result to be passed to the called of ExecuteLD
         TInt iResult;
 
-        /// Active AP database. Owns.
-        CActiveApDb* iApDbNotifier;
-
-        /// Active Favourites Database. Owns.
-        CActiveFavouritesDbNotifier* iFavouritesNotifier;
-
-        /// Contains ETrue if commsdb is being waited on
-        TBool iWaitCommsDb;
-
-        /// Contains ETrue if favourites db is being waited on
-        TBool iWaitFavourites;
-
         /// Active scheduler.
         CActiveSchedulerWait iWait;
 
@@ -144,8 +100,6 @@ class CWPSaver : public CActive,
         /// Retry counter
         TInt iRetryCount;
         
-        RFavouritesDb       iBookmarkDb;
-        RFavouritesSession  iSession;        
         HbProgressDialog *iProgress;
         TBufC<200> iValue;
     };
