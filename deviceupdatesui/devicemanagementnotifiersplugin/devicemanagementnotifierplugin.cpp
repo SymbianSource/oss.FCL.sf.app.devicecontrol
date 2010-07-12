@@ -79,7 +79,11 @@ bool devicemanagementnotifierplugin::deviceDialogInfo(const QString &deviceDialo
     const QVariantMap &parameters, DeviceDialogInfo *info) const
 {
     
-  
+   info->group = GenericDeviceDialogGroup;
+
+info->flags = NoDeviceDialogFlags;
+
+info->priority = DefaultPriority;
     return true;
 }
 

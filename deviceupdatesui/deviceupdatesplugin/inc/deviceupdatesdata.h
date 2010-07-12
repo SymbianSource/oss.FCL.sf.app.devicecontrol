@@ -18,6 +18,7 @@
 #ifndef	DEVICEUPDATESDATA_H_
 #define	DEVICEUPDATESDATA_H_
 
+#include <QtCore/QProcess>
 #include <cpsettingformentryitemdata.h>
 
 _LIT( KDMUIProcess, "\\deviceupdates.exe" );
@@ -37,13 +38,16 @@ public:
 												const QString &description = QString(),
 												const HbIcon &icon = HbIcon(),
 												const HbDataFormModelItem *parent = 0);
-    void OpenDmAppL();
-    void CloseDmUi();
+    void LaunchDeviceUpdatesUi();
+    void CloseDeviceUpdatesUi();
     virtual ~DeviceUpdateData();
 public slots:
 	void onLaunchView();
 private:
 	virtual CpBaseSettingView *createSettingView() const;
+	
+private:
+		QProcess *mproc;
 
 };
 #endif//	DEVICEUPDATESVIEW_H_

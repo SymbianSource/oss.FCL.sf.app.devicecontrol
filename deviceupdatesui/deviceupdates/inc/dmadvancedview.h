@@ -45,6 +45,12 @@
 #include <etel3rdparty.h>
 #include <etelmm.h>
 #include <etel.h>
+#include <sysutil.h>
+#include <sysversioninfo.h>
+#include <swi/sisregistrypackage.h>
+#include <swi/sisregistryentry.h>
+#include <swi/sisregistrysession.h>
+#include "nsmldmsyncprivatecrkeys.h"
 #include "serversettingsview.h"
 #include "dminforetrieval.h"
 #define DOCML_FILE_NAME ":xml/serversview.docml"

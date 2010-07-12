@@ -28,7 +28,9 @@ INCLUDEPATH += . \
 CONFIG += hb plugin
 
 LIBS += -lcpframework \
-					-lcentralrepository
+					-lcentralrepository \
+					-lws32 \
+					-lapparc
 
 # Input
 HEADERS += deviceupdatesplugin.h \
@@ -66,5 +68,6 @@ TARGET.CAPABILITY = CAP_GENERAL_DLL
 plugin.sources = deviceupdatesplugin.dll
 plugin.path = \resource\qt\plugins\controlpanel
 DEPLOYMENT += plugin
+RESOURCES += ./resources/deviceupdatesplugin.qrc
 
 # End of file	--Don't remove this.

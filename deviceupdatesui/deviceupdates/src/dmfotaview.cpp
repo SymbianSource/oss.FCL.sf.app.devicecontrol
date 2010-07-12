@@ -173,6 +173,20 @@ bool DMFotaView::addFotaView()
             }
 
     //Model
+    TBuf<100> phoneName;
+    TInt error = SysVersionInfo::GetVersionInfo(SysVersionInfo::EModelVersion, phoneName);
+    if (error==KErrNone)
+    {
+    
+    //phoneName.Copy( telid.iModel );
+    //imei.Copy(telid.iSerialNumber);
+    if( phoneName.Length()>0 )
+        {
+        val = hbTrId("txt_device_update_dblist_model");
+        str = QString::fromUtf16(phoneName.Ptr(), phoneName.Length());
+        FormatList(val,str);
+        }
+    }
     RTelServer telServer;
     User::LeaveIfError( telServer.Connect() );
     RTelServer::TPhoneInfo teleinfo;
@@ -189,17 +203,10 @@ bool DMFotaView::addFotaView()
     TBuf <50> imei;
     if (status==KErrNone)
     {
-    TBuf<100> phoneName;
-    phoneName.Copy( telid.iModel );
     imei.Copy(telid.iSerialNumber);
-    if( phoneName.Length()>0 )
-        {
-        val = hbTrId("txt_device_update_dblist_model");
-        str = QString::fromUtf16(phoneName.Ptr(), phoneName.Length());
-        FormatList(val,str);
-        }
     }
     phone.Close();
+    
     telServer.Close();
 
     //type
@@ -227,7 +234,7 @@ bool DMFotaView::addFotaView()
           { */
          TBuf<KSysUtilVersionTextLength> productcode;
          productcode.Zero();
-         TInt error = SysVersionInfo::GetVersionInfo(SysVersionInfo::EProductCode, productcode);
+         error = SysVersionInfo::GetVersionInfo(SysVersionInfo::EProductCode, productcode);
          if(error ==KErrNone )
          {            
              if( productcode.Length()>0 )
