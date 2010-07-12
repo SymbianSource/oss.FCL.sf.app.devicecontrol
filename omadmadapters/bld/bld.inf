@@ -25,12 +25,12 @@ PRJ_EXPORTS
 #include "../syncmldm/bld/bld.inf"
 #include "../syncmldm12/bld/bld.inf"
 //#include "../browseradapter/bld/bld.inf"
-//#include "../streamingadapter/bld/bld.inf"
+#include "../streamingadapter/bld/bld.inf"
 
 #include "../globalwlansettings/group/bld.inf"
 //#include "../nsmldminternet/group/bld.inf"
 #include "../nsmldmalwaysonadapter/group/bld.inf"
-//#include "../nsmldmbmadapter/group/bld.inf"
+#include "../nsmldmbmadapter/group/bld.inf"
 #include "../connmoadapter/group/bld.inf"
 
 #ifdef __SYNCML_DM_DS
@@ -38,7 +38,7 @@ PRJ_EXPORTS
 #endif
 
 #ifdef __SYNCML_DM_EMAIL
-//#include "../email/bld/bld.inf"
+#include "../email/bld/bld.inf"
 #endif
 
 #ifdef __SYNCML_DM_MMS

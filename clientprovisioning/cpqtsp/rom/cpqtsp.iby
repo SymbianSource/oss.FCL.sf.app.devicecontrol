@@ -24,7 +24,4 @@
 file = ABI_DIR/BUILD_DIR/Cpqtsp.exe PROGRAMS_DIR/Cpqtsp.exe
 data = DATAZ_/private/10003a3f/import/apps/Cpqtsp_reg.rsc private/10003a3f/import/apps/Cpqtsp_reg.rsc
 
-data=/epoc32/data/z/resource/plugins/devicedialogs/devicemanagementnotifiersplugin.qtplugin		resource/plugins/devicedialogs/devicemanagementnotifiersplugin.qtplugin
-file=ABI_DIR/BUILD_DIR/devicemanagementnotifiersplugin.dll		SHARED_LIB_DIR/devicemanagementnotifiersplugin.dll
-
 #endif

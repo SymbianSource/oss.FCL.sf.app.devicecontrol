@@ -31,6 +31,7 @@ symbian: {
 }
 
 CONFIG += hb service
+INCLUDEPATH += $$APP_LAYER_SYSTEMINCLUDE
 include(Cpqtsp.pri)
 LIBS+=-lxqservice -lxqserviceutil -lflogger
 MMP_RULES += "LIBRARY msgs.lib centralrepository.lib provisioningengine.lib featmgr.lib apengine.lib favouritesengine.lib smcm.lib gsmu.lib"

@@ -34,7 +34,7 @@ ECOM_PLUGIN(nsmldmsettingsadapter12.dll,nsmldmsettingsadapter12.rsc)
 #endif
 
 #ifdef FF_DM_STREAMING_ADAPTER
-REM ECOM_PLUGIN(nsmldmstreamingadapter.dll,nsmldmstreamingadapter.rsc)
+ECOM_PLUGIN(nsmldmstreamingadapter.dll,nsmldmstreamingadapter.rsc)
 #endif
 
 #ifdef FF_DM_BROWSER_ADAPTER
@@ -48,7 +48,7 @@ ECOM_PLUGIN(nsmldssettingsadapter.dll,nsmldssettingsadapter.rsc)
 #endif // __SYNCML_DS
 
 #ifdef __SYNCML_DM_EMAIL //  SyncML device management email settings plug-in
-REM ECOM_PLUGIN(nsmldmemailadapter.dll,nsmldmemailadapter.rsc)
+ECOM_PLUGIN(nsmldmemailadapter.dll,nsmldmemailadapter.rsc)
 #endif // __SYNCML_DM_EMAIL
 
 #ifdef __SYNCML_DM_MMS //  SyncML device management MMS settings plug-in
@@ -76,7 +76,7 @@ ECOM_PLUGIN(globalwlanadapter.dll,globalwlanadapter.rsc)
 ECOM_PLUGIN( nsmldmalwaysonadapter.dll, nsmldmalwaysonadapter.rsc )
 #endif // __ALWAYS_ONLINE_PDPCONTEXT2
 
-REM ECOM_PLUGIN( nsmldmbmadapter.dll, nsmldmbmadapter.rsc )
+ECOM_PLUGIN( nsmldmbmadapter.dll, nsmldmbmadapter.rsc )
 
 #ifdef FF_RUNTIME_DEVICE_CAPABILITY_CONFIGURATION
 REM ECOM_PLUGIN(dcmodmadapter.dll,dcmodmadapter.rsc)

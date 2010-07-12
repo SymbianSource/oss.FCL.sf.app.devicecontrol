@@ -57,7 +57,8 @@ void omacppinquerydialog::createcppinquery(const QVariantMap &parameters)
     loader.load(":/xml/resources/pin.docml", &ok);
     if (!ok)
         {
-        return;
+        qFatal("omacppinquerydialog createcppinquery() Unable to read pin.docml");
+        
         }
 
     HbDialog *dialog = qobject_cast<HbDialog *> (loader.findWidget("dialog"));
