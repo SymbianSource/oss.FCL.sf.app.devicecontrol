@@ -353,6 +353,16 @@ void CDevDiagRuntimeReqsInfo::RunL()
     }
 
 // ---------------------------------------------------------------------------
+// CDevDiagRuntimeReqsInfo::RunError
+// ---------------------------------------------------------------------------
+//
+TInt CDevDiagRuntimeReqsInfo::RunError( TInt aError )
+	{
+		LOGSTRING2( "CDevDiagRuntimeReqsInfo::RunError( %d )", aError )    
+		return KErrNone;
+	}
+	
+// ---------------------------------------------------------------------------
 // From CActive.
 // This function is called to cancel any outstanding asynchronous requests.
 // ---------------------------------------------------------------------------

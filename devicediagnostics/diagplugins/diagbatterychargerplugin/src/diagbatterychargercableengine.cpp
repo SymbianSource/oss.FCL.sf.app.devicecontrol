@@ -436,6 +436,16 @@ void CDiagBatteryChargerCableTestEngine::RunL()
         }
     }
 
+// ---------------------------------------------------------------------------
+// CDiagBatteryChargerCableTestEngine::RunError
+// ---------------------------------------------------------------------------
+//
+TInt CDiagBatteryChargerCableTestEngine::RunError( TInt aError )
+	{
+		LOGSTRING2( "CDiagBatteryChargerCableTestEngine::RunError( %d )", aError )    
+		return KErrNone;
+	}
+	
 // ---------------------------------------------------------------------------------------
 // CDiagHeadsetCableTestEngine::DoCancel
 // Handles cancel request

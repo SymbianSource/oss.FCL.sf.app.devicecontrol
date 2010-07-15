@@ -83,6 +83,11 @@ class CWaitDialogMonitor : public CActive
         void RunL();
         
         /**
+        * Handle RunL leaves
+        */
+        TInt RunError( TInt aError );
+        
+        /**
         * From CActive Cancels any outstanding request.
         * @since 2.0
         * @return void

@@ -157,6 +157,11 @@ private: // from CActive
     * Handle active object completion event
     */
     void RunL();
+    
+    /**
+    * Handle if RunL leaves
+    */
+    TInt RunError( TInt aError );
 
     /**
     * Handle cancel

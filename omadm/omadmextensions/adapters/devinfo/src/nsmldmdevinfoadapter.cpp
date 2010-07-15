@@ -457,7 +457,13 @@ CSmlDmAdapter::TError CNSmlDmDevInfoAdapter::FetchLeafObjectL( const TDesC8& aUR
         if ( segment == KNSmlDMDevInfoLangNodeName )
             { 
             TLanguage language = User::Language();
+            // value to mask off the leftmost 6 bits in language that holds the operator id
+            const TUint KDialectMask=0x03FF;
+            language = static_cast<TLanguage>(language & KDialectMask);
+
             TBuf8<2> langCode;
+            DBG_FILE_CODE("CNSmlDmInfoAdapter::FetchLeafObjectL(): %d",language);
+
             switch ( language )
                 {
                 case ELangEnglish: 
@@ -703,6 +709,7 @@ CSmlDmAdapter::TError CNSmlDmDevInfoAdapter::FetchLeafObjectL( const TDesC8& aUR
                     langCode = KNSmlDMEnglish;
                 }
             aObject.InsertL( 0, langCode );
+            DBG_FILE_CODE("CNSmlDmInfoAdapter::FetchLeafObjectL(): %s",langCode);
             }
         else
         if ( segment == KNSmlDMDevInfoDmVNodeName )

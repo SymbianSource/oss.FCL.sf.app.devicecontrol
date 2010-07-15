@@ -702,12 +702,14 @@ void CDiagBrowserPluginModel::RunL()
 // ---------------------------------------------------------------------------
 TInt CDiagBrowserPluginModel::RunError( TInt aError )
     {
-    LOGSTRING2( "CDiagBrowserPluginModel::RunError( %d )", aError )
+    LOGSTRING2( "CDiagBrowserPluginModel::RunError aError( %d )", aError )
 
     // Try to continue test execution by retrying the secondary connection.
     //TRAPD( error, RetryConnectionL() );
     //return error;
-    HandleTestEndL( CDiagResultsDatabaseItem::EFailed );
+    TInt err(KErrNone);
+    TRAP( err, HandleTestEndL( CDiagResultsDatabaseItem::EFailed ));
+    LOGSTRING2( "CDiagBrowserPluginModel::RunError err( %d )", err )
     return KErrNone;
     }
 

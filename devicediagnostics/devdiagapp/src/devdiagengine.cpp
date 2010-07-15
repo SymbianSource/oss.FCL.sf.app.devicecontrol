@@ -626,6 +626,16 @@ void CDevDiagEngine::RunL()
     }
 
 // ---------------------------------------------------------------------------
+// CDevDiagEngine::RunError
+// ---------------------------------------------------------------------------
+//
+TInt CDevDiagEngine::RunError( TInt aError )
+	{
+		LOGSTRING2( "CDevDiagEngine::RunError error: %d", aError );      
+		return KErrNone;
+	}
+	
+// ---------------------------------------------------------------------------
 // From class CActive.
 // The active object cancellation function.
 // ---------------------------------------------------------------------------

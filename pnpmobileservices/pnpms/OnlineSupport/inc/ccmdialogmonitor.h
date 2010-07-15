@@ -105,8 +105,8 @@ class CCMDialogMonitor : public CActive
         * @since 2.0
         * @return void
         */
-        void RunL();
-        
+        void RunL();        
+            
         /**
         * From CActive Cancels any outstanding request.
         * @since 2.0
@@ -117,7 +117,7 @@ class CCMDialogMonitor : public CActive
         /**
         * From CActive Handles a leave occurring in the request completion event handler RunL().
         */
-        //TInt RunError( TInt aError );
+        TInt RunError( TInt aError );
     private:
 
         /**

@@ -385,6 +385,15 @@ void CCMDialogMonitor::RunL()
     */
     }
 
+// ---------------------------------------------------------------------------
+// CCMDialogMonitor::RunError
+// ---------------------------------------------------------------------------
+//
+TInt CCMDialogMonitor::RunError( TInt aError )
+	{
+		LOGSTRING2( "CCMDialogMonitor::RunError( %d )", aError )    
+		return KErrNone;
+	}
 // ========================== OTHER EXPORTED FUNCTIONS =========================
 
 // None

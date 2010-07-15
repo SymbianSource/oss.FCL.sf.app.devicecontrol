@@ -422,7 +422,17 @@ void CDiagDataNetworkTestPDPEngine::RunL()
         };      
     LOGSTRING("CDiagDataNetworkTestPDPEngine::RunL()");  
     }   
-    
+
+// ---------------------------------------------------------------------------
+// CDiagDataNetworkTestPDPEngine::RunError
+// ---------------------------------------------------------------------------
+//
+TInt CDiagDataNetworkTestPDPEngine::RunError( TInt aError )
+	{
+		LOGSTRING2( "CDiagDataNetworkTestPDPEngine::RunError( %d )", aError )    
+		return KErrNone;
+	}
+	    
 // ---------------------------------------------------------------------------
 // CDiagDataNetworkTestPDPEngine::DoCancel()
 //

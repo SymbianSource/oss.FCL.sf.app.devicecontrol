@@ -138,6 +138,11 @@ private:    // from CActive
     void RunL();
     
     /**
+    * Handle when RunL leaves
+    */
+    TInt RunError( TInt aError );
+    
+    /**
     * Handle cancel
     */
     void DoCancel();

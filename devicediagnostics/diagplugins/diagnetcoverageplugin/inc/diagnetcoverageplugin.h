@@ -76,6 +76,11 @@ class CDiagNetCoveragePlugin : public CDiagTestPluginBase,
         * @see CActive
         */
         void RunL();
+        
+        /**
+        * Handle RunL leaves
+        */
+        TInt RunError( TInt aError );
     
         /**
         * Handle cancel

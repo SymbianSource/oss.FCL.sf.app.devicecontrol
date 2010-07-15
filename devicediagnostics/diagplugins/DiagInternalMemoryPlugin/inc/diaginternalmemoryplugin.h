@@ -118,6 +118,11 @@ class CDiagInternalMemoryPlugin : public CDiagTestPluginBase,
         * Handle active object completion event
         */
         virtual void RunL();
+        
+        /**
+        * Handle RunL leaves
+        */
+        virtual TInt RunError( TInt aError );
     
         /**
         * Handle cancel

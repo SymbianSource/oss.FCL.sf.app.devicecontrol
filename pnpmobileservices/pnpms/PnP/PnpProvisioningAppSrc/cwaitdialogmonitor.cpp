@@ -127,6 +127,16 @@ void CWaitDialogMonitor::RunL()
     iNotifier.WaitDialogDismissedL( iStatus.Int() );
     }
 
+// ---------------------------------------------------------------------------
+// CWaitDialogMonitor::RunError
+// ---------------------------------------------------------------------------
+//
+TInt CWaitDialogMonitor::RunError( TInt /*aError*/ )
+	{
+//		LOGSTRING2( "CWaitDialogMonitor::RunError( %d )", aError )    
+		return KErrNone;
+	}
+	
 // ========================== OTHER EXPORTED FUNCTIONS =========================
 
 // None

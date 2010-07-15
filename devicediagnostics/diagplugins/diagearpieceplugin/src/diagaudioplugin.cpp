@@ -1246,6 +1246,16 @@ void CDiagAudioPlugin::RunL()
     }
 
 // ---------------------------------------------------------------------------
+// CDiagAudioPlugin::RunError
+// ---------------------------------------------------------------------------
+//
+TInt CDiagAudioPlugin::RunError( TInt aError )
+	{
+		LOGSTRING2( "CDiagAudioPlugin::RunError( %d )", aError )    
+		return KErrNone;
+	}
+	
+// ---------------------------------------------------------------------------
 // From CActive
 // CDiagAudioPlugin::DoCancel
 // ---------------------------------------------------------------------------

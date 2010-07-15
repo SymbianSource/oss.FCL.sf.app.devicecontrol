@@ -306,7 +306,16 @@ void CDiagInternalMemoryPlugin::RunL()
         }           
     }    
 
-
+// ---------------------------------------------------------------------------
+// CDiagInternalMemoryPlugin::RunError
+// ---------------------------------------------------------------------------
+//
+TInt CDiagInternalMemoryPlugin::RunError( TInt aError )
+	{
+		LOGSTRING2( "CDiagInternalMemoryPlugin::RunError( %d )", aError )    
+		return KErrNone;
+	}
+	
 // ---------------------------------------------------------------------------
 // From CActive
 // CDiagInternalMemoryPlugin::DoCancel

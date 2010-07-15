@@ -129,7 +129,8 @@ class CDiagDataNetworkTestPlugin : public CDiagTestPluginBase,
         * Handle active object completion event
         */
         void RunL();
-    
+        
+            
         /**
         * Handle cancel
         */

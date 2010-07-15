@@ -560,7 +560,16 @@ void CDiagVibratePlugin::RunL()
         }
     }    
 
-
+// ---------------------------------------------------------------------------
+// CDiagVibratePlugin::RunError
+// ---------------------------------------------------------------------------
+//
+TInt CDiagVibratePlugin::RunError( TInt aError )
+	{
+		LOGSTRING2( "CDiagVibratePlugin::RunError( %d )", aError )    
+		return KErrNone;
+	}
+	
 // ---------------------------------------------------------------------------
 // From CActive
 // CDiagVibratePlugin::DoCancel

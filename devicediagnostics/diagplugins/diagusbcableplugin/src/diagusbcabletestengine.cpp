@@ -476,7 +476,17 @@ void CDiagUSBCableTestEngine::RunL()
         RunUSBCableTestL();
         }
     }
-    
+
+// ---------------------------------------------------------------------------
+// CDiagUSBCableTestEngine::RunError
+// ---------------------------------------------------------------------------
+//
+TInt CDiagUSBCableTestEngine::RunError( TInt aError )
+	{
+		LOGSTRING2( "CDiagUSBCableTestEngine::RunError( %d )", aError )    
+		return KErrNone;
+	}
+	  
 // ---------------------------------------------------------------------------------------
 // CDiagHeadsetCableTestEngine::DoCancel
 // Handles cancel request

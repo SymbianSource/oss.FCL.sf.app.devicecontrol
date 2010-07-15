@@ -281,6 +281,13 @@ private: // From base class CActive
      * requests.
      */
     virtual void DoCancel();
+    
+    /**
+     * From CActive.
+     * This function is called when RunL leaves
+     * 
+     */
+    virtual TInt RunError( TInt aError );
 
 
 private: // From base class MDiagEngineObserver

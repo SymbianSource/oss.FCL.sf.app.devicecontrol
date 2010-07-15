@@ -304,7 +304,16 @@ void CDiagExternalMediaCardPlugin::RunL()
         }
     }    
 
-
+// ---------------------------------------------------------------------------
+// CDiagExternalMediaCardPlugin::RunError
+// ---------------------------------------------------------------------------
+//
+TInt CDiagExternalMediaCardPlugin::RunError( TInt aError )
+	{
+		LOGSTRING2( "CDiagExternalMediaCardPlugin::RunError( %d )", aError )    
+		return KErrNone;
+	}
+	
 // ---------------------------------------------------------------------------
 // From CActive
 // CDiagExternalMediaCardPlugin::DoCancel

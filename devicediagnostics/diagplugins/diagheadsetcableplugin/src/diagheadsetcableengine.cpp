@@ -404,6 +404,16 @@ void CDiagHeadsetCableTestEngine::RunL()
         }
     }
 
+// ---------------------------------------------------------------------------
+// CDiagHeadsetCableTestEngine::RunError
+// ---------------------------------------------------------------------------
+//
+TInt CDiagHeadsetCableTestEngine::RunError( TInt aError )
+	{
+		LOGSTRING2( "CDiagHeadsetCableTestEngine::RunError( %d )", aError )    
+		return KErrNone;
+	}
+	
 // ---------------------------------------------------------------------------------------
 // CDiagHeadsetCableTestEngine::DoCancel
 // Handles cancel request

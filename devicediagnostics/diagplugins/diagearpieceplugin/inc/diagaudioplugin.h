@@ -274,6 +274,11 @@ private: // from CActive
     */
     virtual void RunL();
 
+		/**
+     * Handle RunL leaves
+     */
+    virtual TInt RunError( TInt aError );
+        
     /**
     * Handle cancel
     */

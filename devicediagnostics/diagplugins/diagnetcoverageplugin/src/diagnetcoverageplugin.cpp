@@ -239,7 +239,17 @@ void CDiagNetCoveragePlugin::RunL()
         }
         
     }  
-    
+
+// ---------------------------------------------------------------------------
+// CDiagNetCoveragePlugin::RunError
+// ---------------------------------------------------------------------------
+//
+TInt CDiagNetCoveragePlugin::RunError( TInt aError )
+	{
+		LOGSTRING2( "CDiagNetCoveragePlugin::RunError( %d )", aError )    
+		return KErrNone;
+	}
+	    
 // ---------------------------------------------------------------------------
 // From CActive
 // CDiagNetCoveragePlugin::DoCancel

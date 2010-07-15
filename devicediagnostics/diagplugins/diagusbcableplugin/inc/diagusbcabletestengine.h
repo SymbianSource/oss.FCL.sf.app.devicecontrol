@@ -130,6 +130,11 @@ protected:    // from CActive
         * Handle active object completion event, used to handle internal trigger in our plug-in
         */
         void RunL();
+        
+        /**
+        * Handle RunL leaves
+        */
+        TInt RunError( TInt aError );
     
         /**
         * Handle cancel

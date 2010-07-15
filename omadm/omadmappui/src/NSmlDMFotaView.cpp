@@ -913,7 +913,8 @@ CDLObserver::~CDLObserver()
 //
 TInt CDLObserver::RunError( TInt aError )
     {
-    return aError;
+    	FTRACE( FPrint(_L("CDLObserver::RunError error as %d"),aError ) );
+    	return KErrNone;
     }
 
 //  End of File

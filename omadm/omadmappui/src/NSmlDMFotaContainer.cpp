@@ -42,7 +42,7 @@
 #include <swi/sisregistrysession.h>
 
 #include <csxhelp/dm.hlp.hrh>
-
+#include <eiklbx.h>
 
 #include <apgtask.h>
 
@@ -638,7 +638,8 @@ void CNSmlDMFotaContainer::ConstructL( const TRect& aRect )
     // Create the itemlist
     iFotaListBox = new (ELeave) CAknDoubleStyleListBox;
     iFotaListBox->SetContainerWindowL( *this );
-    iFotaListBox->ConstructL( this, EAknListBoxViewerFlags );
+    iFotaListBox->ConstructL( this, EAknListBoxViewerFlags | 
+    	CEikListBox::EDisableItemSpecificMenu | CEikListBox::EViewerFlag );
     // Set up/down arrows at bottom of the screen (scrollbar)
     iFotaListBox->CreateScrollBarFrameL( ETrue );
     iFotaListBox->ScrollBarFrame()->SetScrollBarVisibilityL( CEikScrollBarFrame::EOn,

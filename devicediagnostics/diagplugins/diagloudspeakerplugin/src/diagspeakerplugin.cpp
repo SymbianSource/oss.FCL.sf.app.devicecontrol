@@ -1229,7 +1229,17 @@ void CDiagSpeakerPlugin::RunL()
             break;
         }
     }
-
+    
+// ---------------------------------------------------------------------------
+// CDiagSpeakerPlugin::RunError
+// ---------------------------------------------------------------------------
+//
+TInt CDiagSpeakerPlugin::RunError( TInt aError )
+	{
+		LOGSTRING2( "CDiagSpeakerPlugin::RunError( %d )", aError )    
+		return KErrNone;
+	}
+	
 // ---------------------------------------------------------------------------
 // From CActive
 // CDiagSpeakerPlugin::DoCancel
