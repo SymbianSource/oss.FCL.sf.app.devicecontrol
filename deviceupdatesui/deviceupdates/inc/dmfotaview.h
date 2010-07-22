@@ -24,6 +24,7 @@
 #include <QGraphicsLinearLayout>
 #include <hbgroupbox.h>
 #include <hbview.h>
+#include <SysUtil.h>
 #include <hblabel.h>
 #include <hbdocumentloader.h>
 #include <hbmenu.h>
@@ -34,12 +35,18 @@
 #include <centralrepository.h>
 #include <QTranslator>
 #include <nsmldmdef.h>
+#include "dminforetrieval.h"
+#include <fotaengine.h>
+#include "deviceupdatemoniterobserver.h"
 //_LIT( KSmlEOL,      "\n" );
 
 
 class HbDialog;
+class HbPushButton;
 class DmAdvancedView;
-class DMFotaView : public HbView
+class CDeviceUpdateMoniter;
+
+class DMFotaView : public HbView, public MDeviceMoniterObserver
     {
     Q_OBJECT
 public:
@@ -47,15 +54,22 @@ public:
     virtual ~DMFotaView();
     bool addFotaView();
     //HbDialog* createDialog() const;
+    void displayNoteAndDisableButtons();
+    void enableButtons();
 private:
     void FormatList(QString val, QString str);
+    RFotaEngineSession& FotaEngineL();
+    void fotaSupportEnabled();
 public slots :
     void OnHelp();
     void OnExit();
 	void CheckforUpdate();
-	void AdvancedDeviceManager();
+	void AdvancedDeviceManager(bool launchadvanceview = true);	
 	void backtoMainWindow();
 	void readSection( Qt::Orientation orientation );
+	void ResumeUpdate();
+public:
+	void UpdateDMUI(TBool aVal);
 private:
 	HbMainWindow* mMainWindow;
 	HbView* fotaPortraitView;
@@ -68,8 +82,20 @@ private:
     QTranslator* mTranslator;
     HbLabel *label,*label2,*label3,*label4;
     QStringList list1,list2;
-    TInt i;
+    TInt i;   
+    DmInfo* mainDmInfo;
     HbDocumentLoader loader,loader2;
+    HbPushButton *updateButton;
+    TInt fotaValue;
+    HbPushButton *advancedButton;
+    HbPushButton *updateButtonLandscape;
+    HbPushButton *advancedButtonLandscape;
+    
+    RFotaEngineSession iFotaEngine;
+    RFotaEngineSession::TState iFotaState;
+    
+    CDeviceUpdateMoniter * iMoniter;
+    TBool Connected;
     };
     
 

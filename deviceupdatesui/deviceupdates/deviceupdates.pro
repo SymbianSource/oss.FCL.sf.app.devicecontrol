@@ -40,7 +40,11 @@ TARGET.CAPABILITY = CAP_APPLICATION
         -letel3rdparty\
 		-letelpckt\
 		-lcmmanager\
-		-lsisregistryclient
+		-lsisregistryclient \
+		-lfotaengine	\
+		-leuser	\
+		-lflogger	\
+		-lxqutils
 	}
 TEMPLATE = app
 TARGET = deviceupdates
@@ -64,7 +68,10 @@ HEADERS += ./inc/dminforetrieval.h \
 ./inc/dmadvancedview.h\
 ./inc/settingsdataformcustomitem.h\
 ./inc/dmfotaview.h\
-./inc/nsmldmdbnotifier.h
+./inc/nsmldmdbnotifier.h	\
+./inc/deviceupdatemoniter.h	\
+./inc/deviceupdatemoniterobserver.h	\
+./inc/DeviceUpdateDebug.h
 
 SOURCES += ./src/dmadvancedview.cpp \
 			./src/main.cpp \
@@ -77,11 +84,12 @@ SOURCES += ./src/dmadvancedview.cpp \
 			./src/dminforetrieval.cpp\
 			./src/serversettingsview.cpp\
 			./src/settingsdataformcustomitem.cpp\
-			../src/dmfotaview.cpp \
-			../src/nsmldmdbnotifier.cpp
+			./src/dmfotaview.cpp \
+			./src/nsmldmdbnotifier.cpp	\
+			./src/deviceupdatemoniter.cpp
 			
 RESOURCES += ./resources/deviceupdates.qrc
 CONFIG += hb
-#TRANSLATIONS += deviceupdates.ts
+TRANSLATIONS += deviceupdates.ts
    
 

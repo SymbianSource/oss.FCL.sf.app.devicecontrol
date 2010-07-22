@@ -23,5 +23,14 @@
 
 
 
-//omadm
-#include "../deviceupdatesui/adapters/bld/bld.inf"
+//omadmadapters
+#include "../omadmadapters/bld/bld.inf"
+
+//omadcmoadapters
+#include "../omadcmoadapters/group/bld.inf"
+
+//omacpadapters
+#include "../omacpadapters/bld/bld.inf"
+
+//application management
+#include "../applicationmanagement/group/bld.inf"

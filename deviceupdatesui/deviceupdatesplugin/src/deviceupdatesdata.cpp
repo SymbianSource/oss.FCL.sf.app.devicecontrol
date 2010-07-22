@@ -15,9 +15,11 @@
 *
 */
 
-
+#include <QtCore/QProcess>
+#include <QtCore/QDir>
+#include <QtCore/QLibraryInfo>
 #include <cpsettingformitemdata.h>
-#include <centralrepository.h>
+#include <apgtask.h>
 #include "deviceupdatesdata.h"
 
 
@@ -32,72 +34,72 @@ DeviceUpdateData::DeviceUpdateData(CpItemDataHelper &itemDataHelper,
 													   icon,
 													   parent)
 {
+	mproc = NULL;
 }
 
 DeviceUpdateData::~DeviceUpdateData()
 {
-	CloseDmUi();
+	CloseDeviceUpdatesUi();
+	if (mproc)
+	{
+		delete mproc;
+		mproc = NULL;
+	}
 }
 
 // -----------------------------------------------------------------------------
 // DeviceUpdateData::OpenDmAppL()
 // -----------------------------------------------------------------------------
 //
-void DeviceUpdateData::OpenDmAppL()
+void DeviceUpdateData::LaunchDeviceUpdatesUi()
 	{	
 		
-    	// Create DM UI Process
-			RProcess rp;
-			TInt cpLaunch(1);
-			CRepository *cenrep = CRepository::NewL(KUidSmlSyncApp);
-			if(cenrep)
-				{
-					cenrep->Set( KNsmlDmUILaunch, cpLaunch);
-					delete cenrep;
-					cenrep = NULL;
-				}	
-    	TInt err = rp.Create(KDMUIProcess,KNullDesC);
-            
-    	User::LeaveIfError(err);  
-    
-		
-      	rp.Resume();    // logon OK - start the server
-      
-    		
+		RWsSession ws;
+    User::LeaveIfError( ws.Connect() );
+    CleanupClosePushL( ws );
+    // Find the task with uid
+    TApaTaskList taskList(ws);
+    TApaTask task = taskList.FindApp( KUidSmlSyncApp );    
+    if ( task.Exists() )
+    {    	    
+        task.BringToForeground();        
+    }
+    else
+    {
+ 				// Create DM UI Process
+    		if(!mproc)
+    			mproc = new QProcess();
+    		if(mproc->state() != QProcess::Running)
+    		{
+    			QString app = QLatin1String("deviceupdates");
+    			QStringList args;
+    			args<< QLatin1String("-cp");
+    			mproc->start(app, args);
+    			mproc->waitForStarted();
+    		}     
+    }
+    CleanupStack::PopAndDestroy();  // ws    		
 	}
 
 // ---------------------------------------------------------------------------------------------
 // DeviceUpdateData::CloseDmUi
 // closes DM Ui
 // ---------------------------------------------------------------------------------------------	
-void DeviceUpdateData:: CloseDmUi()
+void DeviceUpdateData:: CloseDeviceUpdatesUi()
 {
-	// Create DM UI Process
-	 
-	TFullName processName;		
-	TFindProcess process;
-	while ( process.Next( processName ) != KErrNotFound )
-	{
-		if ( ( processName.Find( KDMUIName ) != KErrNotFound ) )
-		{
-			RProcess rprocess;
-			if (rprocess.Open(process, EOwnerProcess) == KErrNone)
-			{				
-				rprocess.Terminate(KErrNone);
-				rprocess.Close();			
-			}
-		}
-	}	
+	if(( mproc )&&(mproc->state() == QProcess::Running))
+  	{
+    			mproc->close();
+    }
+
 }	
 
 void DeviceUpdateData::onLaunchView()
 {
-	TRAP_IGNORE( OpenDmAppL() );
+	LaunchDeviceUpdatesUi();
 }
 
 CpBaseSettingView *DeviceUpdateData::createSettingView() const
 {
-	return 0;
+		return 0;
 }
-
-

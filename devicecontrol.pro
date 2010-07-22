@@ -15,7 +15,11 @@
 #
 TEMPLATE = subdirs
 
-SUBDIRS  += deviceupdatesui 
+SUBDIRS  += devicemgmtdialogsplugin \
+            devicemgmtindicatorsplugin \
+            deviceupdatesui \
+	    			clientprovisioning \
+				applicationmanagement
 
 CONFIG += ordered
 

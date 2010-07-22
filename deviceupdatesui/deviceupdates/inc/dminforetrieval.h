@@ -38,7 +38,7 @@ class DmInfo: public QObject, public MNSmlDMDbEventHandler
     Q_OBJECT
 
    public:
-    DmInfo(DmAdvancedView* serversview, QGraphicsItem *parent=0);
+    DmInfo(DmAdvancedView* serversview=NULL, QGraphicsItem *parent=0);
        virtual ~DmInfo();   
        void refreshProfileList(TBool aIncludeHidden = ETrue);
        int profilescount();
@@ -54,6 +54,7 @@ class DmInfo: public QObject, public MNSmlDMDbEventHandler
        bool checksrvid(QString& serverid);
        void getIaplist(QStringList& iaplist, int& iapselected, int& listindex);
        void synchronize(int& itemnum);
+       void sync(int aProfileId);
        void synccomplete(int);     
        /**
        * Handles DB events
@@ -61,13 +62,13 @@ class DmInfo: public QObject, public MNSmlDMDbEventHandler
        * @return None
        */
        void HandleDbEventL( TNSmlDMDbEvent aEvent );
-       
+       TInt DefaultFotaProfileIdL() const;           
        void DisableDbNotifications( TBool aEvent );
               
 private:
        void GetProfiles( );
+       TInt findProfile(TInt aProfileId);
        void OpenSyncSession();
-       TInt DefaultFotaProfileIdL() const;
        void SetDefaultFotaProfileIdL( const TInt aProfileId );
        
    public slots:

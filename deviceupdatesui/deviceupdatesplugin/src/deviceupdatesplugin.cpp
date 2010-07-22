@@ -15,7 +15,6 @@
 *
 */
 
-//#include <cpsettingformentryitemdataimpl.h>
 
 #include <cpitemdatahelper.h>
 #include "deviceupdatesplugin.h"
@@ -33,19 +32,12 @@ DeviceUpdatesPlugin::~DeviceUpdatesPlugin()
 	
 }
 
-int DeviceUpdatesPlugin::uid() const
-{
-	//  get a uid and replace it.
-   	 return 0X2002DD04;
-}
-
-CpSettingFormItemData *DeviceUpdatesPlugin::createSettingFormItemData(CpItemDataHelper& itemDataHelper) const
+QList<CpSettingFormItemData*> DeviceUpdatesPlugin::createSettingFormItemData(CpItemDataHelper& itemDataHelper) const
 {
    
-	CpSettingFormItemData *entryItem = new DeviceUpdateData(itemDataHelper, QString("Device updates"),
-                                          QString());
-
-	return entryItem;	
+	return QList<CpSettingFormItemData*>()
+					<< new DeviceUpdateData(itemDataHelper, QString("Device updates"),
+                                          QString("Device updates plugin"), HbIcon(":/resources/qtg_large_device_update.svg"));
 }
 
 Q_EXPORT_PLUGIN2( deviceupdatesplugin, DeviceUpdatesPlugin)

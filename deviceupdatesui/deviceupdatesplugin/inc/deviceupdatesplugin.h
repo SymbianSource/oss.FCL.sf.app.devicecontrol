@@ -19,24 +19,22 @@
 #ifndef DEVICEUPDATESPLUGIN_H_
 #define DEVICEUPDATESPLUGIN_H_
 
-#include <cppluginplatinterface.h>
+#include <cpplugininterface.h>
 #include <qobject.h>
 
 
 class CpItemDataHelper;
 
-class DeviceUpdatesPlugin : public QObject, public CpPluginPlatInterface
+class DeviceUpdatesPlugin : public QObject, public CpPluginInterface
 {
 	Q_OBJECT
-  Q_INTERFACES(CpPluginPlatInterface)
+  Q_INTERFACES(CpPluginInterface)
 
 public:
 		DeviceUpdatesPlugin();
 
     virtual ~DeviceUpdatesPlugin();
-
-    virtual int uid() const;
-    virtual CpSettingFormItemData *createSettingFormItemData(CpItemDataHelper &itemDataHelper) const;
+    virtual QList<CpSettingFormItemData*> createSettingFormItemData(CpItemDataHelper &itemDataHelper) const;
 };
 
 #endif /* DEVICEUPDATESPLUGIN_H_ */
