@@ -74,12 +74,12 @@ int ServerSettingsView::setProfileValues(QStringList& settingdatalist,
         serverpwd->setContentWidgetData(QString("echoMode"),HbLineEdit::Password );
         serverpwd->setContentWidgetData(QString("text"), settingdatalist[2]);                
         QStringList sList;
-        sList <<hbTrId("txt_device_update_button_internet");
-        sList<<hbTrId("txt_device_update_button_bluetooth");        
+        sList <<hbTrId("txt_deviceupdate_setlabel_to_update_your_val_inter");
+        sList<<hbTrId("txt_deviceupdate_setlabel_to_update_your_val_bluet");        
         sessionmode->setContentWidgetData(QString("text"), sList[0]);//Internet selected
         sessionmode->setContentWidgetData(QString("additionalText"), sList[1]);
         
-        apdata.append(hbTrId("txt_device_update_setlabel_access_point_val_defaul"));
+        apdata.append(hbTrId("txt_deviceupdate_setlabel_access_point_val_default"));
         accesspoint->setContentWidgetData(QString("items"), apdata);
         currentiapindex = currentap;
         if(currentap >= 0)
@@ -95,8 +95,8 @@ int ServerSettingsView::setProfileValues(QStringList& settingdatalist,
         userpwd->setContentWidgetData(QString("echoMode"),HbLineEdit::Password );
         userpwd->setContentWidgetData(QString("text"),settingdatalist[5]);                
         QStringList yesnoList;
-        yesnoList <<hbTrId("txt_device_update_button_yes");
-        yesnoList<<hbTrId("txt_device_update_button_no");
+        yesnoList <<hbTrId("txt_deviceupdate_setlabel_network_auth_val_yes");
+        yesnoList<<hbTrId("txt_deviceupdate_setlabel_network_auth_val_no");
         networkauth->setContentWidgetData(QString("text"), yesnoList[0]);
         networkauth->setContentWidgetData(QString("additionalText"), yesnoList[1]);        
         networkusername->setContentWidgetData(QString("text"),settingdatalist[6]);
@@ -144,7 +144,7 @@ void ServerSettingsView::backButtonClicked()
     QString netauthdata =
             sessionmode->contentWidgetData(QString("text")).toString();
     bool netauthval = false;
-    if (netauthdata.compare("yes"))
+    if (netauthdata.compare(hbTrId("txt_deviceupdate_setlabel_network_auth_val_yes")))
         netauthval = true;
     //check server name , server id, host addr & usrname        
     if ((itemlist[0].length() > 0) && (itemlist[1].length() > 0)
@@ -258,13 +258,13 @@ void ServerSettingsView::makeviewItemsVisible(QString& formtitle)
         itemname = hbTrId("txt_device_update_formlabel_password");
         userpwd = dataformmodel->appendDataFormItem(HbDataFormModelItem::TextItem, itemname);
         
-        itemname = hbTrId("txt_device_update_setlabel_network_authentication");
+        itemname = hbTrId("txt_device_update_formlabel_network_authentication");
         networkauth = dataformmodel->appendDataFormItem(HbDataFormModelItem::ToggleValueItem, itemname);
         
-        itemname = hbTrId("txt_device_update_formlabel_network_user_name");
+        itemname = hbTrId("txt_device_update_formlabel_network_username");
         networkusername = dataformmodel->appendDataFormItem(HbDataFormModelItem::TextItem, itemname);
         
-        itemname = hbTrId("txt_device_update_formlabel_network_password");
+        itemname = hbTrId("txt_device_update_setlabel_network_password");
         networkpwd = dataformmodel->appendDataFormItem(HbDataFormModelItem::TextItem, itemname);
         }
     }

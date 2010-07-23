@@ -75,7 +75,8 @@ void DmAdvancedView::handleLongPress(HbAbstractViewItem* item , QPointF coOrdina
             connect(defaultprofileAction, SIGNAL(triggered()), this,
                     SLOT(defaultMenuItemSelected()));
             }
-        if (!dminfo->Isprofilelocked(currentselecteditem))
+        if (!dminfo->Isprofilelocked(currentselecteditem) && 
+                     dminfo->isProfileDeleteAllowed(currentselecteditem) )
             {
             deleteaction = csmenu->addAction(hbTrId(
                     "txt_device_update_menu_delete"));

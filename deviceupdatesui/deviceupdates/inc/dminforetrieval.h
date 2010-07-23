@@ -44,8 +44,9 @@ class DmInfo: public QObject, public MNSmlDMDbEventHandler
        int profilescount();
       int profileinfo(int profilelistnum, QStringList& itemtext, int& icon, bool& lock);       
        void setDefaultProfile(int listitem);      
-       bool Isprofilelocked(int profilelistnum/*, bool& lock*/);
-       bool Isdefaultprofile(int profilelistnum/*, bool& defaultprofile*/);
+       bool Isprofilelocked(int profilelistnum);
+       bool Isdefaultprofile(int profilelistnum);
+       bool isProfileDeleteAllowed(int profilelistnum);
        void profileTransport(int profilelistnum, int& transport);
        TInt DeleteProfile( TInt& aIndex );
        bool createNewprofile();       

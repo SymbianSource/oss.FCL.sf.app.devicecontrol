@@ -247,6 +247,19 @@ bool DmInfo::Isdefaultprofile(int profilelistnum)
     return defaultprofile;
     }
 
+bool DmInfo::isProfileDeleteAllowed(int profilelistnum)
+    {
+    bool deleteAllowed = false;
+    if(profilelistnum >= 0 && iProfileList->Count() > 0)
+        {        
+        if(( iProfileList->At( profilelistnum ).iDeleteAllowed))
+            {
+        deleteAllowed = true;
+            }                  
+        }
+    return deleteAllowed;
+    }
+
 void DmInfo::profileTransport(int profilelistnum, int& transport)
     {
     if(profilelistnum >= 0 && profilelistnum < profilescount())
