@@ -19,7 +19,7 @@
 #include <hbapplication.h>
 #include <hbtoolbar.h>
 #include <hbaction.h>
-#include <HbMenu.h>
+#include <hbmenu.h>
 #include <HbTextItem>
 #include <HbFontSpec>
 #include <HbMessageBox>
@@ -29,22 +29,22 @@
 #include <xqserviceutil.h>
 #include <e32base.h>
 #include <flogger.h>
-#include <CWPNameValue.h>
 #include <CWPEngine.h>
-#include <CpQtSpView.h>
-#include <CpQtSpMainWindow.h>
 #include <HbGroupBox>
 #include <HbListWidget>
 #include <HbListWidgetItem>
 #include <HbLabel>
-#include <MSVSTD.H>
-#include <SMSCLNT.H>
-#include <MTCLREG.H>
-#include <SMUTHDR.H>
+#include <msvstd.h>
+#include <smsclnt.h>
+#include <mtclreg.h>
+#include <smuthdr.h>
 #include <QDateTime>
+#include "CWPNameValue.h"
+#include "CpQtSpView.h"
+#include "CpQtSpMainWindow.h"
 #include "ProvisioningDebug.h"
 #include "ProvisioningUIDs.h"
-#include <CWPBioControl.h>
+#include "CWPBioControl.h"
 const QString DATE_TIME_FORMAT("dd.MM.yy hh:mm");
 
 // ----------------------------------------------------------------------------

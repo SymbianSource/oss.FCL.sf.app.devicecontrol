@@ -40,7 +40,7 @@
 #include <hbdevicedialog.h>
 #include <QObject>
 #include <devicedialogconsts.h>
-#include <PnpUtilLogger.h>
+#include "PnpUtilLogger.h"
 
 // CONSTANTS
 _LIT(KNone,"");

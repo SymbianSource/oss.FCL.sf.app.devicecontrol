@@ -70,7 +70,8 @@ symbian: {
         -lapgrfx \
         -lws32 \
         -lapmime \ 
-        -lsif
+        -lsif \
+        -lcmmanager
 }
 TEMPLATE = app
 TARGET = applicationmanagementserver
@@ -123,10 +124,10 @@ SOURCES += ./src/amview.cpp \
     ./src/amwaitprogdialog.cpp \
     ./src/AMAppHideUtil.cpp \
     ./src/AMDeploymentComponent.cpp \
-    ./src/amdeploymentcomponentdata.cpp \ 
+    ./src/AMDeploymentComponentData.cpp \ 
     ./src/AMDownloaddb.cpp \ 
     ./src/AMPreInstallApp.cpp \
-    ./src/amsmlhelper.cpp \
+    ./src/AMSmlHelper.cpp \
     ./src/amstorage.cpp \
     ./src/ApplicationManagementJavaUtility.cpp \
     ./src/ApplicationManagementServer.cpp \

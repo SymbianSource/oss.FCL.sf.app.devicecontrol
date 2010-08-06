@@ -15,11 +15,11 @@
  *
  */
 
-#include <e32Property.h>
+#include <e32property.h>
 #include <qdebug.h>
 #include <qtranslator.h>
 #include <qcoreapplication.h>
-#include <HbAction.h>
+#include <hbaction.h>
 #include <devicedialogconsts.h>
 #include "omacppinquerydialog.h"
 #include "pnputillogger.h"

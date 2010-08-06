@@ -22,14 +22,14 @@
 
 // INCLUDES
 #include <e32cmn.h>
-#include <MSVAPI.H>
+#include <CWPNameValue.h>
 #include <hbsymbianvariant.h>
 #include <hbdevicedialogsymbian.h>
 #include <CWPBootstrap.h>
+#include "ProvisioningUIDs.h"
+#include "CpMessage.h"
 #include "CWPSaver.h"
-#include <ProvisioningUIDs.h>
-#include <CpMessage.h>
-#include <CpQtSpView.h>
+#include "CpQtSpView.h"
 
 class CWPEngine;
 class CWPNameValue;

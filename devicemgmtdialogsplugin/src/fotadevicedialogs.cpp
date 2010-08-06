@@ -15,21 +15,22 @@
 *
 */
 
-#include "devicemanagementnotifierutils.h"
+
 #include <hbdocumentloader.h>
 #include <hbdialog.h>
 #include <hblabel.h>
 #include <hbmessagebox.h>
-#include <HbAction.h>
-#include <e32Property.h>
-#include "syncmlnotifierparams.h"
-#include "fotadevicedialogs.h"
-#include "PnpUtilLogger.h"
-#include <QDebug.h>
-#include <HbListView.h>
+#include <hbaction.h>
+#include <e32property.h>
+#include <qdebug.h>
+#include <hblistview.h>
 #include <hbpushbutton.h>
 #include <e32math.h>
 #include <QStandardItemModel>
+#include <devicedialogsymbian.h>
+#include "devicemanagementnotifierutils.h"
+#include "fotadevicedialogs.h"
+#include "pnputillogger.h"
 
 
 // ---------------------------------------------------------------------------

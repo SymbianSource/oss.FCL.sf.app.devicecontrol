@@ -176,7 +176,10 @@ Cdmatest::~Cdmatest()
     TRAPD(err, SaveMappingsL() );
     if ( err != KErrNone )
     	{
-    	iLog->Log( _L8( "Failed to save mappings!: %d"), err );
+    		if ( iLog )
+				{
+    			iLog->Log( _L8( "Failed to save mappings!: %d"), err );
+    		}
     	}
     Delete();
     

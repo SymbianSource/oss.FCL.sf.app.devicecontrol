@@ -14,17 +14,18 @@
  * Description: DM Progress and Notification indicators implementation
  *
  */
-#include "dmindicator.h" 
-#include "dmpronoteindicators.h" 
+
 #include <QByteArray>
 #include <QVariant>
 #include <e32base.h>
 #include <w32std.h>
 #include <apgtask.h>
 #include <apgtask.h>
-#include <HbIndicator.h>
-
+#include <hbindicator.h>
 #include <eikenv.h>
+#include "dmindicator.h" 
+#include "dmpronoteindicators.h" 
+
 // ----------------------------------------------------------------------------
 // DMProNoteIndicator::DMProNoteIndicator
 // @see dmpronoteindicators.h

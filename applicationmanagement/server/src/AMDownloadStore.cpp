@@ -143,7 +143,7 @@ void CAMDwnldQTWrap::StartDownload(CDeploymentComponent *aComponent,
 
     aComponent->SetCallback(this);
     appdwnld = new appmgmtdownloadmgr(0, *this, aStatus);
-    appdwnld->startDownload(aComponent);
+    appdwnld->startDownload(aComponent, iap);
 
     RDEBUG( "CAMDwnldQTWrap::StartDownload End" );
 

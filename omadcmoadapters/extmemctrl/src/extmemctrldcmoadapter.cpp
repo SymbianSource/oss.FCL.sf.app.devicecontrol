@@ -20,7 +20,6 @@
 #include <driveinfo.h>
 #include <barsread.h> 
 #include <barsc2.h>
-#include <f32file.h> 
 #include <data_caging_path_literals.hrh>
 #include <DevManInternalCRKeys.h>
 #include <centralrepository.h>

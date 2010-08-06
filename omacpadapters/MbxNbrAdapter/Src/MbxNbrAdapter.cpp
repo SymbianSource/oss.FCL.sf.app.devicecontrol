@@ -21,7 +21,7 @@
 #include    <CWPCharacteristic.h>
 #include    <CWPParameter.h>
 #include    <wpmbxnbradapterresource.rsg>
-#include    <CVoiceMailBox.h>
+#include    <cvoicemailbox.h>
 #include 		<cvoicemailboxentry.h>
 #include    <commonphoneparser.h>
 #include 	<voicemailboxdomaincrkeys.h>

@@ -23,7 +23,7 @@
 #include <xqserviceprovider.h>
 #include <QGraphicsLinearLayout>
 #include <CWPNameValue.h>
-#include <MSVAPI.H>
+#include <msvapi.h>
 #include <hbscrollarea.h>
 #include <CpQtSpMainWindow.h>
 #include <HbGroupBox>

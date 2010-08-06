@@ -24,7 +24,7 @@
 #include <imcvcodc.h>
 #include <uikon.hrh>
 #include <e32property.h>
-#include <DriveInfo.h>
+#include <driveinfo.h>
 #include <SWInstDefs.h>
 #include <PolicyEngineClient.h>
 #include <PolicyEngineXACML.h>

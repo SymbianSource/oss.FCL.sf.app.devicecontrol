@@ -18,11 +18,10 @@
 #include <nsmldmconst.h>
 #include <downloadmanager.h>
 #include <download.h>
-#include <e32Property.h>
 #include <serviceipc.h>
 #include <hbdialog.h>
 #include <hblabel.h>
-#include <HbMessageBox.h>
+#include <hbmessagebox.h>
 #include <hbapplication.h>
 #include <hbdevicenotificationdialog.h>
 #include <hbaction.h>
@@ -30,7 +29,7 @@
 #include <coemain.h>
 #include <e32base.h>
 #include <eikenv.h>
-#include <Driveinfo.h>
+#include <driveinfo.h>
 #include <e32property.h>
 #include "ApplicationManagementUtility.h"
 #include "debug.h"
@@ -39,6 +38,9 @@
 #include "appmgmtnotifier.h"
 #include "appmgmtdownloadmgr.h"
 #include "ServicePluginLogger.h"
+
+#include <cmmanager.h>
+#include <cmconnectionmethod.h>
 using namespace NApplicationManagement;
 
 // ------------------------------------------------------------------------------------------------
@@ -84,7 +86,7 @@ appmgmtdownloadmgr::~appmgmtdownloadmgr()
 // ------------------------------------------------------------------------------------------------
 // appmgmtdownloadmgr::startDownload
 // ------------------------------------------------------------------------------------------------ 
-void appmgmtdownloadmgr::startDownload(CDeploymentComponent *aComponent)
+void appmgmtdownloadmgr::startDownload(CDeploymentComponent *aComponent, int aIapid)
     {
 
     RDEBUG( "appmgmtdownloadmgr::startDownload Start" );
@@ -116,6 +118,10 @@ void appmgmtdownloadmgr::startDownload(CDeploymentComponent *aComponent)
     RProperty::Get(KPSUidNSmlSOSServerKey,KNSmlDMSilentJob,silentsession);
     
     CApplicationManagementUtility::iSilentSession = silentsession;
+    
+    QString name = GetIapNameWithIdL(aIapid);
+    
+    int ret = iDownloadManager->setAttribute(AccessPoint, name);
 
     iDl = iDownloadManager->createDownload(url, m_type);
 
@@ -825,7 +831,30 @@ void appmgmtdownloadmgr::sendSrvToBg()
     }
 }
 
+// --------------------------------------------------------------------------
+//  Gets the access point name for a given access point id.
+// --------------------------------------------------------------------------
+QString appmgmtdownloadmgr::GetIapNameWithIdL(TInt aIapId)
+    {
+    QString name(NULL);
 
+    RCmManager cmManager;
+    cmManager.OpenL();
+
+    RCmConnectionMethod conn;
+    conn = cmManager.ConnectionMethodL(aIapId);
+
+    HBufC* temp = conn.GetStringAttributeL(CMManager::ECmName);
+    name = QString::fromUtf16(temp->Ptr(), temp->Length());
+    delete temp;
+    temp = NULL;
+
+    conn.Close();
+
+    cmManager.Close();
+
+    return name;
+    }
 
 //---------------------------------------------------------------------------------
 // CDialogWait::CDialogWait

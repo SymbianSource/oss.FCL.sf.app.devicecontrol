@@ -16,17 +16,18 @@
  */
 
 
-#include <HbDeviceDialog.h>
+#include <hbdevicedialog.h>
 #include <apgtask.h>
 #include <eikenv.h>
-#include <Driveinfo.h>
+#include <driveinfo.h>
+#include <hbapplication.h>
+#include <hbmessagebox.h>
 #include "amstorage.h"
 #include "appmgmtnotifier.h"
 #include "appmgmtdownloadmgr.h"
-#include "applicationmanagementutility.h"
+#include "ApplicationManagementUtility.h"
 #include "debug.h"
-#include <hbapplication.h>
-#include <hbmessagebox.h>
+
 // ------------------------------------------------------------------------------------------------
 // AppMgmtNotifier::AppMgmtNotifier
 // ------------------------------------------------------------------------------------------------ 

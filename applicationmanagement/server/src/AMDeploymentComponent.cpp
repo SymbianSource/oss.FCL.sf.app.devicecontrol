@@ -19,9 +19,9 @@
 #include <s32mem.h>
 #include <featmgr.h>
 #include <ssl.h>
-#include <APGCLI.H>
-#include <APMREC.h>
-#include <APMSTD.H>
+#include <apgcli.h>
+#include <apmrec.h>
+#include <apmstd.h>
 #ifdef __SERIES60_30__
 #include <CMenuClient.h>
 #endif

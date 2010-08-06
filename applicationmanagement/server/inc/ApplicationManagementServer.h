@@ -28,7 +28,7 @@
 #include <swi/sisregistrysession.h>
 #include <swi/sisregistrypackage.h>
 #include <swi/sisregistryentry.h>
-#include <HbProgressDialog.h>
+#include <hbprogressdialog.h>
 #include <hbmainwindow.h>
 #include <hbaction.h>
 #include <usif/sif/sif.h>

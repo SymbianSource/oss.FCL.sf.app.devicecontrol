@@ -23,7 +23,7 @@
 #include <hbaction.h>
 #include <e32property.h>
 #include <qdebug.h>
-#include "SyncMLNotifierParams.h"
+#include <devicedialogsymbian.h>
 #include "pnputillogger.h"
 #include "omacppinquerydialog.h"
 #include "devicemanagementnotifierwidget_p.h"

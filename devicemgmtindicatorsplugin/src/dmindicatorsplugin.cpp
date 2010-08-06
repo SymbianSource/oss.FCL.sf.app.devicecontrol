@@ -106,7 +106,7 @@ bool DMIndicatorsPlugin::accessAllowed(const QString &indicatorType,
         qDebug("DMIndicatorsPlugin::accessAllowed() SecUID is not secure ");
         return false;
         }
-#elif
+#else
     Q_UNUSED(securityInfo)
     qDebug("DMIndicatorsPlugin::accessAllowed() not Symbian ");
     return false;

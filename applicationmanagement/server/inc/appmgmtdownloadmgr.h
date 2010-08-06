@@ -76,7 +76,7 @@ namespace NApplicationManagement
         appmgmtdownloadmgr(QWidget* parent, MDownloadMgrQTCallback& wrapper, TRequestStatus& aStatus);
         ~appmgmtdownloadmgr();
         
-        void startDownload(CDeploymentComponent *aComponent);
+        void startDownload(CDeploymentComponent *aComponent, int aIapid);
         void showDialog(CDeploymentComponent *aComponent);
         void showUninstallDialog(const CDeploymentComponent &aCompo, TRequestStatus &s);
         void updateProgress(TInt32 aDownloadedSize, TInt32 aContentSize);
@@ -91,6 +91,7 @@ namespace NApplicationManagement
         void sendSrvToBg();
         QString convertSize();
         int currDwnldStatForGenericAlert(int dwnldstatus);
+        QString GetIapNameWithIdL(TInt aIapId);
         
     public slots:
         bool downloadMgrEventRecieved(DownloadManagerEvent *event);

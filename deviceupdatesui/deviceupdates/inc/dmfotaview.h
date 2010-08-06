@@ -24,7 +24,7 @@
 #include <QGraphicsLinearLayout>
 #include <hbgroupbox.h>
 #include <hbview.h>
-#include <SysUtil.h>
+#include <sysutil.h>
 #include <hblabel.h>
 #include <hbdocumentloader.h>
 #include <hbmenu.h>
@@ -35,8 +35,8 @@
 #include <centralrepository.h>
 #include <QTranslator>
 #include <nsmldmdef.h>
-#include "dminforetrieval.h"
 #include <fotaengine.h>
+#include "dminforetrieval.h"
 #include "deviceupdatemoniterobserver.h"
 //_LIT( KSmlEOL,      "\n" );
 
