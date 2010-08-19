@@ -25,7 +25,7 @@
 #include <apgtask.h>
 #include <w32std.h>
 #include <StringLoader.h>
-#include <PnpProvisioning.rsg>
+#include <pnpprovisioning.rsg>
 #include <AknGlobalNote.h>
 #include <centralrepository.h>
 

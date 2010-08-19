@@ -34,7 +34,7 @@
 #include "NSmlDMSyncUi.hrh"
 #include "NSmlDMdef.h"
 #include "NSmlDMSyncDebug.h"
-#include <NSmlDMSync.rsg>
+#include <nsmldmsync.rsg>
 #include <nsmldmsync.mbg>
 #include <data_caging_path_literals.hrh>
 

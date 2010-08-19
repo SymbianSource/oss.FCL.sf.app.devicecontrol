@@ -29,7 +29,7 @@
 #include <textresolver.h>
 #include <sysutil.h>
 #include <httpfiltercommonstringsext.h>
-#include <OnlineSupport.rsg>            // has to be system include.
+#include <onlinesupport.rsg>            // has to be system include.
 #include <centralrepository.h>          // link against centralrepository.lib
 #include <browseruisdkcrkeys.h>         // for KCRUidBrowser
 #include <CoreApplicationUIsSDKCRKeys.h>// for KCRUidCoreApplicationUIs

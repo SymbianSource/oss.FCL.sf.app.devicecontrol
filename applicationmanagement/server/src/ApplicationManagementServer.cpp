@@ -421,7 +421,7 @@ void CApplicationManagementServer::DownloadCompleteL(
         // Is session count is not modified whenever there is error then at the end of download complete decrement
         //  the session count.
         
-        if(status != KStatusSuccess && iSessionCount != 0 )
+        if(iSessionCount != 0 )
             {
             iSessionCount--; 
             }
@@ -2825,7 +2825,7 @@ void CApplicationManagementSession::DeactivateL(const RMessage2& aMessage) const
     CDeploymentComponent &compo = Server().Storage()->ComponentL(id);
     Server().Storage()->DeactivateL(compo);
     
-    SetSCOMOTargetURI(compo.UserId());
+   
     }
 
 // -------------------------------------------------------------------------------------------------------------------
@@ -2843,7 +2843,7 @@ void CApplicationManagementSession::ActivateL(const RMessage2& aMessage) const
     CDeploymentComponent &compo = Server().Storage()->ComponentL(id);
     Server().Storage()->ActivateL(compo);
     
-    SetSCOMOTargetURI(compo.UserId());
+    
     }
 
 // -------------------------------------------------------------------------------------------------------------------
@@ -2863,35 +2863,7 @@ void CApplicationManagementSession::GetUserIdL(const RMessage2& aMessage) const
     aMessage.Write( 1, compo.UserId() );
     }
 
-void CApplicationManagementSession::SetSCOMOTargetURI(const TDesC8& aURI) const
-    {
-    _LIT8( KAMSeparator8, "/" );
-    _LIT8( KAMStateValueNodeName, "State" );
-    TBuf8<256> targetStateURI(KDeployedState);
-    
-    targetStateURI.Append(aURI);
-    
-    targetStateURI.Append(KAMSeparator8);
-    targetStateURI.Append(KAMStateValueNodeName);
-            
-    CRepository* cenrep = NULL;
-    TInt errr(KErrNone);
 
-    TRAP(errr, cenrep = CRepository::NewL( KCRUidDeviceManagementInternalKeys ));
-
-    if(errr == KErrNone)
-    {
-    errr = cenrep->Set(KNSmlDMSCOMOTargetRef, targetStateURI);
-    }
-    
-    if(cenrep)
-        {
-        delete cenrep;
-        cenrep = NULL;
-        }
-    
-   
-    }
 
 // -------------------------------------------------------------------------------------------------------------------
 // CApplicationManagementSession::GetTemporaryInstFileL()
@@ -3746,47 +3718,6 @@ void CApplicationManagementSession::StateChangeComponentIdsCountL(
         const RMessage2& aMessage) const
     {
     RDEBUG( "CApplicationManagementSession: StateChangeComponentIdsCountL" );
-               RPointerArray<TPreInstalledAppParams> preInstalledAppParams;
-                CAMPreInstallApp* preInstallApp = CAMPreInstallApp::NewL();
-                preInstallApp->GetPreInstalledAppsL(preInstalledAppParams);
-                TInt count = 0;
-                for (count = 0; count< preInstalledAppParams.Count(); count++)
-                    {
-                    RDEBUG8_2("CApplicationManagementSession::DownloadL: Installed App Name is: %S",&(preInstalledAppParams[count]->iPreInstalledAppame));
-                    RDEBUG8_2("CApplicationManagementSession::DownloadL: Installed App Vendor is: %S",&(preInstalledAppParams[count]->iPreInstalledAppVendorName));
-                    RDEBUG_2("CApplicationManagementSession::DownloadL: Installed App UID is : '0x%X'",preInstalledAppParams[count]->iPreInstalledAppUid);
-
-                    TBool found = EFalse;
-                    const RComponentIdArray &arrt = Server().Storage()->GetComponentIds();
-                    TInt countval(arrt.Count() );
-                    for (TInt i( 0); i < countval; i++)
-                        {
-                        CDeploymentComponent &compo = Server().Storage()->ComponentL(arrt[i]);
-                        if (compo.Uid()== preInstalledAppParams[count]->iPreInstalledAppUid)
-                            {
-                            RDEBUG( "CApplicationManagementSession: ActiveComponentsL found= TRUE" );
-                            found = ETrue;
-                            }
-                        }
-                    if (!found)
-                        {
-                        RDEBUG( "CApplicationManagementSession: Adding Pre-installed app" );
-                        TDCUserId preInstalledAppName;
-                        preInstalledAppName.Copy(preInstalledAppParams[count]->iPreInstalledAppame);
-                        CDeploymentComponent *preInstallCompo= NULL;
-                        RDEBUG8_2("CApplicationManagementSession: Installed App Name is: %S",&preInstalledAppName);
-                        preInstallCompo = Server().Storage()->NewComponentL(EDCSActive, preInstalledAppName);
-                        preInstallCompo->SetUid(preInstalledAppParams[count]->iPreInstalledAppUid);
-                        preInstallCompo->SetNameL(preInstalledAppName);
-                        preInstallCompo->SetVersionL(preInstalledAppParams[count]->iVersion);
-                        preInstallCompo->SetMimeTypeL(preInstalledAppParams[count]->iMimeType);
-				preInstallCompo->SetAppRemovableStatus(ETrue);
-
-                        Server().Storage()->UpdateL( *preInstallCompo );
-                        Server().Storage()->CheckForDuplicateNodesInDeployedL(*preInstallCompo);
-                        }
-                    }
-                delete preInstallApp;
     RComponentIdArray arr;
     Server().Storage()->GetStateChangeComponentIdsL(arr);
     TPckgBuf<TInt> buflen(arr.Count() );

@@ -21,7 +21,7 @@
 
 #include    <gsparentplugin.h>
 #include    <gscommon.hrh>
-#include    <PnpProvisioning.rsg>
+#include    <pnpprovisioning.rsg>
 #include    <ServiceHelpPlugin.mbg>
 #include    <gsprivatepluginproviderids.h>
 #include    <gsfwviewuids.h>

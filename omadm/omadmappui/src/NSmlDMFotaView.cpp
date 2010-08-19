@@ -42,7 +42,7 @@
 #include "NSmlDMdef.h"
 
 #include "NSmlDMSyncUi.hrh"
-#include <NSmlDMSync.rsg>
+#include <nsmldmsync.rsg>
 #include <nsmldmsync.mbg>
 #include "NSmlDMSyncDebug.h"
 

@@ -23,7 +23,7 @@
 #include <AknQueryDialog.h>
 #include <aknnotewrappers.h>
 #include <StringLoader.h>
-#include <PnpProvisioning.rsg>
+#include <pnpprovisioning.rsg>
 #include <apgcli.h>
 #include <e32uid.h>
 #include <CWPEngine.h>      // Using WAP provisioning engine

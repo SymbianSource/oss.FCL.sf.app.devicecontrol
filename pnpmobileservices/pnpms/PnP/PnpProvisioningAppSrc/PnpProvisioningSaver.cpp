@@ -21,7 +21,7 @@
 // INCLUDE FILES
 #include <AknQueryDialog.h>
 #include <eikprogi.h>
-#include <PnpProvisioning.rsg>
+#include <pnpprovisioning.rsg>
 #include <commdb.h>
 #include <CWPEngine.h>
 #include <CWPAdapter.h>

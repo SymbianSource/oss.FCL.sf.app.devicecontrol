@@ -28,7 +28,7 @@
 #include "NSmlDMFotaSettingsDialog.h"
 #include "NSmlDMFotaModel.h"
 #include "NSmlDMSyncUi.hrh"
-#include <NSmlDMSync.rsg>
+#include <nsmldmsync.rsg>
 #include <featmgr.h>
 #include "nsmldmsyncinternalpskeys.h" 
 
@@ -375,7 +375,7 @@ CNSmlDMFotaSettingsDialog::CNSmlDMFotaSettingsDialog()
 //
 void CNSmlDMFotaSettingsDialog::ConstructL()
     {
-    CAknDialog::ConstructL( R_SETTINGS_PROFILEMENU );
+    CAknDialog::ConstructL( R_SETTINGS_FOTAMENU );
 
     iDocument = (CNSmlDMSyncDocument*) iAvkonAppUi->Document();
     

@@ -1,0 +1,31 @@
+/*
+* Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:   Image description file for lawmo plugins
+*
+*/
+
+#ifndef _LAWMO_IBY_
+#define _LAWMO_IBY_
+
+#include <data_caging_paths_for_iby.hrh>
+
+#ifdef	FF_OMA_LAWMO
+ECOM_PLUGIN(lawmomessagingplugin.dll, lawmomessagingplugin.rsc)
+ECOM_PLUGIN(lawmocontactsplugin.dll, lawmocontactsplugin.rsc)
+ECOM_PLUGIN(lawmocalllogsplugin.dll, lawmocalllogsplugin.rsc)
+ECOM_PLUGIN(lawmomediaplugin.dll, lawmomediaplugin.rsc )
+ECOM_PLUGIN(lawmodmadapter.dll ,lawmodmadapter.rsc)
+#endif
+
+#endif // _LAWMO_IBY_

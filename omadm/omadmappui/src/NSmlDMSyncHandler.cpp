@@ -18,7 +18,7 @@
 
 
 // INCLUDES
-#include <NSmlDMSync.rsg>
+#include <nsmldmsync.rsg>
 #include <aknnotewrappers.h>
 #include <AknWaitDialog.h>
 #include <textresolver.h>   // for CTextResolver

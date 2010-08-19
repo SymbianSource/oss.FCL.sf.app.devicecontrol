@@ -922,8 +922,11 @@ void CSCOMOAdapter::SendPendingGenericAlertL()
             TBuf8<6> dataresult;
             dataresult.Num(finalresult);
             
-            TPtrC8 mapping(NSmlDmURI::LastURISeg(targetURIGet) );
+            RDEBUG8_2("CSCOMOAdapter::GetIdentifierIdL is targetURIGet '%S'", &targetURIGet);
             
+            //TPtrC8 mapping(NSmlDmURI::LastURISeg(targetURIGet) );
+            
+            HBufC8* identifier=GetIdentifierIdL(internalid );
             
             TInt retryupdate = iAMdb->GetRetryCountForLuidL(internalid);
             
@@ -962,7 +965,7 @@ void CSCOMOAdapter::SendPendingGenericAlertL()
             ptr.Append(dataresult);
             ptr.Append(KResultCodeEnd);
             ptr.Append(KIdentifierStart);
-            ptr.Append(mapping);
+            ptr.Append(*identifier);
             ptr.Append(KIdentifierEnd);
             //ptr.Append(KDataEnd);
 
@@ -992,18 +995,29 @@ void CSCOMOAdapter::SendPendingGenericAlertL()
             
             TRAP_IGNORE(privateAPI.AddDMGenericAlertRequestL(              
                     *genericalerts[i]->iCorrelator,iItemArray ));
-                    
-                    
+                 
+            
+            //cleanup all the allocated heap cells
+            if(data)        
             delete data;
             
+            if(metamark)
             delete metamark;
             
+            if(metaformat)
             delete metaformat;
             
+            if(metatype)
             delete metatype;
             
+            if(targeturi)
             delete targeturi;
+
+            if(item)
             delete item;
+            
+            if(identifier)
+            delete identifier;
                     
             iItemArray.Reset();			
 			iItemArray.Close();
@@ -1741,12 +1755,13 @@ void CSCOMOAdapter::InstallL(TUint aLuidi, const TDesC8& aURI,
         iManagement.StateChangeComplete(aLuidi);
 
         DeactivateIfInactive(aLuidi, aTargetState);
-        aRet = EOk;
+        aRet = EExecSuccess;
         }
     else
         {
         RDEBUG_2( "CSCOMOAdapter::InstallL(): INSTALL FAILED '%d'" , err);
-        MAPERROR( err, aRet, _L8("Install %d") );
+        //MAPERROR( err, aRet, _L8("Install %d") );
+	  aRet = EExecInstallFailed;
         }
     }
 
@@ -1840,7 +1855,7 @@ void CSCOMOAdapter::ExecuteCommandL(const TDesC8& aURI, const TDesC8& aLUID,
         const TDesC8& aArgument, const TDesC8& /*aType*/, TInt aStatusRef)
     {
 
-#ifdef __TARM_SYMBIAN_CONVERGENCY	//Done by Dipak
+#ifdef __TARM_SYMBIAN_CONVERGENCY	
     TPtrC8 uriPtrc = NSmlDmURI::RemoveDotSlash(aURI);
 #else
     //nothing
@@ -1856,7 +1871,7 @@ void CSCOMOAdapter::ExecuteCommandL(const TDesC8& aURI, const TDesC8& aLUID,
         RDEBUG("CSCOMOAdapter::ExecuteCommandL(): WARNING no valid luid provided" );
         }
 
-#ifdef __TARM_SYMBIAN_CONVERGENCY	//Done by Dipak
+#ifdef __TARM_SYMBIAN_CONVERGENCY
     TInt cnt( NSmlDmURI::NumOfURISegs( uriPtrc ) );
 #else
     TInt cnt(NSmlDmURI::NumOfURISegs(aURI) );
@@ -1946,6 +1961,7 @@ void CSCOMOAdapter::ExecuteCommandL(const TDesC8& aURI, const TDesC8& aLUID,
                             ret = EExecUndefError;
                             }
                     }
+			SetSCOMOTargetURIL(*iUriDel, mapping, ret);
 
                 }
             else
@@ -2056,6 +2072,7 @@ void CSCOMOAdapter::ExecuteCommandL(const TDesC8& aURI, const TDesC8& aLUID,
                         ret = EExecRemoveFailed;
                         RDEBUG( "CSCOMOAdapter::ExecuteCommandL(): case 6 remove Not found node" );
                         }
+                    SetSCOMOTargetURIL(*iUriDel, mapping, ret);
                     }
                         else
                             if (mapping == KAMActivateNodeName)
@@ -2084,6 +2101,8 @@ void CSCOMOAdapter::ExecuteCommandL(const TDesC8& aURI, const TDesC8& aLUID,
                                     ret = EExecActivateFailed;
                                     RDEBUG( "CSCOMOAdapter::ExecuteCommandL(): case 6 Activate Not found node" );
                                     }
+
+                                SetSCOMOTargetURIL(*iUriDel, mapping, ret);
                                 }
                             else
                                 if (mapping == KAMDeActivateNodeName)
@@ -2115,6 +2134,9 @@ void CSCOMOAdapter::ExecuteCommandL(const TDesC8& aURI, const TDesC8& aLUID,
                                         ret = EExecDeactivateFailed;
                                         RDEBUG( "CSCOMOAdapter::ExecuteCommandL(): case 6 DeActivate Not found node" );
                                         }
+
+                                    SetSCOMOTargetURIL(*iUriDel, mapping, ret);
+						
                                     }
                                 else
                                     {
@@ -2135,6 +2157,111 @@ void CSCOMOAdapter::ExecuteCommandL(const TDesC8& aURI, const TDesC8& aLUID,
         }
     SetStatusL(aStatusRef, ret) ;
     }
+
+
+void CSCOMOAdapter::SetSCOMOTargetURIL(const TDesC8& aURI,
+        const TDesC8& aMapping,const TError& aErrorStatus)
+    {
+
+    RDEBUG( "CSCOMOAdapter:: SetSCOMOTargetURI" );
+
+    TInt cnt(NSmlDmURI::NumOfURISegs(aURI));
+    _LIT8( KNSmlNull, "null" );
+
+    CRepository* cenrep = NULL;
+    TInt errr(KErrNone);
+
+    TRAP(errr, cenrep = CRepository::NewL( KCRUidDeviceManagementInternalKeys ));
+
+    if (errr == KErrNone)
+        {
+
+        switch (cnt)
+            {
+            case 3:
+                {
+
+                RDEBUG( "CSCOMOAdapter:: SetSCOMOTargetURI case 3" );
+
+                TInt ASyncSupported = -1;
+
+                CRepository *repository = CRepository::NewLC(
+                        KCRUidPrivateApplicationManagementKeys);
+                repository->Get(KAsyncEnabled, ASyncSupported);
+                CleanupStack::PopAndDestroy();
+
+                //means accepted for processing set <Target><LOCURI> to NULL.
+                if (ASyncSupported)
+                    {
+                    RDEBUG( "CSCOMOAdapter:: ASyncSupported" );
+
+                    TInt err1 = cenrep->Set(KNSmlDMSCOMOTargetRef, KNSmlNull);
+
+                    RDEBUG_2( "CSCOMOAdapter:: ASyncSupported %d", err1 );
+
+                    }
+
+                }
+                break;
+
+            case 4:
+                {
+
+                RDEBUG( "CSCOMOAdapter:: SetSCOMOTargetURI case 4" );
+
+                if (aMapping == KAMRemoveNodeName)
+                    {
+
+                    if (aErrorStatus == EExecSuccess)
+                        {
+                        cenrep->Set(KNSmlDMSCOMOTargetRef, KNSmlNull);
+                        }
+                    }
+
+                if (aMapping == KAMActivateNodeName || aMapping
+                        == KAMDeActivateNodeName)
+                    {
+
+                    RDEBUG( "CSCOMOAdapter:: SetSCOMOTargetURI case KAMActivateNodeName or KAMDeActivateNodeName " );
+
+                    if (aErrorStatus == EExecSuccess)
+                        {
+                        RDEBUG( "CSCOMOAdapter:: EExecSuccess " );
+                        _LIT8( KAMInitial, "./" );
+                        _LIT8( KAMSeparator8, "/" );
+                        _LIT8( KAMStateValueNodeName, "State" );
+                        TBuf8<256> targetStateURI;
+                        targetStateURI.Append(KAMInitial);
+                        targetStateURI.Append(aURI);
+
+                        targetStateURI.Append(KAMSeparator8);
+                        targetStateURI.Append(KAMStateValueNodeName);
+
+                        cenrep->Set(KNSmlDMSCOMOTargetRef, targetStateURI);
+                        RDEBUG( "CSCOMOAdapter:: EExecSuccess End" );
+                        }
+                    else
+                        {
+                        cenrep->Set(KNSmlDMSCOMOTargetRef, KNSmlNull);
+                        }
+
+                    }
+
+                }
+
+                break;
+            }
+
+        }
+
+    if (cenrep)
+        {
+        delete cenrep;
+        cenrep = NULL;
+        }
+
+    }
+
 
 void CSCOMOAdapter::ASyncReportL(TUint32 aLuid, const TDesC8& aArgument,
         const TDownloadTarget aTarget,const TDesC8& aURI)
@@ -4461,6 +4588,38 @@ TBool CSCOMOAdapter::RecognizeMimeType(const TDesC8& aMimeType)
         isSupportedMimeType = ETrue;
         }
     return isSupportedMimeType;
+    }
+
+HBufC8* CSCOMOAdapter::GetIdentifierIdL(const TUint32 aluid)
+    {
+    RDEBUG( "CSCOMOAdapter::GetIdentifierIdL: const TUint32 aluid, const TDesC8& aTargetUri" );
+    
+    _LIT8(KNull, "null");
+    TDeploymentComponent comp;
+    HBufC8 *id = NULL;
+    TInt err(SessionL().DeploymentComponent(aluid, comp) );
+    RDEBUG( "CSCOMOAdapter::GetIdentifierIdL: Step 1" );
+    
+    if(err == KErrNone)
+        {
+            RDEBUG( "CSCOMOAdapter::GetIdentifierIdL: Step 1.1" );
+            if(comp.iState == EDCSDelivered || comp.iState ==EDCSDownload)    
+                {
+                RDEBUG( "CSCOMOAdapter::GetIdentifierIdL: iState EDCSActive,EDCSInactive" );  
+                id = (comp.iPkgID).AllocL();
+                }
+            else if(comp.iState==EDCSActive || comp.iState ==EDCSInactive)
+                {
+                RDEBUG( "CSCOMOAdapter::GetIdentifierIdL: iState EDCSDelivered,EDCSDownload" ); 
+                id = (comp.iId).AllocL();
+                }
+            else
+                {
+                id = KNull().AllocL();
+                }
+        }
+    RDEBUG( "CSCOMOAdapter::GetIdentifierIdL: Step 1 end" );
+    return id;
     }
 // End of File
 

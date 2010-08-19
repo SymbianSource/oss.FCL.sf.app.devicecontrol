@@ -20,7 +20,7 @@
 #include "NSmlDMSyncAppUi.h"
 #include "NSmlDMProfilesView.h"
 #include "NSmlDMProfilesContainer.h"
-#include <NSmlDMSync.rsg>
+#include <nsmldmsync.rsg>
 #include <featmgr.h>
 #include "NSmlDMSyncDebug.h"
 

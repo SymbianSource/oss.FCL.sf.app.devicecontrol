@@ -20,7 +20,7 @@
 
 #include "NSmlDMSyncDialog.h"
 #include "NSmlDMSyncUtil.h"
-#include <NSmlDMSync.rsg>
+#include <nsmldmsync.rsg>
 #include "NSmlDMSyncProfile.h"
 #include "NSmlDMSyncDebug.h"
 

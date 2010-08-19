@@ -55,3 +55,4 @@
 #endif
 
 #include "../dcmodmadapter/group/bld.inf"
+#include "../lawmodmadapter/group/bld.inf"

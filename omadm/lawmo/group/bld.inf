@@ -1,0 +1,29 @@
+/*
+* Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of the License "Symbian Foundation License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.symbianfoundation.org/legal/sfl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  This file provides building information for LAWMO plugins.
+*
+*/
+#include <platform_paths.hrh>
+
+PRJ_EXPORTS
+../rom/lawmo.iby			CORE_APP_LAYER_IBY_EXPORT_PATH(lawmo.iby)
+
+PRJ_MMPFILES
+#include "../lawmoplugins/group/bld.inf"
+
+//PRJ_TESTMMPFILES
+//#include "../tsrc/group/bld.inf"
+
+PRJ_MMPFILES
+//../tsrc/group/testlawmoplugins.mmp

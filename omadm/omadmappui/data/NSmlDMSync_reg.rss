@@ -18,7 +18,7 @@
 
 
 #include <appinfo.rh>
-#include <NSmlDMSync.rsg>
+#include <nsmldmsync.rsg>
 #include <SyncService.rh>
 #include <SyncServiceConst.h>
 #include <data_caging_paths_strings.hrh>

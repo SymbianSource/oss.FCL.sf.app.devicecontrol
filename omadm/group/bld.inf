@@ -19,3 +19,4 @@
 #include "../omadmappui/group/bld.inf"
 #include "../omadmextensions/group/bld.inf"
 #include "../dcmo/group/bld.inf"
+#include "../lawmo/group/bld.inf"

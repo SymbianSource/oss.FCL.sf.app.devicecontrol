@@ -25,7 +25,7 @@
 #include <centralrepository.h>
 #include <barsread.h>
 #include <e32property.h>
-#include <NSmlDMSync.rsg>
+#include <nsmldmsync.rsg>
 #include "nsmldmsyncinternalpskeys.h"
 #include "NSmlDMSyncAppUi.h"
 #include "NSmlDMSyncApp.h"

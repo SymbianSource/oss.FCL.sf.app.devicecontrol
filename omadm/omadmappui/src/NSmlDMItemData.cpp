@@ -20,7 +20,7 @@
 // INCLUDES
 #include "NSmlDMItemData.h"
 #include "NSmlDMSyncDebug.h"
-#include <NSmlDMSync.rsg>
+#include <nsmldmsync.rsg>
 #include "NSmlDMSyncUtil.h"
 
 #include <AknUtils.h>

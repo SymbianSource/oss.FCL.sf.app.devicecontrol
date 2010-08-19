@@ -60,7 +60,7 @@
 #include    "UISettingsSrvAppView.h"
 #include    "UISettingsSrvDocument.h"
 
-#include    <UISettingsSrv.rsg>
+#include    <uisettingssrv.rsg>
 #include    "UISettingsSrv.hrh"
 
 #include    "UISettingsSrv.h"

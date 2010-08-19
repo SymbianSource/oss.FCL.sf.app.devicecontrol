@@ -21,7 +21,7 @@
 #include "NSmlDMProgress.h"
 #include "NSmlDMSyncUtil.h"
 #include "NSmlDMSyncDebug.h"
-#include <NSmlDMSync.rsg>
+#include <nsmldmsync.rsg>
 #include <StringLoader.h>
 #include <eikprogi.h>
 #include <notecontrol.h>

@@ -35,7 +35,7 @@
 #include "NSmlDMdef.h"
 #include <centralrepository.h>
 //multi rofs
-#include <NSmlDMSync.rsg>
+#include <nsmldmsync.rsg>
 #include <e32property.h>
 #include <swi/sisregistrypackage.h>
 #include <swi/sisregistryentry.h>

@@ -33,7 +33,7 @@
 #include "NSmlDMSyncProfileList.h"
 #include "NSmlDMSyncProfile.h"
 #include "NSmlDMSyncDebug.h"
-#include <NSmlDMSync.rsg>
+#include <nsmldmsync.rsg>
 #include <SyncService.h>
 #include <SyncServiceParams.h>
 #include <coreapplicationuisdomainpskeys.h>

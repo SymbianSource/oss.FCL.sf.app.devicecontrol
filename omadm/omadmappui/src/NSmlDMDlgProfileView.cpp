@@ -37,9 +37,9 @@
 #include "NSmlDMSyncDebug.h"
 #include "NSmlDMItemData.h"
 #include "nsmldmsyncinternalpskeys.h"
-#include <NSmlDMSync.rsg>
+#include <nsmldmsync.rsg>
 #include <cmmanager.rsg>
-#include <ConnectionUiUtilities.rsg>
+#include <connectionuiutilities.rsg>
 #include <bautils.h> 
 
 #include <hlplch.h>

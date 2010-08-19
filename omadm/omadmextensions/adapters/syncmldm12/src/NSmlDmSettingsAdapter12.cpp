@@ -2044,7 +2044,7 @@ TBool CNSmlDMSettingsAdapter12::IsServerIDExistL( const TDesC8& aServerid )
 		{
 			TInt pid = i + KMaxDataSyncID;
 			TInt index = profileList.Find(pid );
-			if( index >= i  )
+			if( index >= 0  )
 			{	    		
 	        	TInt rValue(KErrNone);
 	        	RSyncMLDevManProfile profile;

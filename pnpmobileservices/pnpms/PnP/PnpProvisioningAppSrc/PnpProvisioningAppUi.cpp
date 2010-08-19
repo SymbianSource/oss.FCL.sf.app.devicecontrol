@@ -23,7 +23,7 @@
 #include <textresolver.h>
 #include <rconnmon.h>
 #include <ApUtils.h>
-#include <PnpProvisioning.rsg>
+#include <pnpprovisioning.rsg>
 #include <browseruisdkcrkeys.h>         // for KCRUidBrowser
 #include <AknGlobalNote.h>              // for CAknGlobalNote
 #include <AknGlobalConfirmationQuery.h> // for CAknGlobalConfirmationQuery

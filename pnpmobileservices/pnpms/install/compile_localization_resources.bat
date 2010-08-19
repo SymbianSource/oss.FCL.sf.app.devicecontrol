@@ -118,5 +118,5 @@ perl -S epocrc.pl -u -m045,046,047 -DLANGUAGE_159 -DSIS_RESOURCE_COMPILATION -I%
 perl -S epocrc.pl -u -m045,046,047 -DLANGUAGE_160 -DSIS_RESOURCE_COMPILATION -I%EROOT%\include -I..\OnlineSupport\inc -I..\OnlineSupport\inc\LocalizedFiles "..\OnlineSupport\inc\LocalizedFiles\OnlineSupport.rss" -o%RESOURCE_PATH%onlinesupport.r160
 perl -S epocrc.pl -u -m045,046,047 -DLANGUAGE_161 -DSIS_RESOURCE_COMPILATION -I%EROOT%\include -I..\OnlineSupport\inc -I..\OnlineSupport\inc\LocalizedFiles "..\OnlineSupport\inc\LocalizedFiles\OnlineSupport.rss" -o%RESOURCE_PATH%onlinesupport.r161
 
-rem -hOnlineSupport.rsg 
+rem -honlinesupport.rsg 
 
