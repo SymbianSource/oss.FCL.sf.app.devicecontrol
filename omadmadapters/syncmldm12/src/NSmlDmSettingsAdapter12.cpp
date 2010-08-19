@@ -2950,37 +2950,47 @@ TInt CNSmlDMSettingsAdapter12::SetDMFieldDataL( const TInt aLUID, const TDesC8& 
 		break;
 		case ( ETransportAuthName ):
 		{
-		    OpenSyncSessionAndProfileL( aLUID, ESmlOpenReadWrite );
-		  	TInt mediumType = ENone;
-	    	GetProfileConnectiontypeL( mediumType );
+			TInt retVal = OpenSyncSessionAndProfileL( aLUID, ESmlOpenReadWrite );
+    	if( retVal != KErrNone )
+			{
+	    	iCurrentProfile = 0;
+				iProfile.Close();
+        _DBG_FILE( "CNSmlDMSettingsAdapter12::SetDMFieldDataL(): end" );
+        return retVal;	
+			}
+		    
+		  TInt mediumType = ENone;
+	    GetProfileConnectiontypeL( mediumType );
 			if( mediumType == EHttp)
 			{
 		    rValue = SetProfileHttpUserNameL ( aLUID, aObject );
-		    }
-		    else if(mediumType == EObex)
-		    {
-		      rValue = KErrNone;
-		      
-		    }
-			
-	
-		//break;
+		  }
+		  else if(mediumType == EObex)
+		  {
+		     rValue = KErrNone;		   
+		  }		
 		}
 		break;
 		case ( EProfileTransportPassword ):
 		{
-		 TInt mediumType = ENone;
-		  OpenSyncSessionAndProfileL( aLUID, ESmlOpenReadWrite );
-	    	GetProfileConnectiontypeL( mediumType );
+		 	TInt mediumType = ENone;
+		 	TInt retVal = OpenSyncSessionAndProfileL( aLUID, ESmlOpenReadWrite );
+    	if( retVal != KErrNone )
+			{
+	    	iCurrentProfile = 0;
+				iProfile.Close();
+        _DBG_FILE( "CNSmlDMSettingsAdapter12::SetDMFieldDataL(): end" );
+        return retVal;	
+			}		  
+	    GetProfileConnectiontypeL( mediumType );
 			if( mediumType == EHttp)
 			{
 		    rValue = SetProfileHttpPasswordL ( aLUID, aObject );
-		    }
-		    else if(mediumType == EObex)
-		    {
-		      rValue = KErrNone;
-		      
-		    }		
+		  }
+		  else if(mediumType == EObex)
+		  {
+		     rValue = KErrNone;		    
+		  }		
 		}
 		break;
 		case (EProfileTransportAuthData) :

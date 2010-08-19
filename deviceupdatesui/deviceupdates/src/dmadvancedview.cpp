@@ -19,6 +19,7 @@
 #include "dmadvancedview.h"
 #include "dmfotaview.h"
 #include "serversettingsview.h"
+#include "customviewitem.h"
 
 DmAdvancedView::DmAdvancedView(HbMainWindow *mainWindow,DMFotaView *mainView, DmInfo *info, QGraphicsItem *parent):HbView(parent),
     bluetooth(":/icons/qgn_prop_sml_bt.svg"),
@@ -62,7 +63,8 @@ void DmAdvancedView::handleLongPress(HbAbstractViewItem* item , QPointF coOrdina
         {
         modelItem = model->itemFromIndex(item->modelIndex());
         currentselecteditem = modelItem->row();
-
+        if(currentselecteditem == dminfo->profilescount())//Button item pressed
+            return;
         HbMenu *csmenu = new HbMenu();
         csmenu->setAttribute( Qt::WA_DeleteOnClose);
         HbAction *defaultprofileAction = 0;
@@ -99,12 +101,16 @@ void DmAdvancedView::handleClicked(QModelIndex index)
     qDebug("omadm DeviceManagerUi::handleClicked >>");
     if(connectionRequested)
         return;
-    //Stop listening DB events for profile addition
-    dminfo->DisableDbNotifications(true);
-    //If profile is not locked then take to edit server view
-    int itemnum = 0;
+	int itemnum = 0;
     QStandardItem *selectedItem = model->itemFromIndex(index);
-    itemnum = selectedItem->row();                  
+    itemnum = selectedItem->row();	        
+     if(itemnum == dminfo->profilescount())//Button item pressed
+        {
+    qDebug("omadm create new server profile button clicked");
+        return;
+        }
+  //Stop listening DB events for profile addition
+    dminfo->DisableDbNotifications(true);                
     if(itemnum >= 0 && !dminfo->Isprofilelocked(itemnum))
         {        
         //read profile items
@@ -171,14 +177,22 @@ bool DmAdvancedView::displayItems()
         otherDetailsGroup->setCollapsable( true );
         otherDetailsGroup->setCollapsed( true );                            
         list = qobject_cast<HbListView *>(docmlLoader->findWidget( LIST_NAME ) );
-        HbListViewItem *prototype = list->listItemPrototype();
-        prototype->setGraphicsSize(HbListViewItem::LargeIcon);
-        prototype->setSecondaryTextRowCount(1,2);
-        prototype->setStretchingStyle(HbListViewItem::StretchLandscape);
+
+        list->listItemPrototype()->setGraphicsSize(HbListViewItem::LargeIcon);
+        list->listItemPrototype()->setSecondaryTextRowCount(1,2);
+        list->listItemPrototype()->setStretchingStyle(HbListViewItem::StretchLandscape);
+
         dminfo->refreshProfileList();    
         int IndicatorCount =dminfo->profilescount();
-        model = new QStandardItemModel();            
-        for (int i = 0; IndicatorCount > 0 && i < IndicatorCount; ++i) {        
+        model = new QStandardItemModel();   
+        QList<HbAbstractViewItem *> prototypes ;
+        prototypes.append(list->listItemPrototype());
+        CustomViewItem *prototype2 = new CustomViewItem(this,list);
+        prototypes.append(prototype2);
+        list->setItemPrototypes(prototypes);
+        list->setModel(model);
+        int i;
+        for (i = 0; IndicatorCount > 0 && i < IndicatorCount; ++i) {        
         QStringList liststr;
         bool lock = false;
         int icon = 0;
@@ -219,8 +233,10 @@ bool DmAdvancedView::displayItems()
         item->setData(iconlist , Qt::DecorationRole);
         model->setItem(i, item);    
         }        
-        list->setModel(model,prototype);
-        list->setItemRecycling(false);    
+        list->setItemRecycling(false);
+        QStandardItem* customitem = new QStandardItem();
+        customitem->setData(Hb::ItemType_Last + 1001,Hb::ItemTypeRole);
+        model->setItem(i, customitem);
         connect(list, SIGNAL(longPressed(HbAbstractViewItem*,QPointF)),
                 this,  SLOT(handleLongPress(HbAbstractViewItem*,QPointF)));
     
@@ -231,13 +247,7 @@ bool DmAdvancedView::displayItems()
         otherdetailslist->listItemPrototype()->setStretchingStyle(HbListViewItem::StretchLandscape);
 		otherdetailslist->setLongPressEnabled(EFalse);
         qDebug("omadm launching other details list done");    
-        mainCalltoUpdateView();           
-        
-    
-        newserverprofile = qobject_cast<HbPushButton *>(docmlLoader->findWidget(NEWSERVERBUTTON));
-        newserverprofile->setText(hbTrId("txt_device_update_button_new_server_profile"));
-        connect(newserverprofile, SIGNAL(clicked()),this, SLOT(createNewProfile()));
-              
+        mainCalltoUpdateView();                             
         label = qobject_cast<HbLabel *>(docmlLoader->findWidget(LABEL));        
         label->setPlainText(hbTrId("txt_device_update_subhead_advanced_device_updates"));        
         
@@ -322,7 +332,8 @@ void DmAdvancedView::updateListview()
     qDebug("omadm DeviceManagerUi::updateListview >>");
     model->clear();
     int IndicatorCount =dminfo->profilescount();    
-    for (int i = 0; IndicatorCount > 0 && i < IndicatorCount; ++i) {    
+    int i;
+    for ( i = 0; IndicatorCount > 0 && i < IndicatorCount; ++i) {    
     QStringList liststr;
     bool lock = false;
     int icon = 0;
@@ -363,8 +374,9 @@ void DmAdvancedView::updateListview()
     item->setData(iconlist , Qt::DecorationRole);
     model->setItem(i, item);    
     }    
-    model->sort(0);
-    qDebug("omadm DeviceManagerUi::updateListview >>");
+    QStandardItem* item = new QStandardItem();
+    item->setData(Hb::ItemType_Last + 1001,Hb::ItemTypeRole);
+    model->setItem(i, item);
     }
 
 void DmAdvancedView::serversListGroupClicked(bool state)

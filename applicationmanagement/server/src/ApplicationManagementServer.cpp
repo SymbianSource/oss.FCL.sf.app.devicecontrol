@@ -1547,6 +1547,7 @@ void CApplicationManagementServer::JavaInstallL(CDeploymentComponent &aCompo)
     if (err != KErrNone)
         {
         aCompo.SetStatusNode(EDelivered_InstalledFailedWithData);
+        delete wait;
         User::Leave(err);
         }
     wait->StartWait();
@@ -1554,7 +1555,7 @@ void CApplicationManagementServer::JavaInstallL(CDeploymentComponent &aCompo)
         m_Dlg->closeAMWaitDialog();
     m_Window->lower();
     TRequestStatus s1 = wait->iStatus;
-    delete wait;
+    
     RDEBUG_2( "ApplicationManagementSession: JavaInstallL 1 failed with code %d",
                 s1.Int() );
 
@@ -1648,6 +1649,7 @@ void CApplicationManagementServer::SisInstallL(
     if (err != KErrNone)
         {
         aCompo.SetStatusNode(EDelivered_InstalledFailedWithData);
+        delete wait;
         User::Leave(err);
         }
     RDEBUG_2("ApplicationManagementSession: SisInstallL failed with code before startwait %d",

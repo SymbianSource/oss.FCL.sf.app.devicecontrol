@@ -45,8 +45,8 @@ end
 
 LIBRARY 			euser.lib ecom.lib efsrv.lib bafl.lib  etul.lib
 LIBRARY       centralrepository.lib
-LIBRARY       platformenv.lib
-LIBRARY 			commonengine.lib               // Series 60 common components library
-LIBRARY       hbcore.lib hbwidgets.lib
+LIBRARY       PlatformEnv.lib
+LIBRARY 			CommonEngine.lib               // Series 60 common components library
+LIBRARY       HbCore.lib HbWidgets.lib
 
 SMPSAFE

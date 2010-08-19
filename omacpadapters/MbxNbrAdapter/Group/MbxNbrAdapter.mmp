@@ -53,8 +53,8 @@ SYSTEMINCLUDE 	/epoc32/include/ecom
 
 LIBRARY         euser.lib
 LIBRARY         provisioningengine.lib
-LIBRARY         commonengine.lib
-LIBRARY       vmbxengine
+LIBRARY         CommonEngine.lib
+LIBRARY       	vmbxengine.lib
 LIBRARY 				centralrepository.lib
 DEBUGLIBRARY    flogger.lib
 

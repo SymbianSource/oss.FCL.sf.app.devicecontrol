@@ -62,7 +62,7 @@ LIBRARY         provisioningengine.lib
 LIBRARY         msgs.lib
 LIBRARY         cmmanager.lib
 LIBRARY         commdb.lib
-LIBRARY         commonengine.lib
+LIBRARY         CommonEngine.lib
 LIBRARY         centralrepository.lib
 
 DEBUGLIBRARY    flogger.lib

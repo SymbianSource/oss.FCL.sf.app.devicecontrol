@@ -1798,7 +1798,7 @@ CSmlDmAdapter::TError CNSmlWLanAdapter::FetchLeafObjectL(const TDesC8& aURI,
 
     if (luid == KErrNotFound)
         {
-        return;
+        return CSmlDmAdapter::ENotFound;;
         }
 
     TInt err = iWlanSettings->GetWlanSettings(luid, *iSettings);

@@ -71,7 +71,8 @@ HEADERS += ./inc/dminforetrieval.h \
 ./inc/nsmldmdbnotifier.h	\
 ./inc/deviceupdatemoniter.h	\
 ./inc/deviceupdatemoniterobserver.h	\
-./inc/DeviceUpdateDebug.h
+./inc/DeviceUpdateDebug.h \
+./inc/customviewitem.h
 
 SOURCES += ./src/dmadvancedview.cpp \
 			./src/main.cpp \
@@ -86,7 +87,8 @@ SOURCES += ./src/dmadvancedview.cpp \
 			./src/settingsdataformcustomitem.cpp\
 			./src/dmfotaview.cpp \
 			./src/nsmldmdbnotifier.cpp	\
-			./src/deviceupdatemoniter.cpp
+			./src/deviceupdatemoniter.cpp \
+			./src/customviewitem.cpp
 			
 RESOURCES += ./resources/deviceupdates.qrc
 CONFIG += hb

@@ -114,7 +114,6 @@ private:
     HbAction* exit;
     HbWidget* viewwidget;
     HbDocumentLoader *docmlLoader;
-    HbPushButton* newserverprofile;
     int count;
     QTranslator *translator;
     QStandardItemModel *model;

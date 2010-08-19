@@ -114,22 +114,18 @@ TBool CWPAPPhysicalProxy::ValidateL()
 void CWPAPPhysicalProxy::AddDataL( RCmConnectionMethodExt& aCmItem )
 	{  
 	LOG("--CWPAP CWPAPPhysicalProxy::AddDataL begin--");	
-	TInt err(KErrNone);
 	
 	// CMManager
 	aCmItem.SetStringAttributeL( CMManager::ECmWapIPGatewayAddress, iProxyAddr->Value());
-	LOG2("CWPAP EApWapStartPage, value: %S, err: %d",
-	                                             &iProxyAddr->Value(), err);
+	LOG1("CWPAP EApWapStartPage, value: %S ", &iProxyAddr->Value());
 
 	//CMManager
 	aCmItem.SetStringAttributeL( CMManager::ECmIPGateway, iProxyAddr->Value());
-	LOG2("CWPAP EApIspIPGateway, value: %S, err: %d",
-	                                             &iProxyAddr->Value(), err);
+	LOG1("CWPAP EApIspIPGateway, value: %S ", &iProxyAddr->Value());
 
 	//CMManager 
 	aCmItem.SetStringAttributeL( CMManager::ECmProxyServerName, iProxyAddr->Value() );
-	LOG2("CWPAP EApProxyServerAddress, value: %S, err: %d",
-	                                                &iProxyAddr->Value(), err);
+	LOG1("CWPAP EApProxyServerAddress, value: %S ", &iProxyAddr->Value());
 	                                               
 
 	// Store port data
@@ -142,8 +138,7 @@ void CWPAPPhysicalProxy::AddDataL( RCmConnectionMethodExt& aCmItem )
         {
         iLogicalPort->AddDataL( aCmItem );
         }
-    if ( err ) err = 0; // prevent compiler warning
-    
+  
 	LOG("--CWPAP CWPAPPhysicalProxy::AddDataL end--");	
 	}
 

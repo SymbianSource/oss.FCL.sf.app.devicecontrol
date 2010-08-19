@@ -420,11 +420,7 @@ void CNSmlDSSettingsAdapter::UpdateLeafObjectL( const TDesC8& aURI,
 				}
 		    		    
 			}
-		else if( fieldID == EProfileURL )
-			{
-			ret = SetProfileServerURIL( iParentLUID, aObject );
-            }
-        else if( fieldID == EProfileMediumType )//AddrType
+		else if( fieldID == EProfileMediumType )//AddrType
 			{
 			if ( iLeafType == EDSDelete )
 			    {

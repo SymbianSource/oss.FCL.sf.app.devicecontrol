@@ -51,9 +51,12 @@ int main(int argc, char *argv[])
    if( argc == 2) // Launch via Control Panel
     {    	
     	QTranslator *cptranslator = new QTranslator();
-    	cptranslator->load("control_panel_" + lang, path);
-    	qApp->installTranslator(cptranslator);
-    	app.setApplicationName(hbTrId("txt_applib_list_control_panel"));
+    	fine = cptranslator->load("control_panel_" + lang, path);
+    	if(fine)
+    		qApp->installTranslator(cptranslator);
+    	else
+   			qDebug("control panel translator loading failed");
+      app.setApplicationName(hbTrId("txt_cp_title_control_panel"));
     }
     else
     {    		

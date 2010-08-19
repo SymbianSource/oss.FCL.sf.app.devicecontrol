@@ -1726,13 +1726,17 @@ void CNSmlInternetAdapter::AddLeafObjectL(const TDesC8& aURI,
                 tableView->PutRecordChanges();
                 if (serviceReLock)
                     {
-                    DoProtectIAPRecordL(iapID4, ETrue);
+                    TInt reclockerriap = DoProtectIAPRecordL(iapID4, ETrue);
                     TInt reclockerr = DoProtectServiceRecordL(iISPId, ETrue);
+                    DBG_ARGS8(
+                            _S8(
+                                    "CNSmlInternetAdapter::AddLeafObjectL ,UnProtecting IAP returned code = %d"),
+                            reclockerriap);
                     DBG_ARGS8(
                             _S8(
                                     "CNSmlInternetAdapter::AddLeafObjectL ,UnProtecting ServiceRecord returned code = %d"),
                             reclockerr);
-                    if (reclockerr == KErrNone)
+                    if ((reclockerr == KErrNone) && (reclockerriap == KErrNone))
                         serviceReLock = EFalse;
                     }
                 CleanupStack::PopAndDestroy(); // tableView
@@ -3038,17 +3042,28 @@ CSmlDmAdapter::TError CNSmlInternetAdapter::FetchLeafObjectL(
             CCommsDbTableView* networkView =
                     iDatabase->OpenViewMatchingUintLC(TPtrC(IAP), TPtrC(
                             COMMDB_ID), iapID);
-            networkView->GotoFirstRecord();
-            TRAPD(leavecode, networkView->ReadUintL(TPtrC(IAP_NETWORK),
+            errorCode = networkView->GotoFirstRecord();
+            if (errorCode == KErrNone)
+            {
+            	TRAPD(leavecode, networkView->ReadUintL(TPtrC(IAP_NETWORK),
                     iISPId));
-            CleanupStack::PopAndDestroy(); // networkView
-            if (leavecode != 0)
+            	CleanupStack::PopAndDestroy(); // networkView
+            	if (leavecode != 0)
                 {
                 _DBG_FILE(
                         "CNSmlInternetAdapter::FetchLeafObjectL(internal)()(): ENotFound end");
                 CleanupStack::PopAndDestroy(pushed);
                 return CSmlDmAdapter::ENotFound;
                 }
+             }
+             else
+             	{
+             		CleanupStack::PopAndDestroy(); // networkView
+             		_DBG_FILE(
+                        "CNSmlInternetAdapter::FetchLeafObjectL(internal)()(): ENotFound end");
+                CleanupStack::PopAndDestroy(pushed);
+                return CSmlDmAdapter::ENotFound;
+             	}
 
             CCommsDbTableView* tableView = iDatabase->OpenViewMatchingUintLC(
                     TPtrC(NETWORK), TPtrC(COMMDB_ID), iISPId);
@@ -3323,13 +3338,14 @@ CSmlDmAdapter::TError CNSmlInternetAdapter::FetchLeafObjectL(
 
             CCommsDbTableView* nwidView = iDatabase->OpenViewMatchingUintLC(
                     TPtrC(IAP), TPtrC(COMMDB_ID), iISPId);
-            nwidView->GotoFirstRecord();
-            nwidView->ReadUintL(TPtrC(IAP_NETWORK), iISPId);
-            CleanupStack::PopAndDestroy(); // nwidView
-
-            aObject.InsertL(aObject.Size(), SetIntObjectLC(iISPId));
-            pushed++;
+            if (nwidView->GotoFirstRecord() == KErrNone)
+            {						
+            	nwidView->ReadUintL(TPtrC(IAP_NETWORK), iISPId); 
+            	aObject.InsertL(aObject.Size(), SetIntObjectLC(iISPId));
+            	pushed++;
             }
+            CleanupStack::PopAndDestroy(); // nwidView
+          	}
         else if (aURI.Match(_L8("AP/*/Px/*/PortNbr")) != KErrNotFound)
             {
             _DBG_FILE(

@@ -1676,7 +1676,7 @@ TInt CWlanSettings::PerformLockWLANTablesL(TBool aProtect)
     CleanupStack::PopAndDestroy(iapViews);
     CleanupStack::PopAndDestroy(commsDataBase);
 
-    iDatabase.BeginTransaction();
+    err = iDatabase.BeginTransaction();
     return err;
     }
 

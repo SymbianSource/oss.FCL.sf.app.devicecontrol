@@ -287,13 +287,15 @@ void CNSmlDmFotaAdapter::DDFStructureL( MSmlDmDDFObject& aDDF )
 
     CBufBase* acl=CBufFlat::NewL(10);
     CleanupStack::PushL( acl );
-    session.GetAclL( KNSmlDMFotaNode,*acl,EFalse );
-
-    if( acl->Size() == 0 )
+    TInt err = session.GetAclL( KNSmlDMFotaNode,*acl,EFalse );
+		if ( err == KErrNone)
+		{
+    	if( acl->Size() == 0 )
         {
         _LIT8(KACLForAll, "Add=*&Get=*&Delete=*&Exec=*&Replace=*");
         session.UpdateAclL( KNSmlDMFotaNode, KACLForAll);
         }
+    }
     CleanupStack::PopAndDestroy( acl );
     CleanupStack::PopAndDestroy( &session );
 

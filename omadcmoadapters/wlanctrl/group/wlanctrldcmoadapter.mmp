@@ -39,9 +39,9 @@ TARGET wlanctrldcmoadapter.rsc
 LANGUAGE_IDS
 END
 
-LIBRARY 		euser.lib ECom.lib featmgr.lib
-LIBRARY			commonengine.lib
-LIBRARY     hbcore.lib hbwidgets.lib
+LIBRARY 		euser.lib ecom.lib featmgr.lib
+LIBRARY			CommonEngine.lib
+LIBRARY     HbCore.lib HbWidgets.lib
 
 SOURCEPATH ../src
 SOURCE wlanctrldcmoadapterproxy.cpp wlanctrldcmoadapter.cpp

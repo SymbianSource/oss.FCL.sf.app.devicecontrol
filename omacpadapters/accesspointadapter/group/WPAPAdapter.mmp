@@ -64,13 +64,12 @@ SYSTEMINCLUDE 	/epoc32/include/ecom
 LIBRARY         euser.lib
 LIBRARY         ProvisioningEngine.lib
 LIBRARY         commdb.lib
-LIBRARY         FeatMgr.lib
+LIBRARY         featmgr.lib
 LIBRARY         ecom.lib
-LIBRARY 		centralrepository.lib
-LIBRARY			cmmanager.lib
-LIBRARY			eapsymbiantools.lib
-LIBRARY			eaptools.lib
-LIBRARY			eaptrace.lib
+LIBRARY 	centralrepository.lib
+LIBRARY		cmmanager.lib
+LIBRARY		eaptools.lib
+
 DEBUGLIBRARY    flogger.lib     // Only in debug builds
 
 // End of File

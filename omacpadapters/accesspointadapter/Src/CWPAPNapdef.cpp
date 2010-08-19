@@ -23,7 +23,7 @@
 #include "CWPAPNapdef.h"
 #include <CWPCharacteristic.h>
 #include <CWPParameter.h>
-#include <WPAPAdapterResource.rsg>
+#include <wpapadapterresource.rsg>
 #include <featmgr.h>
 #include <WPAdapterUtil.h>
 #include "CWPAPAccesspointItem.h"
@@ -600,6 +600,7 @@ void CWPAPNapdef::VisitL( CWPCharacteristic& aCharacteristic )
 					aCharacteristic.AcceptL( *this );
 				}
 			}
+			break;
 		default:
 			{
 			if ( ( ( ( aCharacteristic.Name().Compare( KWLAN ) ) == 0 )    ||
