@@ -23,24 +23,32 @@
 #include <centralrepository.h>
 #include <f32file.h> 
 #include <SyncMLDef.h>
-
 #include "ApplicationManagementCommon.h"
 #include "aminstalloptions.h"
 #include "amdeploymentcomponentdata.h"
-#include "AMDownload.h"
-#include <httpdownloadmgrcommon.h>
 
 
 namespace NApplicationManagement
     {
-
-
-    //const TInt KMaxURILength = 2048;
     _LIT8( KAMDCDelimiter, "|" );
 
     // FORWARD DECLARATIONS
     class CDeploymentComponent;
     class CAMDownload;
+
+      class MAMDownloadStateObserver
+        {
+public:
+        /**
+         * StatusUpdateL Sets the current download status. This is 
+         *	currently HTTP status code 
+         *	(200 is success, 400+ failure, 100-199 in progress)
+         * @param	aNewStatus	The new download status 
+         */
+        virtual void StatusUpdateL(TInt aNewStatus) = 0;
+        virtual void SuccessStatusUpdateL(const TDesC &aDlFileName,
+                const TDesC8& aDlMimeType) = 0;
+        };
 
 
     class MDownloadCallback
@@ -74,14 +82,15 @@ namespace NApplicationManagement
         TUint32 iInternalId;
         TUid iUid;
         TDCUserId iUserId;
-
+        
         CDeploymentComponentData *iMetaData;
         CDeploymentComponentData *iData;
         TAMInstallOptions iInstallOpts;
         TBool iInstallOptsSet;
         TUint32 iPkgVersion;
         TBool iRemovableApp;
-
+        TBool iDriveSelection;
+        TInt iComponentId;
         TInt iDownloadStatus;
         mutable TInt iStatus;
         TBuf8<KMaxUrlLength> iDownloadURI;
@@ -133,7 +142,7 @@ namespace NApplicationManagement
 
         inline TDeploymentComponentState State() const;
 
-        inline const TUint32 InternalId() const;
+        inline TUint32 InternalId() const;
 
         inline const TUid & Uid() const;
 
@@ -184,6 +193,10 @@ namespace NApplicationManagement
         void SetMidletVersionL( const TDesC8 &aMidletVersion );
 
         void SetAppRemovableStatus(const TBool &aRemovable);
+        
+        void SetDriveSelectionStatus(const TBool &aDriveSelection);
+        
+        void SetComponentId(const TInt &aComponentId);
 
         void SetCallback( MDownloadCallback *aListener )
             {
@@ -198,7 +211,7 @@ namespace NApplicationManagement
         /*
          * Returns the status Node value of the Component ID.
          * */
-        inline const TInt Status() const;
+        inline TInt Status() const;
 
         CDeploymentComponent &operator=( const CDeploymentComponent &aData );
 
@@ -266,6 +279,8 @@ namespace NApplicationManagement
         const SwiUI::TUninstallOptions &UninstallOpts() const;
         TBool InstallOptsSet() const;
         TBool AppRemovable() const;
+        TBool DriveSelected() const;
+        TInt GetComponentId() const;
         void SetDataL( const TDesC8 &aMimeType );
         void SetMetaDataL( const TDesC8 &aMimeType );
         void SetDataL( const TDesC8 &aData, const TDesC8 &aMimeType );

@@ -16,15 +16,13 @@
  */
 
 //	CLASS HEADER
-#include "ApplicationManagementJavaUtility.h"
-#include <debug.h>
+
 #include <e32property.h>
 #include <javadomainpskeys.h>
 #include <javaregistryincludes.h>
 #include <appversion.h>
-//  EXTERNAL INCLUDES
-//#include <mjavaregistry.h>
-
+#include "ApplicationManagementJavaUtility.h"
+#include "debug.h"
 //  INTERNAL INCLUDES
 
 

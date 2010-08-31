@@ -36,13 +36,13 @@ const TInt KAMNullResult = 0;
 const TInt KAMDownloaddbDrive = EDriveC;
 const TUid KAMPolicyUID =
     {
-    0x1020781C
+    0x200267FB
     };
 const TInt KAMMaxPkgURLLength( 2048);
 const TInt KAMMaxPkgNameLength( 80);
 const TInt KAMMaxPkgVersionLength( 80);
 
-_LIT( KDBMSSecureID, "secure[1020781C]" );
+_LIT( KDBMSSecureID, "secure[200267FB]" );
 
 _LIT( KAMDownloaddbName, "c:TARMAppMgmtDownloadDB.db" );
 

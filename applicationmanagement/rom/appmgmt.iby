@@ -20,21 +20,20 @@
 
 //#if defined(__SAP_APPLICATION_MANAGEMENT)
 	
-	S60_APP_EXE(ApplicationManagement)
+	S60_APP_EXE(ApplicationManagementServer)
 
-      
+  S60_APP_RESOURCE( ApplicationManagementServer )
       
       // _reg.rsc has to be in "import" folder to allow updating application exe with a SISX-file
-    data=\EPOC32\DATA\Z\private\10003a3f\apps\ApplicationManagement_reg.RSC \private\10003a3f\import\apps\ApplicationManagement_reg.RSC
+  data=\EPOC32\DATA\Z\private\10003a3f\import\apps\ApplicationManagementServer_reg.RSC \private\10003a3f\import\apps\ApplicationManagementServer_reg.RSC
 
-	file=ABI_DIR\BUILD_DIR\ApplicationManagement.dll		SHARED_LIB_DIR\ApplicationManagement.dll
+	file=ABI_DIR\BUILD_DIR\ApplicationManagementClient.dll		SHARED_LIB_DIR\ApplicationManagementClient.dll
 	
 	ECOM_PLUGIN(RfsAppMgmtPlugin.dll,102073BF.rsc)
-      ECOM_PLUGIN(omascomoadapter.dll, omascomoadapter.rsc)
+  ECOM_PLUGIN(omascomoadapter.dll, omascomoadapter.rsc)
 
-       data=ZPRIVATE\100012a5\policy\20021335.spd      PRIVATE\100012a5\policy\20021335.spd
-
-       data=ZPRIVATE\100012a5\policy\1020781C.spd      PRIVATE\100012a5\policy\1020781C.spd
+  data=ZPRIVATE\100012a5\policy\20021335.spd      PRIVATE\100012a5\policy\20021335.spd
+  data=ZPRIVATE\100012a5\policy\200267FB.spd      PRIVATE\100012a5\policy\200267FB.spd
 
 	
 //#endif // #ifdef __SAP_APPLICATION_MANAGEMENT

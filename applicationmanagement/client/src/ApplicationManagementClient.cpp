@@ -25,7 +25,7 @@
 #include "debug.h"
 #include <apacmdln.h>
 #include <apgtask.h>
-
+#include <e32property.h>
 
 #include <apgcli.h>
 
@@ -37,50 +37,57 @@ using namespace NApplicationManagement;
 // Server startup code
 // ----------------------------------------------------------------------------------------
 
-static TInt StartAMServerL()
+static TInt StartServer()
 	{
-	RDEBUG("RApplicationManagement: Starting server...");
-	
-	TInt err = KErrNone;
-	const TUid nameUid = TUid::Uid(KUikonUidPluginInterfaceNotifiers);
-    	
-	const TUid appServerUid = TUid::Uid(KAppMgmtServerUid );
-	
-	RApaLsSession apa;
-    err = apa.Connect();
-    User::LeaveIfError(err);
-    CleanupClosePushL(apa);
+    RDEBUG("RApplicationManagement: Starting server...");
 
-    // Get application information
-    TApaAppInfo info;
-    
-    for(TInt i = 20; ((err = apa.GetAppInfo(info, 
-	    appServerUid)) == RApaLsSession::EAppListInvalid) && i > 0; i--)
+    const TUidType serverUid(KNullUid, KNullUid,
+            KApplicationManagementServerUid);
+
+    // EPOC and EKA 2 is easy, we just create a new server process. Simultaneous
+    // launching of two such processes should be detected when the second one
+    // attempts to create the server object, failing with KErrAlreadyExists.
+    RProcess server;
+    //TInt r=server.Create(KHelloWorldServerImg,KNullDesC,serverUid);
+    TInt r = server.Create(KApplicationManagementServerImg, KNullDesC);
+    if (r != KErrNone)
         {
-        User::After(500000);
+        RDEBUG_2("ApplicationManagementClient: server start failed %d",r);
+        return r;
         }
-    User::LeaveIfError(err);
+    TRequestStatus stat;
+    server.Rendezvous(stat);
+    if (stat != KRequestPending)
+        server.Kill(0); // abort startup
+    else
+        server.Resume(); // logon OK - start the server
+    RDEBUG("ApplicationManagementClient: Started");
+    User::WaitForRequest(stat);
+    TInt err = RProperty::Define(KProperty, KInteger, RProperty::EInt);
+    RProperty ServerLaunch;
+    ServerLaunch.Attach(KProperty, KInteger, EOwnerThread);
+    TRequestStatus status;
 
-	TRequestStatus aRequestStatusForRendezvous;
-    
-    // Start aplication server
-    CApaCommandLine* cmdLine = CApaCommandLine::NewLC();
-    cmdLine->SetExecutableNameL(info.iFullName);
-    cmdLine->SetServerRequiredL(nameUid.iUid );
-    cmdLine->SetCommandL(EApaCommandBackground);
-    TThreadId   srvid;
-    err = apa.StartApp(*cmdLine, srvid, &aRequestStatusForRendezvous);
-    User::LeaveIfError(err);
+    ServerLaunch.Subscribe(status);
+    //server.Resume();
+    User::WaitForRequest(status);
 
-	User::WaitForRequest(aRequestStatusForRendezvous);
-	CleanupStack::PopAndDestroy(2, &apa);	// cmdLine and apa 
+    ServerLaunch.Close();
+    RProperty::Delete(KProperty, KInteger);
 
-	return KErrNone;
-	}
+    //User::WaitForRequest(stat);		// wait for start or death
+    // we can't use the 'exit reason' if the server panicked as this
+    // is the panic 'reason' and may be '0' which cannot be distinguished
+    // from KErrNone
+    r = (server.ExitType() == EExitPanic) ? KErrGeneral : stat.Int();
+    // _LIT_SECURITY_POLICY_S0(KWritePolicy,KApplicationManagementServerUid.iUid);
+    //  _LIT_SECURITY_POLICY_C1( KReadPolicy, ECapabilityReadDeviceData );
 
-EXPORT_C RAppMgmtRfs::RAppMgmtRfs()
-    {
+    server.Close();
+    return r;
     }
+
+
 EXPORT_C TInt RAppMgmtRfs::Connect()
 	{
 	TInt retry=2;
@@ -88,28 +95,12 @@ EXPORT_C TInt RAppMgmtRfs::Connect()
 	for (;;)
 		{
 		
-		TInt r;
-		
-		const TUid nameUid = TUid::Uid(KUikonUidPluginInterfaceNotifiers);
-    	
-		const TUid appServerUid = TUid::Uid(KAppMgmtServerUid );
-		
-		_LIT(KServerNameFormat, "%08x_%08x_AppServer");
-		TFullName serverName;
-		serverName.Format(KServerNameFormat, 
-		nameUid, appServerUid);
-        TRAP(r, ConnectExistingByNameL(serverName) );
-        if(r)
-            {
-            
-            r = CreateSession (serverName, ver);
-            
-            }    
+		TInt r=CreateSession(KApplicationManagementServerName,ver,1);
 		if (r!=KErrNotFound && r!=KErrServerTerminated)
 			return r;
 		if (--retry==0)
 			return r;
-		TRAP_IGNORE(r=StartAMServerL());
+		r=StartServer();
 		if (r!=KErrNone && r!=KErrAlreadyExists)
 			{
 			return r;
@@ -120,7 +111,7 @@ EXPORT_C TInt RAppMgmtRfs::Connect()
 	
 EXPORT_C void RAppMgmtRfs::Close()
 	{
-	REikAppServiceBase::Close();  //basecall
+	RSessionBase::Close();  //basecall
 	}
 
 // New methods
@@ -129,15 +120,7 @@ EXPORT_C void RAppMgmtRfs::PerformRfsL() const
 	User::LeaveIfError( SendReceive( EPerformRfs, TIpcArgs() ) );	
 	}
 	
-TUid RAppMgmtRfs::ServiceUid() const
-	{
-	return TUid::Uid( KAMServiceUid);
-	}
 
-	
-EXPORT_C RApplicationManagement::RApplicationManagement()
-    {
-    }
 
 // This is the standard retry pattern for server connection
 EXPORT_C TInt RApplicationManagement::Connect( )
@@ -147,28 +130,12 @@ EXPORT_C TInt RApplicationManagement::Connect( )
 	for (;;)
 		{
 		
-		TInt r;
-		
-		const TUid nameUid = TUid::Uid(KUikonUidPluginInterfaceNotifiers);
-    	
-		const TUid appServerUid = TUid::Uid(KAppMgmtServerUid );
-		
-		_LIT(KServerNameFormat, "%08x_%08x_AppServer");
-		TFullName serverName;
-		serverName.Format(KServerNameFormat, 
-		nameUid, appServerUid);
-        TRAP(r, ConnectExistingByNameL(serverName) );
-        if(r)
-            {
-            
-            r = CreateSession (serverName, ver);
-            
-            }    
+		TInt r=CreateSession(KApplicationManagementServerName,ver,1);
 		if (r!=KErrNotFound && r!=KErrServerTerminated)
 			return r;
 		if (--retry==0)
 			return r;
-		TRAP_IGNORE(r=StartAMServerL())
+		r=StartServer();
 		if (r!=KErrNone && r!=KErrAlreadyExists)
 			{
 			return r;
@@ -190,7 +157,7 @@ EXPORT_C TInt RApplicationManagement::Connect( const TCertInfo &aCertInfo )
 	
 EXPORT_C void RApplicationManagement::Close()
 	{
-	REikAppServiceBase::Close();
+	RSessionBase::Close();  //basecall
 	}
 
 

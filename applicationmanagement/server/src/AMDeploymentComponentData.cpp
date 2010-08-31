@@ -15,15 +15,12 @@
  *
  */
 
-#include "amdeploymentcomponentdata.h"
-
 #include <bautils.h>
-#include <sisdataprovider.h>
-
 #include <DRMLicenseManager.h>
-#include "debug.h"
 #include <pathinfo.h>
 #include <zipfilemember.h>
+#include "amdeploymentcomponentdata.h"
+#include "debug.h"
 
 _LIT8( KSisxMimeType, "x-epoc/x-sisx-app" );
 _LIT( KTempDir, "piptemp\\" );
@@ -31,6 +28,9 @@ _LIT8( KPipMimeType, "application/x-pip" );
 _LIT8( KDrmMessageMimeType, "application/vnd.oma.drm.message" );
 _LIT8( KDrmContentMimeType, "application/vnd.oma.drm.content" );
 _LIT8( KSisMimeType, "application/vnd.symbian.install");
+_LIT8( KJadMIMEType, "text/vnd.sun.j2me.app-descriptor" );
+_LIT8( KJarMIMEType, "application/java-archive" );
+_LIT8( KJavaMIMEType, "application/java" );
 
 using namespace NApplicationManagement;
 
@@ -45,7 +45,6 @@ CDeploymentComponentData::CDeploymentComponentData(TType aType,
         const TDesC8 &aDataFile) :
     iDataFileName(aDataFile), iType(aType)
     {
-
     }
 
 void CDeploymentComponentData::ConstructL(const TDesC8 &aData,
@@ -210,11 +209,72 @@ TUid CDeploymentComponentData::SetDataL(const TDesC8& aMimeType)
     TUid ret(TUid::Null());
     iMimeType = aMimeType.Left(KMaxMimeLength);
 
+    if (aMimeType.Length()!=NULL)
+        {
+        TUid ret(TUid::Null());
+        RFs fs;
+        User::LeaveIfError(fs.Connect());
+        CleanupClosePushL(fs);
+        CFileMan *fm = CFileMan::NewL(fs);
+        CleanupStack::PushL(fm);
+        TFileName oldfilepath;
+        oldfilepath.Copy(iDataFileName);
+        
+        
+        RDEBUG("App Mgmt before copy start");
+        TInt maxLength = iDataFileName.Length();
+        TChar charvaldot = '.';
+        TChar charvalslash = '\\';
+        //TFileName oldfilepath;
+        TInt pos = iDataFileName.LocateReverse(charvaldot);
+
+        TInt lengthDeleted = maxLength - pos;
+
+        iDataFileName.Delete(pos, lengthDeleted);
+        
+        if (iMimeType == KSisxMimeType)
+            {
+            _LIT16(KExt,".sisx");
+            iExtn.Append(KExt);
+            }
+        if(iMimeType==KSisMimeType)
+            {
+            _LIT16(KExt,".sis");
+            iExtn.Append(KExt);
+            }
+        if(iMimeType==KPipMimeType)
+            {
+            _LIT16(KExt,".pip");
+            iExtn.Append(KExt);
+            }
+        if(iMimeType==KJadMIMEType)
+            {
+            _LIT16(KExt,".jad");
+            iExtn.Append(KExt);
+            }
+        if(iMimeType==KJarMIMEType)
+            {
+            _LIT16(KExt,".jar");
+            iExtn.Append(KExt);
+            }
+        if(iMimeType==KJavaMIMEType)
+            {
+            _LIT16(KExt,".jar");
+            iExtn.Append(KExt);
+            }
+        iDataFileName.Append(iExtn);//file name with sisx extension
+        TFileName newfilepath;
+        newfilepath.Copy(iDataFileName);
+        User::LeaveIfError(fm->Rename(oldfilepath, newfilepath));
+        CleanupStack::PopAndDestroy(fm);
+        CleanupStack::PopAndDestroy( &fs);
+        //RDEBUG_2(" filename: %S", iDataFileName );
+        }
     if (IsSISInstallFile(aMimeType) )
         {
         RFs fs;
         User::LeaveIfError(fs.Connect() );
-        CleanupClosePushL(fs);
+        CleanupClosePushL(fs);     
         ret = ResolveUidL(fs);
         CleanupStack::PopAndDestroy( &fs);
         }
@@ -226,6 +286,8 @@ TUid CDeploymentComponentData::SetDataL(const TFileName &aData,
         const TDesC8& aMimeType)
     {
     RDEBUG_2("CDeploymentComponentData::SetDataL() TFileName: (%S)", &aData);
+    
+    _LIT(KNewPath, "c:\\private\\200267FB\\");
 
     TUid ret(TUid::Null());
     iMimeType = aMimeType.Left(KMaxMimeLength) ;
@@ -236,7 +298,41 @@ TUid CDeploymentComponentData::SetDataL(const TFileName &aData,
     CleanupStack::PushL(fm);
     TFileName fn;
     fn.Copy(iDataFileName);
-    User::LeaveIfError(fm->Copy(aData, fn) );
+
+    RDEBUG("App Mgmt before copy start");
+
+    
+    TInt maxLength = iDataFileName.Length();
+    TChar charvaldot = '.';
+    TChar charvalslash = '\\';
+    
+    TInt pos = iDataFileName.LocateReverse(charvaldot);
+    
+    TInt lengthDeleted = maxLength-pos;
+    
+    iDataFileName.Delete(pos, lengthDeleted);
+    
+    TInt srcpos = aData.LocateReverse(charvaldot);
+    
+    TBuf<15> extn(aData.Mid(srcpos));
+    
+    iDataFileName.Append(extn);
+    
+    TFileName newfilepath;
+    newfilepath.Copy(iDataFileName);
+    
+    User::LeaveIfError(fm->Move(aData,KNewPath()));
+    
+    TFileName oldfilepath(KNewPath());
+    oldfilepath.Append(aData.Mid(aData.LocateReverse(charvalslash)));
+    
+    User::LeaveIfError(fm->Rename(oldfilepath, newfilepath));
+   
+    
+    //User::LeaveIfError(fm->Copy(aData, fn) );
+
+    RDEBUG("App Mgmt before copy End");
+
 
     if (IsSISInstallFile(aMimeType) )
         {

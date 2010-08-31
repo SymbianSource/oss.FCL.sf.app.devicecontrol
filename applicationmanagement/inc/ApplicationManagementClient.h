@@ -27,9 +27,7 @@
 #include "ApplicationManagementConst.h"
 #include <ssl.h>
 #include <f32file.h>
-#include <AknServerApp.h>
-#include <uikon.hrh>
-
+//#include <AknServerApp.h>
 typedef RArray<TUint32> RElementIdArray;
 
 namespace NApplicationManagement
@@ -65,13 +63,9 @@ class RAMTC : public RSessionBase
 	
 
 
-class RApplicationManagement : public RAknAppServiceBase
+class RApplicationManagement : public RSessionBase
 	{
 	public:
-
-	       public: // Constructors 
-
-	IMPORT_C RApplicationManagement();
 	    /**
 		* Connect Connects client side to application management server
 	    * @return KErrNone Symbian error code

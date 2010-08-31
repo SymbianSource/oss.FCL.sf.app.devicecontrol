@@ -14,18 +14,17 @@
 * Description: Implementation of applicationmanagement components
 *
 */
-
-// 
+ 
 
 #ifndef __APPLICATIONMANAGEMENTCLIENTSERVER_H__
 #define __APPLICATIONMANAGEMENTCLIENTSERVER_H__
 
 #include <e32std.h>
 
-_LIT(KApplicationManagementServerName,"ApplicationManagement");
-_LIT(KApplicationManagementServerImg,"ApplicationManagement");		// DLL/EXE name
+_LIT(KApplicationManagementServerName,"applicationmanagementserver");
+_LIT(KApplicationManagementServerImg,"\\applicationmanagementserver.exe");		// DLL/EXE name
 
-const TUid KApplicationManagementServerUid={0x1020781C};
+const TUid KApplicationManagementServerUid={0x200267FB};
 
 namespace NApplicationManagement
 	{

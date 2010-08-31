@@ -15,10 +15,12 @@
  *
  */
 
-#include "amsmlhelper.h"
+
 #include <SyncMLClientDM.h>
-#include "debug.h"
 #include <rconnmon.h> 
+#include "amsmlhelper.h"
+#include "debug.h"
+
 #ifndef SYMBIAN_ENABLE_SPLIT_HEADERS
 #include <es_sock.h>
 #else
@@ -210,13 +212,11 @@ void SmlHelper::GetDefaultIAPFromDMProfileL(TInt& aDefaultIAP)
     RDEBUG("	8/8");
 
     aDefaultIAP = num;
-    
-    RDEBUG_2( "GetDefaultIAPFromDMProfileL::SetIAPL: Set IAP Id value to (%d) ", aDefaultIAP);
 
     // If there is no default Access point in DM profile then use
     // currently used access point by DM session
 
-    if (aDefaultIAP <= -1)
+    if (aDefaultIAP == -2)
         {
 
         TInt sockIapid = -1;
@@ -273,7 +273,6 @@ void SmlHelper::GetDefaultIAPFromDMProfileL(TInt& aDefaultIAP)
                 if (uid == KSosServerUid)
                     {
                     sockIapid = connInfo().iIapId;
-                    RDEBUG_2( "GetDefaultIAPFromDMProfileL::SetIAPL: Set IAP Id value to (%d) ", sockIapid);
 
                     }
 

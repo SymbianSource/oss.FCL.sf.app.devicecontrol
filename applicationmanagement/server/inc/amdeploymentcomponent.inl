@@ -46,7 +46,7 @@ inline TDeploymentComponentState CDeploymentComponent::State() const
     return iState;
     }
 
-inline const TUint32 CDeploymentComponent::InternalId() const
+inline TUint32 CDeploymentComponent::InternalId() const
     {
     return iInternalId;
     }
@@ -65,7 +65,7 @@ inline void CDeploymentComponent::StateChangeComplete()
     {
     iOldState = EDCSNone;
     }
-inline const TInt CDeploymentComponent::Status() const
+inline TInt CDeploymentComponent::Status() const
     {
     return iStatus;
     }

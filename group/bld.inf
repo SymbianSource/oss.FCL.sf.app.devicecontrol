@@ -23,20 +23,14 @@
 
 
 
-//omadm
-#include "../omadm/group/bld.inf"
+//omadmadapters
+#include "../omadmadapters/bld/bld.inf"
 
-// pnpmobileservices
-#include "../pnpmobileservices/group/bld.inf"
+//omadcmoadapters
+#include "../omadcmoadapters/group/bld.inf"
 
-//devicediagnostics
-#include "../devicediagnostics/group/bld.inf"
+//omacpadapters
+#include "../omacpadapters/bld/bld.inf"
 
-//applicationmanagement
+//application management
 #include "../applicationmanagement/group/bld.inf"
-
-//customization
-#include "../customization/group/bld.inf"
-
-//omacp
-#include "../omacp/group/bld.inf"

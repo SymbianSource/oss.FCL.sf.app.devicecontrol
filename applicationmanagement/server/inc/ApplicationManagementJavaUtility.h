@@ -21,10 +21,8 @@
 
 //  EXTERNAL INCLUDES
 #include <e32base.h>
-
 #include <javaregistryincludes.h>
 using namespace Java;
-
 //  INTERNAL INCLUDES
 #include "ApplicationManagementUtility.h"
 

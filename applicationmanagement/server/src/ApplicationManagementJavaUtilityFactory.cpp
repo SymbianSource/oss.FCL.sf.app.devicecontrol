@@ -17,7 +17,6 @@
 
 //	CLASS HEADER
 #include "ApplicationManagementUtilityFactory.h"
-
 #include "ApplicationManagementJavaUtility.h"
 
 using namespace NApplicationManagement;

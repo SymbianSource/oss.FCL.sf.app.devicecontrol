@@ -20,9 +20,12 @@
 #include <platform_paths.hrh>
 #include "defaultcaps.hrh"
 
-TARGET        applicationmanagement.dll
+TARGET        applicationmanagementclient.dll
 TARGETTYPE    dll
-UID           0x1000008d 0x1020781B
+UID           0x1000008d 0x2001247C
+#if 0
+CAPABILITY    CAP_CLIENT_DLL -TCB -DRM WriteDeviceData
+#endif
 CAPABILITY    CAP_CLIENT_DLL
 
 SOURCEPATH    ../src
@@ -44,4 +47,4 @@ LIBRARY         eikcore.lib
 LIBRARY			centralrepository.lib
 
 
-SMPSAFE
+//SMPSAFE

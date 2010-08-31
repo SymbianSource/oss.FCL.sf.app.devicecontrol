@@ -21,7 +21,7 @@
 
 // Application Management Server UID for Publish and Subscribe key
 
-const TUid KUidPSApplicationManagementKeys = { 0x1020781C };
+const TUid KUidPSApplicationManagementKeys = { 0x200267FB };
 
 // P&S key to check whether AM UI Server is enabled or disabled
 

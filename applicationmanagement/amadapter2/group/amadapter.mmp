@@ -58,7 +58,7 @@ LIBRARY		euser.lib
 LIBRARY		ecom.lib 
 LIBRARY     estor.lib
 LIBRARY		efsrv.lib 
-LIBRARY		applicationmanagement.lib
+LIBRARY		applicationmanagementclient.lib
 LIBRARY		centralrepository.lib 
 LIBRARY 	aminstalloptions.lib 
 LIBRARY		featmgr.lib 

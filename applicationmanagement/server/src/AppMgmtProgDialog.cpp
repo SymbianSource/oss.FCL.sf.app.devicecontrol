@@ -1,86 +1,169 @@
 /*
-* Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies). 
-* All rights reserved.
-* This component and the accompanying materials are made available
-* under the terms of "Eclipse Public License v1.0"
-* which accompanies this distribution, and is available
-* at the URL "http://www.eclipse.org/legal/epl-v10.html".
-*
-* Initial Contributors:
-* Nokia Corporation - initial contribution.
-*
-* Contributors:
+ * Copyright (c) 2000 Nokia Corporation and/or its subsidiary(-ies). 
+ * All rights reserved.
+ * This component and the accompanying materials are made available
+ * under the terms of "Eclipse Public License v1.0"
+ * which accompanies this distribution, and is available
+ * at the URL "http://www.eclipse.org/legal/epl-v10.html".
  *
- * Description:  Implementation of applicationmanagement components
+ * Initial Contributors:
+ * Nokia Corporation - initial contribution.
  *
-*/
-#include "AppMgmtProgDialog.h"
-#include <avkon.rsg>
-#include <applicationmanagement.rsg>
+ * Contributors:
+ *
+ * Description: Implementation of downloading progress note
+ *
+ */
+
+#include <hblabel.h>
+#include <hbaction.h>
+#include <e32property.h>
+#include <qapplication.h>
+#include <apgtask.h>
+#include <e32base.h>
 #include <eikenv.h>
-#include <aknnotewrappers.h>
-#include <avkon.hrh>
+#include <dmindicatorconsts.h>
+#include "appmgmtdownloadmgr.h"
+#include "ApplicationManagementUtility.h"
 
-CAppMgmtProgDialog::CAppMgmtProgDialog(MDLProgressDlgObserver *iCallback) :
-    iDlgObserver(iCallback)
-    {
+using namespace NApplicationManagement;
 
+// ------------------------------------------------------------------------------------------------
+// AppMgmtProgDialog::AppMgmtProgDialog
+// ------------------------------------------------------------------------------------------------ 
+AppMgmtProgDialog::AppMgmtProgDialog(QString aAppData, Download &mdl,int &aUserCancelled)
+:m_Dlg(0)
+    {   
+    m_Data=aAppData;
+    iDl=&mdl;
+    mUsrCancel = aUserCancelled;
+    m_Indi = 0;
     }
 
-CAppMgmtProgDialog::~CAppMgmtProgDialog()
+// ------------------------------------------------------------------------------------------------
+// AppMgmtProgDialog::~AppMgmtProgDialog()
+// ------------------------------------------------------------------------------------------------ 
+AppMgmtProgDialog::~AppMgmtProgDialog()
     {
-    if (iProgressDialog)
+    if(m_Dlg)
         {
-        delete iProgressDialog;
-        }
-
-    }
-
-void CAppMgmtProgDialog::StartProgressNoteL()
-    {
-    iProgressDialog = new (ELeave) CAknProgressDialog(
-            (REINTERPRET_CAST(CEikDialog**, &iProgressDialog)),
-            ETrue);
-    iProgressDialog->PrepareLC(R_PROGRESS_NOTE);
-    iProgressInfo = iProgressDialog->GetProgressInfoL();
-    iProgressDialog->SetCallback(this);
-    iProgressDialog->RunLD();
-    iProgressInfo->SetFinalValue(500);
-
-    }
-
-void CAppMgmtProgDialog::UpdateProcessL(TInt aProgress)
-    {
-    if (iProgressInfo)
-        {
-        iProgressInfo->SetAndDraw(aProgress);
+        delete m_Dlg;
+        m_Dlg=NULL;
         }
     }
 
-void CAppMgmtProgDialog::ProgressCompletedL()
+// ------------------------------------------------------------------------------------------------
+// AppMgmtProgDialog::sendServerToBackground()
+// ------------------------------------------------------------------------------------------------ 
+void AppMgmtProgDialog::sendServerToBackground()
     {
-    if (iProgressDialog)
+    CCoeEnv* coe = CCoeEnv::Static();
+    TApaTaskList taskList(coe->WsSession());
+    TApaTask task=taskList.FindApp(TUid::Uid(KAppMgmtServerUid));
+    if(task.Exists())
         {
-        iProgressDialog->ProcessFinishedL();
+        task.SendToBackground();
         }
-
     }
 
-void CAppMgmtProgDialog::SetFinalValueL(TInt32 aFinalValue)
+// ------------------------------------------------------------------------------------------------
+// AppMgmtProgDialog::startDialog
+// ------------------------------------------------------------------------------------------------ 
+void AppMgmtProgDialog::startDialog(int aContentSize,int aDownloaded)
     {
-    iProgressInfo = iProgressDialog->GetProgressInfoL();
-    iProgressInfo-> SetFinalValue(aFinalValue);
-    }
-
-void CAppMgmtProgDialog::DialogDismissedL(TInt aButtonId)
-    {
-
-    //|| aButtonId == EAknSoftkeyEmpty
-    if (aButtonId == EAknSoftkeyCancel)
+    if (m_Dlg == NULL)
         {
+        m_Dlg = new HbProgressDialog(HbProgressDialog::ProgressDialog);
+        CApplicationManagementUtility::mCurrDlg = m_Dlg;
+        QStringList strList = m_Data.split(",");
+        m_Name = strList[0];
+        m_SizeStr = strList[1];
+        }
+    m_Dlg->setMinimum(0);
+    m_Dlg->setMaximum(aContentSize);
 
-        iDlgObserver->HandleDLProgressDialogExitL(aButtonId);
+    m_Dlg->setAutoClose(true);
+    m_Dlg->setProgressValue(aDownloaded);
 
+    QString val = hbTrId("txt_device_update_title_downloading");
+    m_Dlg->setHeadingWidget(new HbLabel(val));
+
+    val = hbTrId("txt_deviceupdate_info_file_1_2").arg(m_Name);
+    val.append("\n");
+    val.append(m_SizeStr);
+
+    m_Dlg->setText(val);
+    val = hbTrId("txt_common_button_hide");
+    HbAction* hide = new HbAction();
+    hide->setText(val);
+    m_Dlg->clearActions();
+    m_Dlg->addAction(hide);
+    val = hbTrId("txt_common_button_cancel");
+    HbAction* cancel = new HbAction();
+    cancel->setText(val);
+    m_Dlg->addAction(cancel);
+    QObject::connect(hide, SIGNAL(triggered()), this,
+            SLOT(hideAMProgDialog()));
+    QObject::connect(cancel, SIGNAL(triggered()), this, SLOT(cancelDialog()));
+    m_Dlg->show();
+    }
+
+// ------------------------------------------------------------------------------------------------
+// AppMgmtProgDialog::closeAMProgDialog()
+// ------------------------------------------------------------------------------------------------ 
+void AppMgmtProgDialog::closeAMProgDialog()
+    {    
+    CApplicationManagementUtility::mCurrDlg=0;
+    if(m_Dlg)
+        {
+        m_Dlg->close();
+        }
+    if(CApplicationManagementUtility::mHidden==0)
+        {
+        sendServerToBackground();
+        }
+    else
+        {
+        m_Indi->deactivate(KScomoProgressIndicatorType);   
+        }
+    }
+
+// ------------------------------------------------------------------------------------------------
+// AppMgmtProgDialog::cancelDialog()
+// ------------------------------------------------------------------------------------------------ 
+void AppMgmtProgDialog::cancelDialog()
+    {
+    mUsrCancel = 1;
+    iDl->cancel();
+    if(m_Dlg)
+        {
+        m_Dlg->close();
+        }
+    sendServerToBackground();
+    CApplicationManagementUtility::mCurrDlg=0;
+    }
+
+// ------------------------------------------------------------------------------------------------
+// AppMgmtProgDialog::hideAMProgDialog()
+// ------------------------------------------------------------------------------------------------ 
+void AppMgmtProgDialog::hideAMProgDialog()
+    {
+    sendServerToBackground();
+    
+    QString str = hbTrId("txt_device_update_dblist_product_code_val_download").arg(m_Name);
+    CApplicationManagementUtility::mHidden=1;
+    m_Indi = new HbIndicator();
+    m_Indi->activate(KScomoProgressIndicatorType,str);
+    }
+
+// ------------------------------------------------------------------------------------------------
+// AppMgmtProgDialog::updateProgress
+// ------------------------------------------------------------------------------------------------ 
+void AppMgmtProgDialog::updateProgress(int aProgress)
+    {
+    if(m_Dlg)
+        {
+        m_Dlg->setProgressValue(aProgress);       
         }
     }
 

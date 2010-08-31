@@ -88,7 +88,7 @@ private:
      * @param	aLuid				Luid in descriptor format
      * @return						Luid in TInt type
      */
-    TInt DesToInt(const TDesC8& aLuid) const;
+    TInt DesToInt(const TDesC8& aLuid);
 
     /**
      * Return the URI without ./ at the beginning, if those exist

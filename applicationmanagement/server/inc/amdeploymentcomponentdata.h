@@ -21,9 +21,8 @@
 #include <e32base.h>
 #include <f32file.h> 
 #include <s32strm.h>
-
 #include "ApplicationManagementCommon.h"
-
+const TInt KMaxUrlLength = 2048;
 namespace NApplicationManagement
     {
 
@@ -49,7 +48,7 @@ private:
          Possibly changes mutable iData
          */
         void LoadDataL() const;
-
+        
         TBool IsSISInstallFile(const TDesC8 &aMimeType);
 
 public:
@@ -98,7 +97,7 @@ private:
         TBuf8<KMaxFileName> iDataFileName;
         TMimeType iMimeType;
         TType iType;
-
+        TBuf<15> iExtn;
         };
 
     inline CDeploymentComponentData::TType CDeploymentComponentData::Type() const
