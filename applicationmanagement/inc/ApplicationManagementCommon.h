@@ -26,15 +26,11 @@
 namespace NApplicationManagement
 	{
 
-const TUint32  KAppMgmtServerUid         = {0x200267FB};
+const TUint32  KAppMgmtServerUid         = {0x1020781C};
 
 const TUint32 KAMServiceUid = {0x1020781B};
 
-const TUid KProperty = {0x101F9A02};
-
-const TUint32 KInteger = 0x00000001;
-
-//const TUint32 KOmaDMAppUid = {0x200267FB};
+const TUint32 KOmaDMAppUid = {0x1020781C};
 const TInt KVersionLength= 7; // 3 for Major, 1 for '.' and 3 for Minor
 _LIT( KLiteralPeriod, ".");
 

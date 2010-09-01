@@ -1,0 +1,41 @@
+/*
+* Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:   Localisation file. 
+*
+*/
+
+// LOCALISATION STRINGS
+
+// d: This wait note is used while download in progress
+// l: popup_note_wait_window
+// r: 5.2
+#define qtn_dm_wait_downloading "Downloading"
+
+// d: Information note is displayed when user cancels download progress
+// l: popup_note_window/opt2
+// r: 5.2
+#define qtn_dm_query_download_cancelled "Download Cancelled"
+
+// d: Information note is displayed when download fails due to loss in network
+// d: connection
+// l: popup_note_window/opt2
+// r: 5.2
+#define qtn_dm_query_connection_failed "Download failed due to connection error"
+
+// d: Information note is displayed when download fails for any other reason like
+// d: out of memory etc.
+// l: popup_info_list_pane_t1
+// r: 5.2
+#define qtn_dm_query_general_failed "Download failed due to general error"
+// End of File

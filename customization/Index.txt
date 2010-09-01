@@ -1,0 +1,17 @@
+DeviceManagement Adapters:
+--------------------------
+
+Path				Explanation			UIDs (Implementation / Component)
+====				===================		=================================
+pmadapter  			Policy Management		See XLS
+terminalcontrol/tcadapter	Terminal Control 		0x0EEEEE01 / 0x0EEEEE00
+appmgmt/amadapter		Applicaton Management		See XLS
+WallpaperAdapter  		WallPaper customization		See XLS
+EmbeddedLinkAdapter		Embedded Links customization	See XLS
+supadapter 			StartUP customization		0x0FDDEF01 / 0x0FDDEEFB
+ScreenSaverAdapter  		ScreenSaver customization	See XLS
+isadapter  			Idle SOftkeys customization	0x0FDDEF04 / 0x0FDDEEFF
+ThemesAdapter			Themes customization		See XLS
+OperatorLogoAdapter		Operator Logo customization	See XLS
+
+DMUtils				Common utilities for DM adapters         - / -

@@ -142,8 +142,8 @@ TPtrC8 NSmlDmURI::RemoveLastSeg(const TDesC8& aURI)
 // TPtrC8 NSmlDmURI::URISeg(const TDesC8& aURI,TInt aLocation,TInt aSegCount=1)
 // Returns the aLocation:th URI segment
 // ------------------------------------------------------------------------------------------------
-/*TPtrC8 NSmlDmURI::URISeg(const TDesC8& aURI, TInt aLocation, TInt aSegCount/*=1*///)
-    /*{
+TPtrC8 NSmlDmURI::URISeg(const TDesC8& aURI, TInt aLocation, TInt aSegCount/*=1*/)
+    {
     TInt i, start;
     if (aLocation < 0)
         {
@@ -186,7 +186,7 @@ TPtrC8 NSmlDmURI::RemoveLastSeg(const TDesC8& aURI)
         }
     // i points to end of segment   
     return aURI.Mid(start+1, i-start-1);
-    }*/
+    }
 
 // ------------------------------------------------------------------------------------------------
 // TInt NSmlDmURI::NumOfURISegs(const TDesC8& aURI)

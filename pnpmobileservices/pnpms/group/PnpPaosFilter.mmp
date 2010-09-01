@@ -1,0 +1,57 @@
+/*
+* Copyright (c) 2005-2006 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Project definition file for project PnpPaosFilter
+*
+*/
+
+
+// To get the APP_LAYER_SYSTEMINCLUDE-definition
+#include <platform_paths.hrh>
+
+TARGET          pnppaosfilter.dll
+TARGETTYPE      PLUGIN
+CAPABILITY      CAP_ECOM_PLUGIN
+VENDORID        VID_DEFAULT
+
+// ECom filter UID followed by Unique 3rd UID
+UID             0x10009D8D 0x10272D33
+
+SOURCEPATH      ../PnpPaosFilter/src
+SOURCE          PnpPaosFilter.cpp
+SOURCE          PnpPaosFilterDll.cpp
+SOURCE          PnpPaosXml.cpp
+
+// Default system include paths for application layer modules.
+APP_LAYER_SYSTEMINCLUDE
+
+SYSTEMINCLUDE   /epoc32/include/ecom
+
+START RESOURCE ../data/10272D33.rss
+TARGET pnppaosfilter.rsc
+END
+
+LIBRARY         bafl.lib pnp.lib
+LIBRARY         euser.lib
+LIBRARY         http.lib
+LIBRARY         inetprotutil.lib
+LIBRARY         ecom.lib
+LIBRARY         xmlframework.lib
+LIBRARY         efsrv.lib
+LIBRARY         apgrfx.lib		// RApaLsSession
+LIBRARY         apparc.lib		// CApaCommandLine
+LIBRARY         sysutil.lib
+LIBRARY         centralrepository.lib
+DEBUGLIBRARY    flogger.lib     // for logging
+
+SMPSAFE

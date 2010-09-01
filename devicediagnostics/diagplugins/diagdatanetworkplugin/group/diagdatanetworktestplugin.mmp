@@ -1,0 +1,84 @@
+/*
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Project specification file.
+*
+*/
+
+
+#include  <data_caging_paths.hrh>    // For RESOURCE_FILES_DIR
+#include <platform_paths.hrh> // To get the MW_LAYER_SYSTEMINCLUDE-definition
+
+
+TARGET              devdiagdatanetworktestplugin.dll
+TARGETTYPE          PLUGIN
+UID                 0x10009D8D 0x2000E598                    
+VENDORID            VID_DEFAULT
+CAPABILITY          CAP_ECOM_PLUGIN
+
+SOURCEPATH  ../src
+SOURCE      diagdatanetworktestpluginimplementationtable.cpp    
+SOURCE      diagdatanetworktestplugin.cpp
+SOURCE      diagdatanetworktestpdpengine.cpp
+
+
+SOURCEPATH  ../../diagpdptestengine/src // for PDP Test Engine
+SOURCE      diagpdptestengine.cpp
+
+//User include paths
+USERINCLUDE     ../inc
+USERINCLUDE     ../../diagpdptestengine/inc // for PDP Test Engine
+USERINCLUDE     ../data // For *.rh
+USERINCLUDE     ../loc
+
+//System include paths
+SYSTEMINCLUDE   /epoc32/include/ecom
+
+// Default system include paths for middleware layer modules.
+APP_LAYER_SYSTEMINCLUDE
+
+SOURCEPATH      ../data
+
+// resource file for the plugin implementation
+START RESOURCE  devdiagdatanetworktestplugin.rss
+TARGET          devdiagdatanetworktestplugin.rsc
+TARGETPATH      ECOM_RESOURCE_DIR
+END
+
+// resource file for the plugin registration
+START RESOURCE  devdiagdatanetworktestpluginrsc.rss
+HEADER
+TARGETPATH      RESOURCE_FILES_DIR
+LANGUAGE_IDS
+END
+
+LIBRARY   euser.lib
+LIBRARY   commdb.lib
+
+LIBRARY				avkon.lib   // ADO & Platformization Changes
+LIBRARY   			eikcoctl.lib // ADO & Platformization Changes
+LIBRARY   			eikdlg.lib	// ADO & Platformization Changes
+
+LIBRARY   centralrepository.lib // for CRepository
+LIBRARY   esock.lib             // for RConnection
+
+LIBRARY   commonengine.lib      // For StringLoader
+LIBRARY   diagpluginbase.lib
+LIBRARY   flogger.lib           // for RFileLogger
+LIBRARY   diagframework.lib     // for CDiagLogEventEraser
+LIBRARY   logcli.lib            // for CLogFilter
+LIBRARY   cmmanager.lib
+LIBRARY  apengine.lib
+//LIBRARY   avkon.lib
+//LIBRARY   bafl.lib 
+// End of File

@@ -1,0 +1,35 @@
+/*
+* Copyright (c) 2005 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Contains common definitions for menu id:s
+*
+*/
+
+
+#ifndef DIAGAUDIOPLUGIN_HRH
+#define DIAGAUDIOPLUGIN_HRH
+
+#define DIAG_AUDIO_PLUGIN_UID 0x2000E58D
+
+enum TAudioTestCBA
+    {
+    ECBACmdRecord = 0x6300,
+    ECBACmdCancel,
+    ECBACmdContinue,
+    ECBACmdSkip,
+    ECBACmdCustomNo
+    };
+
+#endif //  DIAGAUDIOPLUGIN_HRH
+
+//End of File

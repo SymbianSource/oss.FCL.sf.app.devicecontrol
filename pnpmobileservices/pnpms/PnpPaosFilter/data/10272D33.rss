@@ -1,0 +1,87 @@
+/*
+* Copyright (c) 1027 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  This file contains resource definitions for PnP Paos filter. 
+*
+*/
+
+
+//  RESOURCE IDENTIFIER
+
+//  INCLUDES
+#ifdef RD_SECURE_BIN_RES
+	#include "registryinfov2.rh"
+#else
+	#include "RegistryInfo.rh"
+#endif
+
+//  CONSTANTS
+
+//  MACROS
+
+//  RESOURCE DEFINITIONS
+// -----------------------------------------------------------------------------
+//
+// REGISTRY_INFO
+// Contains the registry information for the WsPaosFilter
+//
+// -----------------------------------------------------------------------------
+//
+RESOURCE REGISTRY_INFO theInfo
+    {
+#ifdef RD_SECURE_BIN_RES
+		resource_format_version = RESOURCE_FORMAT_VERSION_2;
+#endif
+
+    dll_uid = 0x10272D33;
+    interfaces=
+        {
+        INTERFACE_INFO
+            {
+            // Ecom plugin interface_uid value MUST NOT be modified
+            interface_uid = 0x101F446D;
+            implementations =
+                {
+                IMPLEMENTATION_INFO
+                    {
+                    implementation_uid = 0x10272D33;
+                    version_no = 1;
+                    display_name = "PnpPaosFilter";
+
+                    // For HTTP-TF the default_data must be defined as follows
+                    // 1.Protocol identifier
+                    //    HTTP-TF uses first part (separated with /-character) to identify
+                    //    what protocol this filter will support. It could also be WSP but
+                    //    then HTTP-TF does not load it with any sessions that based on HTTP.
+                    // 2.Separator
+                    //    /-separator must be always there
+                    // 3.Filter category
+                    //    + = mandatory (HTTP-TF will panic if installation of this filter fails)
+                    //    - = Explicit (Does not install filter)
+                    //      = Implicit (Installs filter but traps possible errors and continues)
+
+                    default_data = "HTTP/+PAOS||WSP/+PAOS";
+                    opaque_data = "";
+
+										// Allow updating a ROM component with the corresponding
+										// RAM component
+										#ifdef RD_SECURE_BIN_RES
+											rom_only = 0;
+										#endif
+                    }
+                };
+            }
+        };
+    }
+
+// End of File

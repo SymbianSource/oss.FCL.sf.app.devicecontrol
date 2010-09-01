@@ -1,0 +1,68 @@
+;
+; Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
+; All rights reserved.
+; This component and the accompanying materials are made available
+; under the terms of "Eclipse Public License v1.0"
+; which accompanies this distribution, and is available
+; at the URL "http://www.eclipse.org/legal/epl-v10.html".
+;
+; Initial Contributors:
+; Nokia Corporation - initial contribution.
+;
+; Contributors:
+;
+; Description:
+;
+; Languages
+&EN
+;01
+
+; Package header
+#{"Device Diagnostics CenReps"},(0x10202BE9),0,1,0,TYPE=SP
+
+;Localised Vendor name
+%{"Nokia San Diego"}
+
+;Unique Vendor name
+:"Nokia"
+
+; Dependency for S60
+[0x101F7961],0,0,0,{"Series60ProductID"}
+
+
+;; =============================================================================
+;; REQUIRED FILES ==============================================================
+;; =============================================================================
+
+;; Phone Doctor Central Repository Files
+"\epoc32\data\Z\private\10202be9\2000E542.txt"-"!:\private\10202be9\2000E542.txt"
+
+
+;; Browser Plugin Central Repository Files
+"\epoc32\data\Z\private\10202be9\2000E59A.txt"-"!:\private\10202be9\2000E59A.txt"
+
+
+;; Data Network Plugin
+"\epoc32\data\Z\private\10202be9\2000E598.txt"-"!:\private\10202be9\2000E598.txt"
+
+
+;; Ear Piece Plugin
+"\epoc32\data\Z\private\10202be9\2000E58C.txt"-"!:\private\10202be9\2000E58C.txt"
+
+
+;; Loud Speaker Plugin
+"\epoc32\data\Z\private\10202be9\2000E58E.txt"-"!:\private\10202be9\2000E58E.txt"
+
+;; Network Coverage
+"\epoc32\data\Z\private\10202be9\2000E596.txt"-"!:\private\10202be9\2000E596.txt"
+
+;; Vibrate plugin
+"\epoc32\data\Z\private\10202be9\2000E586.txt"-"!:\private\10202be9\2000E586.txt"
+
+
+;; DiagFramework
+"\epoc32\data\Z\private\10202be9\2000B16B.txt"-"!:\private\10202be9\2000B16B.txt"
+
+
+;; Diagnostics Results Database Central Repository Files
+"\epoc32\data\Z\private\10202be9\2000B45D.txt" -"!:\private\10202be9\2000B45D.txt"

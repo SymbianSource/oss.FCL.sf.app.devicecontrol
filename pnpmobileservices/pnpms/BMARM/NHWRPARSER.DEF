@@ -1,0 +1,11 @@
+EXPORTS
+	"_._19CNHeadWrapperParser" @ 1 NONAME R3UNUSED ; CNHeadWrapperParser::~CNHeadWrapperParser(void)
+	GetContentTypeL__C19CNHeadWrapperParser @ 2 NONAME R3UNUSED ; CNHeadWrapperParser::GetContentTypeL(void) const
+	GetHeadersL__C19CNHeadWrapperParser @ 3 NONAME R3UNUSED ; CNHeadWrapperParser::GetHeadersL(void) const
+	GetProvisioningActivation__C19CNHeadWrapperParser @ 4 NONAME R3UNUSED ; CNHeadWrapperParser::GetProvisioningActivation(void) const
+	GetReportUrlL__C19CNHeadWrapperParser @ 5 NONAME R3UNUSED ; CNHeadWrapperParser::GetReportUrlL(void) const
+	GetUserInteraction__C19CNHeadWrapperParser @ 6 NONAME R3UNUSED ; CNHeadWrapperParser::GetUserInteraction(void) const
+	NewL__19CNHeadWrapperParserRC6TPtrC8 @ 7 NONAME R3UNUSED ; CNHeadWrapperParser::NewL(TPtrC8 const &)
+	Parse__19CNHeadWrapperParser @ 8 NONAME R3UNUSED ; CNHeadWrapperParser::Parse(void)
+	GetContentL__C19CNHeadWrapperParser @ 9 NONAME R3UNUSED ; CNHeadWrapperParser::GetContentL(void) const
+

@@ -28,28 +28,20 @@
 #include <swi/sisregistrysession.h>
 #include <swi/sisregistrypackage.h>
 #include <swi/sisregistryentry.h>
-#include <hbprogressdialog.h>
-#include <hbmainwindow.h>
-#include <hbaction.h>
-#include <usif/sif/sif.h>
-#include <SWInstApi.h>
-#include <QGraphicsLinearLayout>
+#include <downloadmgrclient.h>
+
 #include "ApplicationManagementClientServer.h"
 #include "PlatformSecurityPolicies.h"
 #include "AMDeploymentComponent.h"
 #include "amstorage.h"
 #include "ApplicationManagementUtility.h"
 #include "AMDownloaddb.h"
-#include "amwaitprogdialog.h"
-#include "AMDownloadStore.h"
 
+#include "AMDownloadManager.h"
 // CONSTANTS
-const TUid NProperty = {0x200267FB};
-const TUint32 NInteger = 0x00000001;
 const TInt KBase64BufSize = 131072;
-const QString path = "z:/resource/qt/translations/";
 class CAppMgmtSrvApp;
-_LIT(KIndicatorParamDownloading, "Downloading");
+
 namespace NApplicationManagement
     {
 
@@ -63,14 +55,7 @@ namespace NApplicationManagement
         EPanicIllegalFunction,
         EBadDescriptor
         };
-    // -----------------------------------------------------------
-    // Wait dialog types
-    // -----------------------------------------------------------
-    enum TDialogType
-        {
-        EInstallWaitDlg,
-        EUninstallWaitDlg
-        };
+
     // FUNCTION PROTOTYPES
 
     void PanicClient(const RMessagePtr2& aMessage,
@@ -97,26 +82,26 @@ private:
      *  Description.
      */
 
-    class CApplicationManagementServer : public CPolicyServer,
-        public MDownloadMngrObserver,public MInstallerCallBack
+    class CApplicationManagementServer : public CAknAppServer,
+        public MDownloadMngrObserver
         {
 public:
-        static CServer2* NewL(HbMainWindow *mainWindow);
+        static CApplicationManagementServer* NewL();
         ~CApplicationManagementServer();
 
         void Panic(TInt aPanicCode);
         void AddSession();
         void DropSession();
-        
+
         CPolicyServer::TCustomResult CreateServiceSecurityCheckL(
                 TUid aServiceType, const RMessage2& aMsg, TInt& aAction,
                 TSecurityInfo& aMissing);
 private:
 
         CApplicationManagementServer();
-        virtual void ConstructL(HbMainWindow *mainWindow);
-        CSession2* NewSessionL(const TVersion& aVersion, 
-         const RMessage2& aMessage) const;
+        virtual void ConstructL(const TDesC &aServerName);
+        /*CSession2* NewSessionL(const TVersion& aVersion, 
+         const RMessage2& aMessage) const;*/
 
         //From CPolicyServer
         CPolicyServer::TCustomResult
@@ -256,9 +241,13 @@ public:
 
         void StartShutDownTimerL();
 
+        void SendServerToBackground();
+
+        void BringServertoForeground();
+
+        void BringDMUItoForeground();
         TBool IsInstalledAppRemovableL(TDriveNumber &iDrive);
 
-	  void InstallationCancelled();
 private:
 
         /**
@@ -348,34 +337,33 @@ private:
                 TFileName &aMetaFileName) const;
 
         CApaAppServiceBase* CreateServiceL(TUid aServiceType) const;
+
 public:
+
         CAppMgmtSrvApp* iParentApp;
+
 private:
+
         TInt iSessionCount;
         CShutdown iShutdown;
         CApplicationManagementUtility* iUtility;
         CDeliveryComponentStorage *iStorage;
         TBool iInstallInProgress;
 
-        Usif::RSoftwareInstall iInstaller;
-        Usif::COpaqueNamedParams *iArgu;
-        Usif::COpaqueNamedParams *iResults;
+        //SwiUI::RSWInstSilentLauncher iInstaller;
+        SwiUI::RSWInstLauncher iInstaller;
         SwiUI::TInstallOptionsPckg iInstallOptions;
         SwiUI::TUninstallOptionsPckg iUninstallOptions;
         SwiUI::TInstallReqPckg iInstallReq;
-        TFileName iAppname;
+
         RFs iInstallRFs;
         RFile iInstallFile;
-        CAMDownloadStore* iDownloadMngr;
+
+        CAMDownloadManager* iDownloadMngr;
+
         CAMDownloaddb* iAMServerDB;
         TBool iOMASCOMOEnabled;
-        
-        appmgmtdownloadmgr* m_DownloadMngr;
-        QString m_appName;
-        AMWaitProgDialog* m_Dlg;
-        CDeploymentComponent* iComp;
-        HbMainWindow* m_Window;
-        int mUserCancelled;
+
         };
 
     namespace NPolicyConstants
@@ -390,7 +378,7 @@ private:
         _LIT8( KResourceValue, "ApplicationManagement" );
         }
 
-    class CApplicationManagementSession : public CSession2
+    class CApplicationManagementSession : public CAknAppServiceBase
         {
 public:
         inline CApplicationManagementSession();
@@ -446,13 +434,14 @@ private:
         void GenericAlertSentForIdL(const RMessage2& aMessage) const;
 
         void CheckStatusNodesValuesL();
+        
+        void SetSCOMOTargetURI(const TDesC8& aURI) const;
 
 private:
         void LookupSisRegistryL();
 
         TCertInfo iCertInfo;
         TBool iTrustAdded;
-        
         };
 
     }

@@ -23,7 +23,7 @@
 
 TARGET          omascomoadapter.dll
 
-CAPABILITY 	    CAP_GENERAL_DLL -TCB -DRM
+CAPABILITY 	    CAP_GENERAL_DLL
 
 TARGETTYPE      PLUGIN
 UID             0x10009D8D 0x20021335
@@ -61,13 +61,14 @@ LIBRARY		euser.lib edbms.lib sysutil.lib
 LIBRARY		ecom.lib 
 LIBRARY     estor.lib
 LIBRARY		efsrv.lib 
-LIBRARY		applicationmanagementclient.lib
+LIBRARY		applicationmanagement.lib
 LIBRARY		centralrepository.lib 
 LIBRARY 	aminstalloptions.lib 
 LIBRARY		featmgr.lib 
 LIBRARY 	flogger.lib
 LIBRARY			syncmlclientapi.lib
 LIBRARY			nsmlprivateapi.lib
+LIBRARY     	syncservice.lib
 
 #ifdef __TARM_SYMBIAN_CONVERGENCY
 LIBRARY		devmancmdmgr.lib
@@ -78,5 +79,6 @@ LIBRARY		nsmldmclientserverutils.lib
 LIBRARY		nsmldmiapmatcher.lib apgrfx.lib ws32.lib 
 #endif
 
-	
+SMPSAFE
+
 // End of File

@@ -1,0 +1,284 @@
+/*
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Resource file for DiagExternalMediaCardPlugin
+*
+*/
+
+
+//  RESOURCE IDENTIFIER
+NAME    DGMT // 4 letter ID
+
+//  INCLUDES
+#include    "diagexternalmediacardplugin.hrh"
+#include    <diagexternalmediacardplugin.loc>
+
+#include    <avkon.loc>
+#include    <avkon.mbg>
+#include    <avkon.rsg>
+#include    <avkon.rh> // ADO & Platformization Changes
+#include    <AvkonIcons.hrh>
+#include    <bldvariant.hrh>
+#include    <data_caging_paths_strings.hrh>
+#include    <eikcore.rsg>
+#include    <eikon.rsg>
+#include    <uikon.rh>
+#include    <eikon.rh>
+
+// CONSTANTS
+
+//  RESOURCE DEFINITIONS
+
+RESOURCE RSS_SIGNATURE
+    {
+    }
+
+RESOURCE TBUF
+    {
+    buf="DGMT";
+    }
+
+//----------------------------------------------------
+//  r_diag_external_media_card_plugin_name
+//
+// Timer Test Plugin caption 
+//----------------------------------------------------
+//
+RESOURCE TBUF r_diag_external_media_card_plugin_name
+    {
+    buf = qtn_diag_lst_external_memory;
+    }
+
+//----------------------------------------------------
+//  qtn_diag_lst_test_mmc
+//
+// External Media Card Plugin Text 
+//----------------------------------------------------
+//
+RESOURCE TBUF r_qtn_diag_lst_test_mmc
+    {
+    buf = qtn_diag_lst_test_mmc;
+    }
+    
+
+//----------------------------------------------------
+//  r_qtn_diag_msg_title_mmc
+//
+// External Media Card Plugin Text 
+//----------------------------------------------------
+//
+RESOURCE TBUF r_qtn_diag_msg_title_mmc
+    {
+    buf = qtn_diag_msg_title_mmc;
+    }
+
+//----------------------------------------------------
+//  r_qtn_diag_msg_info_mmc
+//
+// External Media Card Plugin Text 
+//----------------------------------------------------
+//
+RESOURCE TBUF r_qtn_diag_msg_info_mmc
+    {
+    buf = qtn_diag_msg_info_mmc;
+    }
+
+//----------------------------------------------------
+//  r_qtn_diag_title_test_external_memory
+//
+// External Media Card Plugin Text 
+//----------------------------------------------------
+//
+RESOURCE TBUF r_qtn_diag_title_test_external_memory
+    {
+    buf = qtn_diag_title_test_external_memory;
+    }
+  
+// ADO & Platformization Changes  
+
+RESOURCE CBA r_ext_memory_softkeys_ok_skip
+{
+		buttons = 
+		{
+				CBA_BUTTON
+				{
+						id  = EAknSoftkeyOk; 
+						txt = text_softkey_ok; 
+				},
+				
+				CBA_BUTTON
+				{
+						id 	= ECBACmdSkip;
+						txt = qtn_diag_softk_skip;
+				}
+		};
+}
+
+
+//----------------------------------------------------
+// r_ext_memory_softkeys_ok_cancel
+// CBA for OK_CANCEL
+//----------------------------------------------------
+//
+
+RESOURCE CBA r_ext_memory_softkeys_ok_cancel
+{
+		buttons =
+		{
+				CBA_BUTTON
+				{
+						id 	= EAknSoftkeyOk;
+						txt = text_softkey_ok;
+				},
+				
+				CBA_BUTTON
+				{
+						id  = ECBACmdCancel;
+						txt = text_softkey_cancel;
+				}
+		};
+}
+
+
+RESOURCE CBA r_ext_memory_softkeys_yes_no
+{
+        buttons =
+        {
+                CBA_BUTTON
+                {
+                        id  = EAknSoftkeyYes;
+                        txt = text_softkey_yes;
+                },
+                
+                CBA_BUTTON
+                {
+                        id  = ECBACmdNo ;
+                        txt = text_softkey_no;
+                }
+        };
+}
+
+
+RESOURCE DIALOG r_messagequery_title_externalmemory
+{
+		flags = EGeneralQueryFlags;
+		buttons = r_ext_memory_softkeys_ok_cancel;
+		items =
+		{
+				DLG_LINE
+				{
+						type = EAknCtPopupHeadingPane;
+						id = EAknMessageQueryHeaderId;
+						
+						control = AVKON_HEADING
+						{
+								label = qtn_diag_msg_title_mmc;
+								headinglayout = R_AVKON_WML_SIGN_QUERY_HEADING_PANE;
+						};
+				},
+				
+			 DLG_LINE
+			 {
+			 		type = EAknCtMessageQuery;
+			 		id = EAknMessageQueryContentId;
+			 		control = AVKON_MESSAGE_QUERY
+			 		{
+			 				message = qtn_diag_msg_info_mmc;
+			 		};
+			 }
+		};
+}
+
+
+
+
+RESOURCE DIALOG r_messagequery_no_externalmemory
+{
+		flags = EGeneralQueryFlags;
+		buttons = r_ext_memory_softkeys_yes_no;
+		items =
+		{
+				DLG_LINE
+				{
+						type = EAknCtPopupHeadingPane;
+						id = EAknMessageQueryHeaderId;
+						
+						control = AVKON_HEADING
+						{
+								label = qtn_diag_msg_title_mmc;
+								headinglayout = R_AVKON_WML_SIGN_QUERY_HEADING_PANE;
+						};
+				},
+				
+			 DLG_LINE
+			 {
+			 		type = EAknCtMessageQuery;
+			 		id = EAknMessageQueryContentId;
+			 		control = AVKON_MESSAGE_QUERY
+			 		{
+			 				message = qtn_diag_msg_no_mmc;
+			 		};
+			 }
+		};
+}
+
+//----------------------------------------------------
+//  r_extmem_softkeys_stop__cancel
+//
+// Buttons shown during the test. Shown when the
+// test is run as a part of a suite.
+//----------------------------------------------------
+//
+RESOURCE CBA r_extmem_softkeys_cancel
+    {
+    buttons = 
+        {
+       CBA_BUTTON 
+	        { 
+            id  = EAknSoftkeyEmpty; 
+            txt = text_softkey_empty;
+	        },
+
+        CBA_BUTTON 
+	        { 
+            id  = ECBACmdCancel;      // .hrh 
+            txt = text_softkey_cancel; // .rls or .loc
+	        } 
+
+	
+        };
+    }
+	
+RESOURCE DIALOG r_extmem_plugin_wait_note
+    {
+    flags = EAknWaitNoteFlags | EEikDialogFlagNotifyEsc;
+    //buttons = R_AVKON_SOFTKEYS_EMPTY;
+	buttons = r_extmem_softkeys_cancel;
+    items =
+        {
+        DLG_LINE
+            {
+            type = EAknCtNote;
+            id = EYBWaitNoteId;
+            control= AVKON_NOTE 
+                { 
+                layout = EWaitLayout;
+                singular_label = qtn_diag_msg_testing_memory_card;
+                animation = R_QGN_GRAF_WAIT_BAR_ANIM;
+                };
+            }
+        };
+    }
+	
+// changes ends
+//End of File

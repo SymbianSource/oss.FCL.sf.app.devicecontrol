@@ -15,8 +15,11 @@
  *
  */
 
-#include <centralrepository.h>
 #include "AMAppHideUtil.h"
+
+#include <centralrepository.h>
+#include <menu2internalcrkeys.h>
+
 #include "debug.h"
 
 using namespace NApplicationManagement;
@@ -119,7 +122,6 @@ void CAMAppHideUtil::PersistUid(const TUid &aUid, TDes &aBuf, TBool aHasMore) co
 // -----------------------------------------------------------------------------
 void CAMAppHideUtil::PersistUidsL()
     {
-    TInt err = KErrNone;
     if (iChanged)
         {
         TBuf<NCentralRepositoryConstants::KMaxUnicodeStringLength> buf;
@@ -129,9 +131,9 @@ void CAMAppHideUtil::PersistUidsL()
             RDEBUG_3( "PersistUids: cur %d %x", i,iHiddenUids[i].iUid );
             PersistUid(iHiddenUids[i], buf, i > 0) ;
             }
-        /*CRepository *rep = CRepository::NewLC(KCRUidMenu);
+        CRepository *rep = CRepository::NewLC(KCRUidMenu);
         TInt err(rep->Set(KMenuHideApplication, buf) );
-        CleanupStack::PopAndDestroy(rep);*/
+        CleanupStack::PopAndDestroy(rep);
         if (err != KErrNone)
             {
             RDEBUG_2( "PersistUids: ERROR failed to set key: %d", err );
@@ -178,12 +180,10 @@ TBool CAMAppHideUtil::SkipDelim(TLex &aLex) const
 // -----------------------------------------------------------------------------
 void CAMAppHideUtil::LoadUidsL()
     {
-    TInt err = KErrNone;
-    TBuf<NCentralRepositoryConstants::KMaxUnicodeStringLength> buf;
-    /*CRepository *rep = CRepository::NewLC(KCRUidMenu);
+    CRepository *rep = CRepository::NewLC(KCRUidMenu);
     TBuf<NCentralRepositoryConstants::KMaxUnicodeStringLength> buf;
     TInt err(rep->Get(KMenuHideApplication, buf) );
-    CleanupStack::PopAndDestroy(rep);*/
+    CleanupStack::PopAndDestroy(rep);
     if (err == KErrNone)
         {
         RDEBUG_2( "CAMAppHideUtil::LoadUidsL - Loading '%S'", &buf);

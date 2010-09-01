@@ -1,0 +1,120 @@
+/*
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: Implementation of diagnostics components
+*
+*/
+
+
+#include <data_caging_paths.hrh>
+// To get the MW_LAYER_SYSTEMINCLUDE-definition
+#include <platform_paths.hrh>
+
+CAPABILITY All -TCB MULTIMEDIADD USERENVIRONMENT
+
+#ifdef __UI_FRAMEWORKS_V2__
+TARGETPATH	/sys/bin
+#if defined(EKA2) || !defined(WINS)
+TARGET          devdiagapp.exe
+TARGETTYPE exe
+#else // EKA1 WINS
+TARGET          DevDiagApp.app
+TARGETTYPE exedll
+deffile /epoc32/release/wins/DevDiagApp.def
+#endif
+#else // __UI_FRAMEWORKS_V2__
+TARGET          DevDiagApp.app
+TARGETPATH      /system/apps/DevDiagApp
+TARGETTYPE app
+#endif
+
+UID               0x100039CE 0x2000E542
+
+SOURCEPATH        ../src
+
+SOURCE            devdiagapp.cpp
+SOURCE            devdiagappapplication.cpp 
+SOURCE            devdiagsuiteview.cpp
+SOURCE            devdiagsuitecontainer.cpp
+SOURCE            devdiagappappui.cpp
+SOURCE            devdiagappdocument.cpp 
+SOURCE            devdiagengine.cpp
+SOURCE            devdiagexecutionresults.cpp
+SOURCE            devdiagruntimereqsInfo.cpp
+SOURCE            devdiagcommoncanceldialogs.cpp
+SOURCE            devdiagcommonskipdialogs.cpp
+SOURCE            devdiagpluginview.cpp
+SOURCE            devdiagplugincontainer.cpp
+SOURCE            devdiagutil.cpp
+
+SOURCEPATH        ../group
+
+USERINCLUDE       ../inc  
+USERINCLUDE       ../loc
+
+
+
+// Default system include paths for middleware layer modules.
+APP_LAYER_SYSTEMINCLUDE
+
+LIBRARY           euser.lib
+LIBRARY           apparc.lib
+LIBRARY           cone.lib 
+LIBRARY           eikcore.lib  
+LIBRARY           avkon.lib  
+LIBRARY           gdi.lib  
+LIBRARY           eikcoctl.lib 
+LIBRARY           eikctl.lib 
+LIBRARY           bafl.lib
+LIBRARY           eikdlg.lib  
+LIBRARY           featmgr.lib           // Feature manager
+LIBRARY           hlplch.lib            // for "Help" options menu
+LIBRARY           aknicon.lib
+LIBRARY           egul.lib
+
+LIBRARY           diagframework.lib
+LIBRARY           etel3rdparty.lib
+LIBRARY           diagresultsdatabase.lib
+LIBRARY           eiksrv.lib
+LIBRARY           drmserviceapi.lib
+LIBRARY           commonengine.lib  //String loader
+LIBRARY           centralrepository.lib 
+LIBRARY           efsrv.lib 
+
+DEBUGLIBRARY      flogger.lib
+
+#ifdef __UI_FRAMEWORKS_V2__
+START RESOURCE	../data/devdiagapp.rss
+HEADER
+targetpath	/resource/apps
+LANGUAGE_IDS
+end
+#else
+RESOURCE        ../data/DevDiagApp.RSS 
+#endif
+
+#ifdef __UI_FRAMEWORKS_V2__
+sourcepath		.
+START RESOURCE ../data/devdiagapp_reg.rss
+#ifdef WINSCW
+TARGETPATH	/private/10003a3f/apps
+#else
+TARGETPATH	/private/10003a3f/apps
+#endif
+END
+   
+start resource ../data/devdiagapp_loc.rss
+targetpath /resource/apps
+lang sc
+end
+#endif

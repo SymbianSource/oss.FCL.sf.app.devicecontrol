@@ -16,6 +16,7 @@
  */
 
 #define __INCLUDE_CAPABILITY_NAMES__
+
 #include <e32svr.h>
 #include <badesca.h>
 #include <e32cmn.h>
@@ -24,20 +25,15 @@
 #include <imcvcodc.h>
 #include <uikon.hrh>
 #include <e32property.h>
-#include <driveinfo.h>
+#include "ApplicationManagementConst.h"
+#include "ampskeys.h"
 #include <SWInstDefs.h>
+#include "amprivateCRKeys.h"
 #include <PolicyEngineClient.h>
 #include <PolicyEngineXACML.h>
-#include <eikenv.h>
-#include <hbapplication.h>
-#include <apgwgnam.h>
-#include <nsmldmconst.h>
-#include <DevManInternalCRKeys.h>
-#include <apgtask.h>
-#include <apgwgnam.h>
-#include "ampskeys.h"
-#include "amprivateCRKeys.h"
-#include "ApplicationManagementConst.h"
+#include <pathinfo.h>
+#include <driveinfo.h>
+
 #include "ApplicationManagementCommon.h"
 #include "ApplicationManagementClientServer.h"
 #include "ApplicationManagementServer.h"
@@ -45,11 +41,14 @@
 #include "amsmlhelper.h"
 #include "ApplicationManagementUtility.h"
 #include "ApplicationManagementUtilityFactory.h"
+
 #include "debug.h"
+
 #include "coemain.h"
+#include <aknnotewrappers.h>
+#include "SyncService.h"
 #include "AMPreInstallApp.h"
-#include "amview.h"
-#include "appmgmtnotifier.h"
+#include <DevManInternalCRKeys.h>
 
 using namespace NApplicationManagement;
 
@@ -59,20 +58,162 @@ using namespace NApplicationManagement;
 #else
 #pragma message("AM Connecting installer when needed")
 #endif
+
 // Needed only for jad+jar installation  
 _LIT( KInstallDir, "c:\\temp\\" );
 _LIT8(KMIDletJarURL, "MIDlet-Jar-URL");
+
 //OMA SCOMO Specific
 _LIT8(KDownloadState, "./SCOMO/Download/");
 _LIT8(KDeliveredState, "./SCOMO/Inventory/Delivered/");
 _LIT8(KDeployedState, "./SCOMO/Inventory/Deployed/");
 
-//Package all the above together into a policy
-CPolicyServer::TPolicy KApplicationManagementSecurityPolicy;
+// ------------------------------------------------------------------------------------------------
+// CShutDown::CShutdown()
+// ------------------------------------------------------------------------------------------------
+
+inline CShutdown::CShutdown() :
+    CTimer(-1)
+    {
+    CActiveScheduler::Add(this);
+    }
+
+// ------------------------------------------------------------------------------------------------
+// CShutDown::ConstructL()
+// ------------------------------------------------------------------------------------------------
+
+inline void CShutdown::ConstructL()
+    {
+    CTimer::ConstructL();
+    }
+
+// ------------------------------------------------------------------------------------------------
+// CShutDown::Start()
+// ------------------------------------------------------------------------------------------------
+
+inline void CShutdown::Start()
+    {
+    RDEBUG( "ApplicationManagementServer: starting shutdown timeout" );
+    After(KApplicationManagementShutdownDelay);
+    }
+
+// ------------------------------------------------------------------------------------------------
+// CShutDown::RunL()
+// ------------------------------------------------------------------------------------------------
+
+void CShutdown::RunL()
+    {
+    RDEBUG( "ApplicationManagementServer timeout ... closing" );
+    CActiveScheduler::Stop();
+    }
+
+// ------------------------------------------------------------------------------------------------
+// CShutDown::Start()
+// ------------------------------------------------------------------------------------------------
+
+inline void CShutdown::Stop()
+    {
+    RDEBUG( "ApplicationManagementServer: Stop" );
+    CActiveScheduler::Stop();
+    }
+
+
+// ------------------------------------------------------------------------------------------------
+// CApplicationManagementServer::CreateServiceL()
+// ------------------------------------------------------------------------------------------------
+CApaAppServiceBase* CApplicationManagementServer::CreateServiceL(
+        TUid aServiceType) const
+    {
+    RDEBUG( "ApplicationManagementServer CreateServiceL" );
+    if (aServiceType.iUid == KAMServiceUid)
+        {
+        return ((CApaAppServiceBase*) (new (ELeave) CApplicationManagementSession));
+        }
+    else
+        {
+        return CAknAppServer::CreateServiceL(aServiceType);
+        }
+    }
+
+// ------------------------------------------------------------------------------------------------
+// CApplicationManagementServer::SendServerToBackground()
+// ------------------------------------------------------------------------------------------------
+
+void CApplicationManagementServer::SendServerToBackground()
+    {
+
+    RDEBUG( "ApplicationManagementServer SendServerToBackground - Start " );
+    TApaTaskList taskList(CEikonEnv::Static()->WsSession() );
+    TApaTask task = taskList.FindApp(TUid::Uid(KAppMgmtServerUid));
+    
+     TInt id = CEikonEnv::Static()->RootWin().Identifier();
+
+    RDEBUG_2( "CApplicationManagementServer:::SendServerToBackground %d", id );
+	
+    task.SetWgId(id);
+
+    if (task.Exists())
+        {
+	RDEBUG( "ApplicationManagementServer SendServerToBackground - Start 1" );
+        task.SendToBackground();
+        }
+    RDEBUG( "ApplicationManagementServer SendServerToBackground - End " );
+    TInt amServerEnabled = 0;
+    RProperty::Set(KUidPSApplicationManagementKeys, KAMServerUIEnabled,
+            amServerEnabled);
+    RDEBUG( "ApplicationManagementServer SendServerToBackground - End 2 " );
+
+    }
+
+// ------------------------------------------------------------------------------------------------
+// CApplicationManagementServer::BringServertoForeground()
+// ------------------------------------------------------------------------------------------------
+
+void CApplicationManagementServer::BringServertoForeground()
+    {
+
+    RDEBUG( "CApplicationManagementServer:::BringServertoForeground " );
+    TApaTaskList taskList(CEikonEnv::Static()->WsSession() );
+    TApaTask task = taskList.FindApp(TUid::Uid(KAppMgmtServerUid));
+
+    TInt id = CEikonEnv::Static()->RootWin().Identifier();
+
+    RDEBUG_2( "CApplicationManagementServer:::BringServertoForeground %d", id );
+	
+    task.SetWgId(id);
+    if (task.Exists())
+        {
+	RDEBUG( "ApplicationManagementServer SendServerToBackground - BringServertoForeground " );
+        task.BringToForeground();
+        }
+    }
+
+// ------------------------------------------------------------------------------------------------
+// CApplicationManagementServer::BringServertoForeground()
+// ------------------------------------------------------------------------------------------------
+
+void CApplicationManagementServer::BringDMUItoForeground()
+    {
+    RDEBUG( "ApplicationManagementServer DownloadComplete - DM UI Broughtto foreground Start " );
+
+    TApaTaskList taskList(CEikonEnv::Static()->WsSession() );
+    TApaTask task = taskList.FindApp(KPSUidNSmlDMSyncApp);
+
+    const TInt id = task.WgId();
+    task.SetWgId(id);
+    RDEBUG_2( "CApplicationManagementServer:::BringDMUItoForeground %d", id );
+    
+    if (task.Exists())
+        {
+        RDEBUG( "ApplicationManagementServer DownloadComplete - DM UI Broughtto foreground " );
+        task.BringToForeground();
+        }
+    }
 
 // ------------------------------------------------------------------------------------------------
 // CApplicationManagementServer::ComponentDownloadComplete()
 // ------------------------------------------------------------------------------------------------
+
 void CApplicationManagementServer::ComponentDownloadComplete(
         CDeploymentComponent *aComponent, TInt iapid, HBufC8 *aServerId)
     {
@@ -89,15 +230,13 @@ void CApplicationManagementServer::DownloadCompleteL(
     {
     RDEBUG( "ApplicationManagementServer DownloadComplete - start" );
     __ASSERT_DEBUG( aComponent, User::Invariant() );
-    iComp = aComponent;
-    iStorage->UpdateL(*aComponent);
+    iStorage->UpdateL( *aComponent);
     TInt errdownload = KErrNone;
     TInt errInstall = KErrNone;
     TInt status = KStatusSuccess;
-
-    if (!aComponent->DownloadFailed())
+    if ( !aComponent->DownloadFailed() )
         {
-        CDeploymentComponent *old = DoDataUpdateCheckL(*aComponent);
+        CDeploymentComponent *old = DoDataUpdateCheckL( *aComponent);
         TDownloadTarget trgt = aComponent->DownloadTarget();
         switch (trgt)
             {
@@ -108,14 +247,16 @@ void CApplicationManagementServer::DownloadCompleteL(
             case EInstall:
             case EInstallAndActivate:
                 {
-
                 TRAP(errInstall,DoTheInstallL( *aComponent));
-RDEBUG_2( "ApplicationManagementServer DownloadComplete - start %d", errInstall);
-
                 if (trgt == EInstall && errInstall == KErrNone)
                     {
-                    iStorage->DeactivateL(*aComponent);
+                    iStorage->DeactivateL( *aComponent);
                     }
+                /* to avoid duplicates in deployed tree if user delivered upgrade package
+                 * by using "Install/InstallActivate" operation. if upgrade package is delivered 
+                 * by Update/UpdateandActivate" , this been handled in next switch case
+                 */
+
                 break;
                 }
 
@@ -124,10 +265,10 @@ RDEBUG_2( "ApplicationManagementServer DownloadComplete - start %d", errInstall)
                 {
                 if (old)
                     {
-                    FullUpdateL(*aComponent, *old);
+                    FullUpdateL( *aComponent, *old);
                     if (trgt == EUpdate)
                         {
-                        iStorage->DeactivateL(*aComponent);
+                        iStorage->DeactivateL( *aComponent);
                         }
                     }
                 break;
@@ -137,6 +278,7 @@ RDEBUG_2( "ApplicationManagementServer DownloadComplete - start %d", errInstall)
                 break;
                 }
             }
+
         }
     else
         {
@@ -146,249 +288,247 @@ RDEBUG_2( "ApplicationManagementServer DownloadComplete - start %d", errInstall)
     RDEBUG( "ApplicationManagementServer DownloadComplete - Start Send to background" );
     //Download Completed/ Failed or installation success/ failure Send server to Background.
 
+    SendServerToBackground();
+
+    // Bring DM UI to foreground provided operation is in non silent mode.
+    TInt operNonSilent = KErrNotFound;
+
+    RProperty::Get(KUidPSApplicationManagementKeys, KAMOperationNonSilent,
+            operNonSilent);
+
+    if (operNonSilent==1 || operNonSilent==KErrNotFound)
+        {
+        RDEBUG( "ApplicationManagementServer DownloadComplete - DM UI Bring " );
+        BringDMUItoForeground();
+        }
+
     iOMASCOMOEnabled = IsOMASCOMOEnabledL();
-    
-    m_Window->lower();
-    
+		
+
     if (iOMASCOMOEnabled)
         {
-        status = GetErrorStatus(errdownload, errInstall);
 
+
+				status = GetErrorStatus(errdownload,errInstall); 
+		      
         TInt ASyncSupported = -1;
 
-        CRepository *repository = CRepository::NewLC(
-                KUidPSApplicationManagementKeys);
+        CRepository *repository = CRepository::NewLC( KUidPSApplicationManagementKeys );
         repository->Get(KAsyncEnabled, ASyncSupported);
         CleanupStack::PopAndDestroy();
-
+        
         // For Sync Reporting
         if (!ASyncSupported)
             {
+            
             // Update Central Repository with proper error code for Sync
-
-            CRepository *repository = CRepository::NewLC(
-                    KUidPSApplicationManagementKeys);
+            
+           
+            CRepository *repository= CRepository::NewLC ( KUidPSApplicationManagementKeys ) ;
             repository->Set(KAMSyncStatus, status);
             CleanupStack::PopAndDestroy();
-
+                        
             RProperty counter;
-
-            TInt r = counter.Attach(KUidPSApplicationManagementKeys,
+            
+            TInt r=counter.Attach(KUidPSApplicationManagementKeys,
                     KSyncNotifier, EOwnerThread);
             User::LeaveIfError(r);
-
-            TInt err = counter.Set(KErrCancel);
-            User::LeaveIfError(err);
-            counter.Close();
-            }
-        else// Do AsyncReporting
-            {
-
-            RDEBUG( "CApplicationManagementServer::ASync Reporting Step 1" );
-
-            // Get deployement component entries
-            TInt internalid = aComponent->InternalId();
-
-            RDEBUG( "CApplicationManagementServer::ASync Reporting Step 2" );
 
             TBuf8<256> targetURI;
 
             TDeploymentComponentState state = aComponent->State();
 
-            RDEBUG( "CApplicationManagementServer::ASync Reporting Step 3" );
+            if (state == EDCSDownload)
+                {
+                targetURI.Append(KDownloadState);
+                targetURI.Append(aComponent->UserId());
+                }
+            else
+                if (state == EDCSDelivered)
+                    {
+                    targetURI.Append(KDeliveredState);
+                    targetURI.Append(aComponent->UserId());
+
+                    }
+                else
+                    if (state == EDCSActive|| state == EDCSInactive)
+                        {
+                        targetURI.Append(KDeployedState);
+                        targetURI.Append(aComponent->UserId());
+                        }
+
+						//Set Targeturi to cenrep
+		
+						CRepository* cenrep = NULL;
+  					TInt errr(KErrNone);
+	  				TRAP(errr, cenrep = CRepository::NewL( KCRUidDeviceManagementInternalKeys ));	  	
+	  				if(errr == KErrNone)
+	  				{
+    					errr = cenrep->Set( KNSmlDMSCOMOTargetRef, targetURI );    	
+    					delete cenrep;
+    					cenrep = NULL;
+    				}
+
+            TInt err = counter.Set(KErrCancel);
+            User::LeaveIfError(err);
+            counter.Close();
+
+            }
+        else// Do AsyncReporting
+            {
+
+            // Get deployement component entries
+            TInt internalid = aComponent->InternalId();
+
+            TBuf8<256> targetURI;
+
+            TDeploymentComponentState state = aComponent->State();
 
             if (state == EDCSDownload)
                 {
-
-                RDEBUG( "CApplicationManagementServer::ASync EDCSDownload Start" );
-
                 targetURI.Append(KDownloadState);
                 targetURI.Append(aComponent->UserId());
-
-                RDEBUG( "CApplicationManagementServer::ASync EDCSDownload End" );
-
                 }
-            else if (state == EDCSDelivered)
-                {
-                RDEBUG( "CApplicationManagementServer::ASync EDCSDelivered Start" );
+            else
+                if (state == EDCSDelivered)
+                    {
+                    targetURI.Append(KDeliveredState);
+                    targetURI.Append(aComponent->UserId());
 
-                targetURI.Append(KDeliveredState);
-                targetURI.Append(aComponent->UserId());
-
-                RDEBUG( "CApplicationManagementServer::ASync EDCSDelivered End" );
-
-                }
-            else if (state == EDCSActive || state == EDCSInactive)
-                {
-
-                RDEBUG( "CApplicationManagementServer::ASync EDCSActive Start" );
-
-                targetURI.Append(KDeployedState);
-                targetURI.Append(aComponent->UserId());
-
-                RDEBUG( "CApplicationManagementServer::ASync EDCSActive End" );
-                }
+                    }
+                else
+                    if (state == EDCSActive|| state == EDCSInactive)
+                        {
+                        targetURI.Append(KDeployedState);
+                        targetURI.Append(aComponent->UserId());
+                        }
 
             //Save Entry to database with status and target URI of deployment component
-            TInt iapidval = 2;
-            TRAPD( err1, SmlHelper::GetDefaultIAPFromDMProfileL( iapid ) );
-            if (err1 == KErrNone)
-                {
-                RDEBUG_2("Application Mgmt Server service::DownloadCompleteL iapid to : %d", iapid );
-                }
 
             TInt index;
             iAMServerDB->SaveToDatabaseL(index, internalid, status,
-                    targetURI, iapidval);
-
-            RDEBUG( "CApplicationManagementServer::ASync SaveToDatabaseL completed" );
+                    targetURI, iapid);
 
             EnableDMNetworkMonL(iapid, aServerId);
             }
+
         }
-    int value = 0 ;
-    int err = RProperty::Set(TUid::Uid(KOmaDMAppUid), KDownloadActive, value);
-    RDEBUG_2("RProperty set (%d)", err  );
     if (iDownloadMngr->DownloadCount() == 0)
         {
-
+        
         RDEBUG_2( "CApplicationManagementServer::ConstructL - ERROR leaving cannot connect installer: %d", iSessionCount );
-
+        
         // Is session count is not modified whenever there is error then at the end of download complete decrement
         //  the session count.
-
-        if (status != KStatusSuccess && iSessionCount != 0)
+        
+        if(iSessionCount != 0 )
             {
-            iSessionCount--;
+            iSessionCount--; 
             }
-
+       
         if (iSessionCount == 0)
-            {
-            iShutdown.Start();    
+            {  
+		       iShutdown.Stop();
             }
         }
-    aComponent->SetDriveSelectionStatus(false);
+
     RDEBUG( "ApplicationManagementServer DownloadComplete - end" );
     }
 
-void CApplicationManagementServer::InstallationCancelled()
-	{
-		iInstaller.CancelOperation();
-	}
 // ------------------------------------------------------------------------------------------------
 // CApplicationManagementServer::IsOMASCOMOEnabledL()
 // ------------------------------------------------------------------------------------------------
 
 TBool CApplicationManagementServer::IsOMASCOMOEnabledL()
     {
-    RDEBUG( "CApplicationManagementServer::IsOMASCOMOEnabledL Start" );
-
     TInt adapterValue;
-
-    CRepository *repository = CRepository::NewLC(
-            KCRUidPrivateApplicationManagementKeys);
+    
+    CRepository *repository = CRepository::NewLC ( KCRUidPrivateApplicationManagementKeys ) ;
     repository->Get(KAMAdapterValue, adapterValue);
     CleanupStack::PopAndDestroy();
-
-    RDEBUG( "CApplicationManagementServer::IsOMASCOMOEnabledL End" );
-
-    if (adapterValue == 0 || adapterValue == 1)
-        return EFalse;
+    
+    if(adapterValue ==0 || adapterValue == 1)
+     return EFalse;
     else
-        return ETrue;
+     return ETrue;
+    
     }
 
 // ------------------------------------------------------------------------------------------------
 // CApplicationManagementServer::GetErrorStatus()
 // ------------------------------------------------------------------------------------------------
-TInt CApplicationManagementServer::GetErrorStatus(TInt aErrorDownload,
-        TInt aErrorInstall)
-    {
-    TInt status = KStatusSuccess;
+TInt CApplicationManagementServer::GetErrorStatus(TInt aErrorDownload, TInt aErrorInstall)
+{
+	       TInt status = KStatusSuccess;
+	       
+	       if (aErrorDownload!=KErrNone)
+                {
+                if (aErrorDownload == KStatusUserCancelled || aErrorDownload
+                        == KStatusDowloadFailedOOM || aErrorDownload
+                         == KStatusUnSupportedEnvironment || aErrorDownload 
+                        ==KStatusAlternateDownldAuthFail || aErrorDownload == KStatusAltDowldUnavailable)
+                    {
+                    status = aErrorDownload;
+                    }
+                else
+                    status = KStatusDownloadFailed;
+                }
 
-    if (aErrorDownload != KErrNone)
-        {
-        if (aErrorDownload == KStatusUserCancelled || aErrorDownload
-                == KStatusDowloadFailedOOM || aErrorDownload
-                == KStatusUnSupportedEnvironment || aErrorDownload
-                == KStatusAlternateDownldAuthFail || aErrorDownload
-                == KStatusAltDowldUnavailable)
-            {
-            status = aErrorDownload;
-            }
-        else
-            status = KStatusDownloadFailed;
-        }
+            else
+                if (aErrorInstall!=KErrNone)
+                    {
+                    if (aErrorInstall == SwiUI::KSWInstErrSecurityFailure)
+                        status = KStatusPkgValidationFailed;
+                    if (aErrorInstall == SwiUI::KSWInstErrInsufficientMemory)
+                        status = KStatusInstallFailedOOM;
+                    else
+                        status = KStatusInstallFailed;
 
-    else if (aErrorInstall != KErrNone)
-        {
-        if (aErrorInstall == SwiUI::KSWInstErrSecurityFailure)
-            status = KStatusPkgValidationFailed;
-        if (aErrorInstall == SwiUI::KSWInstErrInsufficientMemory)
-            status = KStatusInstallFailedOOM;
-	  if (aErrorInstall == KStatusUserCancelled)
-		status = KStatusUserCancelled;
-        else
-            status = KStatusInstallFailed;
+                    }
+                    
+           return status;
 
-        }
+}
 
-    return status;
-
-    }
-
+   
 // ------------------------------------------------------------------------------------------------
 // CApplicationManagementServer::EnableDMNetworkMonL()
 // ------------------------------------------------------------------------------------------------
-void CApplicationManagementServer::EnableDMNetworkMonL(TInt iapid,
-        HBufC8 *aServerId)
-    {
-    TInt retryenabled = 1;
-    _LIT( KNetMon,"\\dmnetworkmon.exe" );
+void CApplicationManagementServer::EnableDMNetworkMonL(TInt iapid, HBufC8 *aServerId)
+{
+						TInt retryenabled = 1;
+						_LIT( KNetMon,"\\dmnetworkmon.exe" );
+            
+            // Enable DM Network Monitoring for retry of Generic alert in case of N/W loss
 
-    // Enable DM Network Monitoring for retry of Generic alert in case of N/W loss
+            CRepository *repository= CRepository::NewLC ( KCRUidDeviceManagementInternalKeys );
+            repository->Set(KDevManEnableDMNetworkMon, retryenabled);
+            repository->Set(KDevManServerIdKey, *aServerId);
+            repository->Set(KDevManIapIdKey, iapid);
+            CleanupStack::PopAndDestroy();
+               
+						// create NetMon EXE
+            RProcess rp;
+            TInt err = rp.Create(KNetMon,KNullDesC);
+            User::LeaveIfError(err);
+            TRequestStatus stat;
+            rp.Rendezvous(stat);
+                            
+            if (stat!=KRequestPending)
+              rp.Kill(0);     // abort startup
+            else
+              rp.Resume();    // logon OK - start the server
+            TInt r=(rp.ExitType()==EExitPanic) ? KErrGeneral : stat.Int();
+                        rp.Close();
 
-    CRepository *repository = CRepository::NewLC(
-            KCRUidDeviceManagementInternalKeys);
-    TInt err_val = repository->Set(KDevManEnableDMNetworkMon, retryenabled);
-    RDEBUG_2( "CApplicationManagementServer::EnableDMNetworkMonL Retry enabled err: %d", err_val );
-    RDEBUG_2( "CApplicationManagementServer::EnableDMNetworkMonL Retry enabled value: %d", retryenabled );
-
-    err_val = repository->Set(KDevManIapIdKey, iapid);
-    RDEBUG_2( "CApplicationManagementServer::EnableDMNetworkMonL devmaniapid: %d", err_val );
-    RDEBUG_2( "CApplicationManagementServer::EnableDMNetworkMonL iap id: %d", iapid );
-
-    err_val = repository->Set(KDevManServerIdKey, *aServerId);
-    RDEBUG_2( "CApplicationManagementServer::EnableDMNetworkMonL serveridkey: %d", err_val );
-
-    TBuf<256> buf1;
-    buf1.Copy(*aServerId);
-    RDEBUG_2( "Server ID -  '%S'", &buf1);
-
-    CleanupStack::PopAndDestroy();
-
-    // create NetMon EXE
-    RProcess rp;
-    TInt err = rp.Create(KNetMon, KNullDesC);
-    User::LeaveIfError(err);
-    TRequestStatus stat;
-    rp.Rendezvous(stat);
-
-    if (stat != KRequestPending)
-        rp.Kill(0); // abort startup
-    else
-        rp.Resume(); // logon OK - start the server
-    TInt r = (rp.ExitType() == EExitPanic) ? KErrGeneral : stat.Int();
-    rp.Close();
-
-    }
+	
+}
 
 // ------------------------------------------------------------------------------------------------
 // CApplicationManagementServer::CApplicationManagementServer
 // ------------------------------------------------------------------------------------------------
 
-inline CApplicationManagementServer::CApplicationManagementServer() :
-    CPolicyServer(0, KApplicationManagementSecurityPolicy, ESharableSessions)
+inline CApplicationManagementServer::CApplicationManagementServer()
     {
     }
 
@@ -416,7 +556,7 @@ void CApplicationManagementServer::DropSession()
     RDEBUG( "ApplicationManagementServer: CApplicationManagementServer::DropSession" );
 
     // Start the shutdown timer if it is the last session
-    if (--iSessionCount == 0)
+    if ( --iSessionCount == 0)
         {
         if (iDownloadMngr->DownloadCount() > 0)
             {
@@ -437,45 +577,76 @@ void CApplicationManagementServer::AddDownloadL(
         CDeploymentComponent *aComponent)
     {
     __ASSERT_DEBUG( aComponent, User::Invariant() );
-
-    RDEBUG( "CApplicationManagementServer::AddDownloadL Start" );
-
     iDownloadMngr->AddDownloadL(aComponent);
-
-    RDEBUG( "CApplicationManagementServer::AddDownloadL End" );
     }
 
 // ------------------------------------------------------------------------------------------------
-// CApplicationManagementServer
-// -----------------------------------------------------------------------------
+// CApplicationManagementServer::NewLC
+// ------------------------------------------------------------------------------------------------
 
-CServer2* CApplicationManagementServer::NewL(HbMainWindow *mainWindow)
+CApplicationManagementServer* CApplicationManagementServer::NewL()
     {
-    //specifies all connect attempts should pass
-    KApplicationManagementSecurityPolicy.iOnConnect
-            = CPolicyServer::EAlwaysPass;
-    KApplicationManagementSecurityPolicy.iRangeCount
-            = KApplicationManagementRangeCount; //number of ranges                                   
-    KApplicationManagementSecurityPolicy.iRanges
-            = KApplicationManagementRanges;
-    KApplicationManagementSecurityPolicy.iElementsIndex
-            = KApplicationManagementSecurityElementsIndex;
-    KApplicationManagementSecurityPolicy.iElements
-            = KApplicationManagementSecurityElements;
 
-    RDEBUG( "ApplicationManagementServer: CApplicationManagementServer::NewLC" );
+    CApplicationManagementServer* self=new(ELeave) CApplicationManagementServer;
 
-    CApplicationManagementServer* self =
-            new (ELeave) CApplicationManagementServer;
-    CleanupStack::PushL(self);
-
-    self->ConstructL(mainWindow);
-    CleanupStack::Pop();
     return self;
+    }
+
+// ------------------------------------------------------------------------------------------------
+// CApplicationManagementServer::CreateServiceSecurityCheckL
+// ------------------------------------------------------------------------------------------------
+
+CPolicyServer::TCustomResult CApplicationManagementServer::CreateServiceSecurityCheckL(
+        TUid aServiceType, const RMessage2& aMsg, TInt& aAction,
+        TSecurityInfo& aMissing)
+    {
+    TInt32 trustRange = EAddTrust;
+    TInt32 performRFS = EPerformRfs;
+    TInt32 last = ELast;
+
+    if ( (aServiceType.iUid >= trustRange)
+            && (aServiceType.iUid < performRFS ))
+        {
+        if (aMsg.HasCapability(TCapability(ECapabilityTrustedUI) ) )
+            {
+            return CPolicyServer::EPass;
+            }
+        else
+            {
+            return CPolicyServer::EFail;
+            }
+        }
+
+    else
+        if ( (aServiceType.iUid >= performRFS) && (aServiceType.iUid < last))
+
+            {
+            if (aMsg.HasCapability(TCapability(ECapabilityDiskAdmin))
+                    && (aMsg.SecureId().iId == 0x101f9a02 ))
+                {
+                return CPolicyServer::EPass;
+                }
+            else
+                {
+                return CPolicyServer::EFail;
+                }
+            }
+
+        else
+            if (aServiceType.iUid == last)
+                {
+                return CPolicyServer::EFail;
+                }
+
+            else
+                {
+                return CAknAppServer::CreateServiceSecurityCheckL(
+                        aServiceType, aMsg, aAction, aMissing);
+                }
 
     }
 
-// -----------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------
 // CApplicationManagementServer::~CApplicationManagementServer
 // ------------------------------------------------------------------------------------------------
 
@@ -498,11 +669,11 @@ CApplicationManagementServer::~CApplicationManagementServer()
 
     RProperty::Delete(KUidPSApplicationManagementKeys, KDMUINotClosed);
 
+    
     iInstallFile.Close();
     iInstallRFs.Close();
 
     delete iDownloadMngr;
-
     }
 
 // ------------------------------------------------------------------------------------------------
@@ -518,27 +689,29 @@ void CApplicationManagementServer::HandleAllClientsClosed()
 // CApplicationManagementServer::ConstructL
 // ------------------------------------------------------------------------------------------------
 
-void CApplicationManagementServer::ConstructL(HbMainWindow* aWindow)
+void CApplicationManagementServer::ConstructL(const TDesC &aServerName)
     {
 
     // 2nd phase construction - ensure the timer and server objects are running
     RDEBUG( "CApplicationManagementServer::ConstructL - Start" );
 
     iOMASCOMOEnabled = ETrue;
-    mUserCancelled = 0;
-    TRAPD( errf, FeatureManager::InitializeLibL() );
+
+    CAknAppServer::ConstructL(aServerName);
+    TRAPD( errf, FeatureManager::InitializeLibL() )
+    ;
     if (errf != KErrNone)
         {
         User::Leave(errf);
         }
-    m_Window = aWindow;
+
     RDEBUG( "CApplicationManagementServer::ConstructL - start" );
-    StartL(KApplicationManagementServerName);
+
     iStorage = CDeliveryComponentStorage::NewL();
 
     iUtility
             = ApplicationManagementUtilityFactory::CreateManagementUtilityL();
-    iDownloadMngr = CAMDownloadStore::NewL(*this);
+    iDownloadMngr = CAMDownloadManager::NewL( *this);
     iAMServerDB = CAMDownloaddb::NewL();
 
     // Define P&S Keys
@@ -561,6 +734,8 @@ void CApplicationManagementServer::ConstructL(HbMainWindow* aWindow)
             EOwnerThread);
     syncproperty.Set(KErrNone);
     syncproperty.Close();
+    
+    SendServerToBackground();
 
 #ifdef __AM_CONNECT_INSTALLER_ONSTARTUP_	
     TInt err( iInstaller.Connect() );
@@ -570,26 +745,23 @@ void CApplicationManagementServer::ConstructL(HbMainWindow* aWindow)
         User::LeaveIfError( err );
         }
 #endif	
+    RDEBUG( "CApplicationManagementServer::ConstructL - end" );
+    }
+
+// ------------------------------------------------------------------------------------------------
+// CApplicationManagementServer::StartShutDownTimer()
+// ------------------------------------------------------------------------------------------------
+
+void CApplicationManagementServer::StartShutDownTimerL()
+    {
+
+    RDEBUG( "CApplicationManagementServer::ConstructL - end" );
+
     iShutdown.ConstructL();
     // ensure that the server still exits even if the 1st client fails to connect
     iShutdown.Start();
 
     RDEBUG( "CApplicationManagementServer::ConstructL - end" );
-    }
-//---------------------------------------------------------------------------
-// Create a new client session. 
-//---------------------------------------------------------------------------
-CSession2* CApplicationManagementServer::NewSessionL(
-        const TVersion& aVersion, const RMessage2& /*aMessage */) const
-    {
-    RDEBUG( "ApplicationManagementServer: CApplicationManagementServer::NewSessionL" );
-    TVersion ver(KAMVerMajor, KAMVerMinor, KAMVerBuild);
-    if (!User::QueryVersionSupported(ver, aVersion))
-        {
-        RDEBUG( "CApplicationManagementServer::NewSessionL(): wrong version offered -> BAIL OUT!" );
-        User::Leave(KErrNotSupported);
-        }
-    return new (ELeave) CApplicationManagementSession();
     }
 
 // ------------------------------------------------------------------------------------------------
@@ -610,56 +782,29 @@ void CApplicationManagementServer::InstallCompleteL(
         const CDeploymentComponent& aCompo, const TBool &aInstallSuccess)
     {
     RDEBUG_2("CApplicationManagementServer::InstallCompleteL start (%d)", aInstallSuccess);
-
     iInstallFile.Close();
+
     // if java jad + jar install, remove files from c:\temp directory
     if (CDeploymentComponent::IsJavaMimeL(aCompo.MetaData().MimeType() ) && CDeploymentComponent::IsJavaMimeL(aCompo.Data().MimeType() ) )
         {
         TFileName fn, fn2;
         GenerateTempFileNameL(iInstallRFs, aCompo, fn, fn2);
         RDEBUG_3("CApplicationManagementServer::InstallCompleteL delete files: (%S) (%S)", &fn, &fn2);
-        User::LeaveIfError(iInstallRFs.Delete(fn));
-        User::LeaveIfError(iInstallRFs.Delete(fn2));
+        User::LeaveIfError(iInstallRFs.Delete(fn) );
+        User::LeaveIfError(iInstallRFs.Delete(fn2) );
         }
-         TInt silentsession = 0;
-        TInt r2 = RProperty::Get(KPSUidNSmlSOSServerKey, KNSmlDMSilentJob,
-                silentsession);
 
-	  if(r2 == KErrNone)
-		CApplicationManagementUtility::iSilentSession = silentsession;
-
-        if (!CApplicationManagementUtility::iSilentSession)
-        	{
-    AppMgmtNotifier* note = new AppMgmtNotifier(m_appName);
     if (aInstallSuccess)
         {
-        note->showInstallSuccessNote();
         // Remove temporary files from private directory 
-        const_cast<CDeploymentComponent&> (aCompo).ResetDataL(iInstallRFs);
+        const_cast<CDeploymentComponent&>(aCompo).ResetDataL(iInstallRFs);
         }
-    else if(mUserCancelled == 0)
-        {
-        note->showInstallFailedNote();
-        m_Window->lower();
-        }
-        
-    delete note;
-     }
-     else
-     	{
-     		 if (aInstallSuccess)
-        {
-        
-        const_cast<CDeploymentComponent&> (aCompo).ResetDataL(iInstallRFs);
-        m_Window->lower();
-        }
-     	}
-     
+
     iInstallRFs.Close();
 
     iInstallInProgress = EFalse;
 #ifndef __AM_CONNECT_INSTALLER_ONSTARTUP_	
-    iInstaller.Close();
+    iInstaller.Close() ;
 #endif
     RDEBUG("CApplicationManagementServer::InstallCompleteL end");
     }
@@ -674,12 +819,12 @@ void CApplicationManagementServer::GenerateTempJarFileNameL(RFs &aFs,
     if (aMetaSource != KNullDesC)
         {
         RFile file;
-        User::LeaveIfError(file.Open(aFs, aMetaSource, EFileRead));
+        User::LeaveIfError(file.Open(aFs, aMetaSource, EFileRead) );
         CleanupClosePushL(file);
         TFileName temp;
         temp = ReadJarFileNameL(file);
         GenerateTempFileNameL(aFs, temp, aFileName);
-        CleanupStack::PopAndDestroy(&file);
+        CleanupStack::PopAndDestroy( &file);
         }
     }
 
@@ -694,8 +839,8 @@ void CApplicationManagementServer::GenerateTempFileNameL(const RFs &aFs,
         {
         aFileName.Copy(KInstallDir);
         TParse p;
-        User::LeaveIfError(aFs.Parse(aSource, p));
-        aFileName.Append(p.NameAndExt());
+        User::LeaveIfError(aFs.Parse(aSource, p) );
+        aFileName.Append(p.NameAndExt() );
         }
     }
 
@@ -708,14 +853,14 @@ void CApplicationManagementServer::GenerateTempFileNameL(RFs &aFs,
         TFileName &aMetaSource, TFileName &aFileName,
         TFileName &aMetaFileName) const
     {
-    if (!BaflUtils::FolderExists(aFs, KInstallDir))
+    if ( !BaflUtils::FolderExists(aFs, KInstallDir) )
         {
         aFs.MkDirAll(KInstallDir);
         }
 
-    aMetaSource.Copy(aCompo.MetaData().DataFileName());
+    aMetaSource.Copy(aCompo.MetaData().DataFileName() );
     GenerateTempFileNameL(aFs, aMetaSource, aMetaFileName);
-    aSource.Copy(aCompo.Data().DataFileName());
+    aSource.Copy(aCompo.Data().DataFileName() );
     GenerateTempJarFileNameL(aFs, aMetaSource, aFileName);
     }
 
@@ -739,12 +884,12 @@ void CApplicationManagementServer::GenerateTempFileNameL(RFs &aFs,
 TFileName CApplicationManagementServer::ReadJarFileNameL(RFile& aFile) const
     {
     TFileName jarFileName;
-    HBufC8* lineBuffer = HBufC8::NewLC(KMaxFileName + 72); // lets hope all lines fit to this
-    TPtr8 linePtr(lineBuffer->Des());
+    HBufC8* lineBuffer = HBufC8::NewLC(KMaxFileName+72); // lets hope all lines fit to this
+    TPtr8 linePtr(lineBuffer->Des() );
     TInt length(0);
     aFile.Size(length);
     HBufC8* data = HBufC8::NewLC(length);
-    TPtr8 ptr(data->Des());
+    TPtr8 ptr(data->Des() );
     aFile.Read(ptr);
     RDesReadStream stream(*data);
     CleanupClosePushL(stream);
@@ -766,7 +911,7 @@ TFileName CApplicationManagementServer::ReadJarFileNameL(RFile& aFile) const
                 colonIndex = linePtr.Locate(KJadNameValueSeparator);
                 if (colonIndex != KErrNotFound)
                     {
-                    filename.Set(linePtr.Mid(colonIndex + 1)); // get jar filename, format is: MIDlet-Jar-URL: bomber.jar
+                    filename.Set(linePtr.Mid(colonIndex+1)); // get jar filename, format is: MIDlet-Jar-URL: bomber.jar
                     jarFileName.Copy(filename);
                     jarFileName.Trim();
                     break;
@@ -798,7 +943,7 @@ void CApplicationManagementServer::ReadLineL(RReadStream& aStream,
     // reset
     aLineBuffer.Zero();
 
-    while (!endOfLine)
+    while ( !endOfLine)
         {
         TRAP(errRead, aStream.ReadL(input, 1));
 
@@ -813,18 +958,19 @@ void CApplicationManagementServer::ReadLineL(RReadStream& aStream,
             // End of line
             endOfLine = ETrue;
             }
-        else if (input[0] == CR)
-            {
-            // Only end of line if not followed by a LF
-            }
         else
-            {
-            // We put any other character in the buffer
-            if (aLineBuffer.Length() < aLineBuffer.MaxLength())
+            if (input[0] == CR)
                 {
-                aLineBuffer.Append(input[0]);
+                // Only end of line if not followed by a LF
                 }
-            }
+            else
+                {
+                // We put any other character in the buffer
+                if (aLineBuffer.Length() < aLineBuffer.MaxLength())
+                    {
+                    aLineBuffer.Append(input[0]);
+                    }
+                }
         }
     }
 
@@ -839,20 +985,20 @@ TBool CApplicationManagementServer::PrepareInstallL(
     TBool res(ETrue);
 
 #ifndef __AM_CONNECT_INSTALLER_ONSTARTUP_
-    TInt err(iInstaller.Connect());
+    TInt err(iInstaller.Connect() );
     if (err != KErrNone)
         {
         RDEBUG_2( "CApplicationManagementServer::PrepareInstallL - ERROR leaving cannot connect installer: %d", err );
         User::LeaveIfError(err);
         }
-    CleanupClosePushL(iInstaller);
+    
 #endif
 
     RDEBUG( "CApplicationManagementServer::PrepareInstallL - connected to installer" );
     // Copy data file name (install file)
     if (aComponent.Data().DataFileName().Length() > 0)
         {
-        aFileName.Copy(aComponent.Data().DataFileName());
+        aFileName.Copy(aComponent.Data().DataFileName() );
         }
     else
         {
@@ -860,46 +1006,43 @@ TBool CApplicationManagementServer::PrepareInstallL(
         User::Leave(KErrNotFound);
         }
     // Open RFs session
-    User::LeaveIfError(iInstallRFs.Connect());
-    User::LeaveIfError(iInstallRFs.ShareProtected());
+    User::LeaveIfError(iInstallRFs.Connect() );
+    User::LeaveIfError(iInstallRFs.ShareProtected() );
 
     // set installoptions and correct mime type
     using namespace SwiUI;
     iInstallOptions = aComponent.InstallOpts().iOptions;
     TInstallReq req;
-    if (aComponent.Data().MimeType() == SwiUI::KSisMimeType)
-        {
-        //convert if MIME type is application/vnd.symbian.install to x-epoc/x-sisx-app
-        //as installer doesn't support application/vnd.symbian.install MIME type from S60 3rd edition onwards.
-        req.iMIME = SwiUI::KSisxMimeType;
-        }
-    else
-        {
-        req.iMIME = aComponent.Data().MimeType();
-        }
+	if (aComponent.Data().MimeType() == SwiUI::KSisMimeType) 
+	{
+		//convert if MIME type is application/vnd.symbian.install to x-epoc/x-sisx-app
+		//as installer doesn't support application/vnd.symbian.install MIME type from S60 3rd edition onwards.
+		req.iMIME = SwiUI::KSisxMimeType;
+	}
+	else 
+	{
+		req.iMIME = aComponent.Data().MimeType();
+	}
 
-    if (CDeploymentComponent::IsJavaMimeL(aComponent.MetaData().MimeType()))
-        {
-        // Check if both jad and jar files already exist in the phone	
-        if (CDeploymentComponent::IsJavaMimeL(aComponent.Data().MimeType())
-                && aComponent.MetaData().MimeType() == SwiUI::KJadMIMEType)
-            {
-            // Move both files to temporary location and use jad to install java application
-            CFileMan *fm = CFileMan::NewL(iInstallRFs);
-            CleanupStack::PushL(fm);
-            TFileName source, metasource, metatarget;
-            aFileName.Copy(KNullDesC8()); // reset
-            GenerateTempFileNameL(iInstallRFs, aComponent, source,
-                    metasource, aFileName, metatarget);
+	if (CDeploymentComponent::IsJavaMimeL(aComponent.MetaData().MimeType() ) ) {
+		// Check if both jad and jar files already exist in the phone	
+		if (CDeploymentComponent::IsJavaMimeL(aComponent.Data().MimeType() ) && aComponent.MetaData().MimeType() == SwiUI::KJadMIMEType) {
+			// Move both files to temporary location and use jad to install java application
+			CFileMan *fm = CFileMan::NewL(iInstallRFs);
+			CleanupStack::PushL(fm);
+			TFileName source, metasource, metatarget;
+			aFileName.Copy(KNullDesC8() ); // reset
+			GenerateTempFileNameL(iInstallRFs, aComponent, source, metasource,
+					aFileName, metatarget);
 
             RDEBUG_2( "CApplicationManagementServer::PrepareInstallL - temp jar file '%S'", &aFileName );
             RDEBUG_2( "CApplicationManagementServer::PrepareInstallL - temp jad file '%S'", &metatarget );
 
             // Copy datafile (jar)
-            TInt copyer(fm->Copy(source, aFileName));
+            TInt copyer(fm->Copy(source, aFileName) );
 
             // Copy metadatafile (jad)
-            TInt copyer2(fm->Copy(metasource, metatarget));
+            TInt copyer2(fm->Copy(metasource, metatarget) );
 
             CleanupStack::PopAndDestroy(fm);
 
@@ -916,12 +1059,13 @@ TBool CApplicationManagementServer::PrepareInstallL(
                 User::Leave(KErrWrite);
                 }
             }
-        else if (aComponent.MetaData().MimeType() == SwiUI::KJadMIMEType)
-            {
-            aFileName.Copy(aComponent.MetaData().DataFileName());
-            req.iMIME = aComponent.MetaData().MimeType();
-            RDEBUG_2( "CApplicationManagementServer::PrepareInstallL - Using Jad file to install java application: %S", &aFileName );
-            }
+        else
+            if (aComponent.MetaData().MimeType() == SwiUI::KJadMIMEType)
+                {
+                aFileName.Copy(aComponent.MetaData().DataFileName() );
+                req.iMIME = aComponent.MetaData().MimeType();
+                RDEBUG_2( "CApplicationManagementServer::PrepareInstallL - Using Jad file to install java application: %S", &aFileName );
+                }
         }
 
     if (aComponent.GetIAP() > -1)
@@ -932,7 +1076,8 @@ TBool CApplicationManagementServer::PrepareInstallL(
     else
         {
         TInt iap = KErrNotFound;
-        TRAPD( err, SmlHelper::GetDefaultIAPFromDMProfileL( iap ) );
+        TRAPD( err, SmlHelper::GetDefaultIAPFromDMProfileL( iap ) )
+        ;
         if (err == KErrNone)
             {
             req.iIAP = iap;
@@ -948,23 +1093,17 @@ TBool CApplicationManagementServer::PrepareInstallL(
     RDEBUG8_2( "CApplicationManagementServer::PrepareInstallL: mime type is (%S)", &req.iMIME);
     RDEBUG_2( "CApplicationManagementServer::PrepareInstallL - Using temp file '%S'", &aFileName );
 
-    User::LeaveIfError(iInstallFile.Open(iInstallRFs, aFileName, EFileRead));
+    User::LeaveIfError(iInstallFile.Open(iInstallRFs, aFileName, EFileRead) );
     TInt sz;
-    User::LeaveIfError(iInstallFile.Size(sz));
-    if (!(sz > 0))
+    User::LeaveIfError(iInstallFile.Size(sz) );
+    if ( !(sz > 0))
         {
         res = EFalse;
         RDEBUG( "CApplicationManagementServer::PrepareInstallL - ERROR size of source file is 0!" );
         }
 
-#ifndef __AM_CONNECT_INSTALLER_ONSTARTUP_   
-    CleanupStack::Pop(&iInstaller);
-#endif
 
     RDEBUG( "CApplicationManagementServer::PrepareInstallL end" );
-
-    iAppname = aFileName;
-    
     return res;
     }
 
@@ -980,50 +1119,25 @@ void CApplicationManagementServer::InstallL(
     if (iInstallInProgress == EFalse)
         {
         TFileName fn;
-        TInt type = EInstallWaitDlg;
-        TInt silentsession = 0;
-        TInt r2 = RProperty::Get(KPSUidNSmlSOSServerKey, KNSmlDMSilentJob,
-                silentsession);
-
-	  if(r2 == KErrNone)
-		CApplicationManagementUtility::iSilentSession = silentsession;
-
-        if (!CApplicationManagementUtility::iSilentSession)
+        if (PrepareInstallL(aComponent, fn) )
             {
-            m_Dlg = new AMWaitProgDialog(m_appName, *this);
-            m_Dlg->createWaitDialog(type);
-            if (CApplicationManagementUtility::mHidden == 1)
+            RDEBUG_3( "CApplicationManagementServer::InstallL: Install '%S' sizeof opts: %d", &fn, sizeof (aComponent.InstallOpts()));
+
+            // Silent or Non Silent Installation is choosen based on DM session started in silent or non silent
+
+            TInt err = KErrNone;
+            TInt nonSilentOperation = KErrNotFound;
+            RProperty::Get(KUidPSApplicationManagementKeys,
+                    KAMOperationNonSilent, nonSilentOperation);
+
+            if (!nonSilentOperation)
                 {
-                m_Dlg->startIndicator();
+                TRAP( err ,iInstaller.SilentInstall( aStatus, iInstallFile, iInstallReq, iInstallOptions ) );
                 }
             else
                 {
-                m_Window->raise();
-                CApplicationManagementUtility::mCurrDlg->setVisible(true);
+                TRAP( err ,iInstaller.Install( aStatus, iInstallFile, iInstallReq ) );
                 }
-            }
-        if (PrepareInstallL(aComponent, fn))
-            {	  
-            if (m_Dlg)
-                m_Dlg->registerInstallRequest(aStatus);
-            delete iArgu;
-            iArgu = NULL;
-            iArgu = Usif::COpaqueNamedParams::NewL();
-            iArgu->AddIntL(Usif::KSifInParam_InstallSilently, 1);
-            TAMInstallOptions opts = aComponent.InstallOpts();
-            TChar drive = opts.iOptions.iDrive;
-            RFs iFs;
-            TInt driveNumber;
-            iFs.CharToDrive(drive,driveNumber);
-
-            iArgu->AddIntL(Usif::KSifInParam_Drive, driveNumber);  
-
-            delete iResults;
-            iResults = NULL;
-            iResults = Usif::COpaqueNamedParams::NewL();
-
-            RDEBUG_3( "CApplicationManagementServer::InstallL: Install '%S' sizeof opts: %d", &fn, sizeof (aComponent.InstallOpts()));
-		TRAPD( err ,iInstaller.Install( iInstallFile, *iArgu, *iResults, aStatus ) );
 
             RDEBUG_2( "CApplicationManagementServer::InstallL: status: %d", err);
             User::LeaveIfError(err);
@@ -1056,11 +1170,14 @@ void CApplicationManagementServer::InstallL(
     if (iInstallInProgress == EFalse)
         {
         TFileName fn;
-        if (PrepareInstallL(aComponent, fn))
+        if (PrepareInstallL(aComponent, fn) )
             {
             iInstallInProgress = ETrue;
             RDEBUG_2( "CApplicationManagementServer::InstallL: Install '%S' ", &fn);
             SwiUI::TInstallOptionsPckg pkg(aComponent.InstallOpts().iOptions);
+            TRAPD( err ,iInstaller.SilentInstall( fn, pkg ) )
+            ;
+            User::LeaveIfError(err);
             iInstallInProgress = EFalse;
             }
         else
@@ -1082,21 +1199,38 @@ void CApplicationManagementServer::UninstallL(
     RDEBUG( "CApplicationManagementServer::UninstallL: begin" );
     if (iInstallInProgress == EFalse)
         {
-        TInt err(iInstaller.Connect());
+        TInt err(iInstaller.Connect() );
         User::LeaveIfError(err);
         RDEBUG_2( "CApplicationManagementServer::UninstallL: UninstallL '0x%X' ", aComponent.Uid());
         using namespace SwiUI;
         iUninstallOptions = aComponent.UninstallOpts();
 
-        delete iArgu;
-        iArgu = NULL;
-        iArgu = Usif::COpaqueNamedParams::NewL();
-        iArgu->AddIntL( Usif::KSifInParam_InstallSilently, 1 );
+        TInt nonSilentOperation = KErrNotFound;
 
-        delete iResults;
-        iResults = NULL;
-        iResults = Usif::COpaqueNamedParams::NewL();
-        TRAP( err ,iInstaller.Uninstall( aComponent.GetComponentId(), *iArgu, *iResults, aStatus ));
+        RProperty::Get(KPSUidNSmlDMSyncApp, KSilentSession,
+                nonSilentOperation);
+
+				iOMASCOMOEnabled = IsOMASCOMOEnabledL();
+
+        if (!iOMASCOMOEnabled)
+            nonSilentOperation = 0;
+        if (!nonSilentOperation)
+            {
+            TRAP( err ,iInstaller.SilentUninstall( aStatus, aComponent.Uid(),
+                            iUninstallOptions, aComponent.MimeType() ) );
+            }
+        else
+            {
+            TRAP( err ,iInstaller.Uninstall( aStatus, aComponent.Uid(), aComponent.MimeType() ) );
+            CSyncService *syncService =
+                    CSyncService::NewL(NULL, KDevManServiceStart);
+            if (syncService)
+                {
+                syncService->EnableProgressNoteL(EFalse);
+                }
+
+            delete syncService;
+            }
 
         RDEBUG_2( "CApplicationManagementServer::UninstallL: UninstallL result '0x%X'", err );
         User::LeaveIfError(err);
@@ -1119,8 +1253,8 @@ void CApplicationManagementServer::PerformRFSL()
     {
     RDEBUG( "CApplicationManagementServer::PerformRFSL: begin" );
     const RComponentIdArray &arrt = iStorage->GetComponentIds();
-    TCertInfoPckg *corcert = NULL;
-    for (TInt i(0); i < arrt.Count(); i++)
+    TCertInfoPckg *corcert= NULL;
+    for (TInt i( 0); i < arrt.Count(); i++)
         {
         RDEBUG_3( "CApplicationManagementServer::PerformRFSL processing dc %d of %d", i, arrt.Count() );
         CDeploymentComponent &c = iStorage->ComponentL(arrt[i]);
@@ -1129,12 +1263,12 @@ void CApplicationManagementServer::PerformRFSL()
         TInt index = c.Owner();
         TCertInfoPckg *certp = NULL;
         if (index >= 0)
+        {
+        	certp = certs[ c.Owner() ];
+        }
+        if ( !corcert && certp)
             {
-            certp = certs[c.Owner()];
-            }
-        if (!corcert && certp)
-            {
-            if (CheckCertL((*certp)()))
+            if (CheckCertL( (*certp)() ) )
                 {
                 corcert = certp;
                 RDEBUG_2( "CApplicationManagementServer::PerformRFSL Found CORP Cert! Removing %d ", i );
@@ -1165,116 +1299,83 @@ void CApplicationManagementServer::PerformRFSL()
 // CApplicationManagementServer::RemoveInternalL()
 // ------------------------------------------------------------------------------------------------
 
-
 void CApplicationManagementServer::RemoveInternalL(
         const CDeploymentComponent &aCompo, TBool aDoUninstall /* = ETrue */)
     {
     RDEBUG_2("CApplicationManagementServer: RemoveInternalL - Remove id: (%d)", aCompo.InternalId() );
+
+    aCompo.SetStatusNode(EDelivered_RemoveProgress);
     TInt err(KErrNone);
-    TDeploymentComponentName name = aCompo.ComponentName();
-    TBuf<KDeploymentComponentNameMaxLength> ne;
-    ne.Copy(name);
-    m_appName = QString::fromUtf16(ne.Ptr(), ne.Length());
-
-    RDEBUG("CApplicationManagementServer: RemoveInternalL - step1");
-
-    TInt err1 = KErrNone;
-    if (!err1)
+    TDeploymentComponentState st(aCompo.State() );
+    if (st == EDCSDelivered || st == EDCSDownload)
         {
-        RDEBUG("CApplicationManagementServer: RemoveInternalL - step2");
-
-        aCompo.SetStatusNode(EDelivered_RemoveProgress);
-
-        TDeploymentComponentState st(aCompo.State());
-        if (st == EDCSDelivered || st == EDCSDownload)
+        TRAP(err,iStorage->RemoveL( aCompo.InternalId() ));
+        }
+    else
+        if (st == EDCSActive || st == EDCSInactive)
             {
-            RDEBUG("CApplicationManagementServer: RemoveInternalL - step3 start");
-            TRAP(err,iStorage->RemoveL( aCompo.InternalId() ));
-            RDEBUG("CApplicationManagementServer: RemoveInternalL - step4 start");
-            }
-        else if (st == EDCSActive || st == EDCSInactive)
-            {
-            RDEBUG("CApplicationManagementServer: RemoveInternalL - step5 start");
             if (aDoUninstall)
                 {
-                if (aCompo.Uid() != TUid::Null())
+                if (aCompo.Uid() != TUid::Null() )
                     {
+                    //TInt err= KErrNone;
+
                     TInt nonSilentOperation = KErrNotFound;
-                    iOMASCOMOEnabled = IsOMASCOMOEnabledL();
+
+                    RProperty::Get(KPSUidNSmlDMSyncApp, KSilentSession,
+                            nonSilentOperation);
+
+										iOMASCOMOEnabled = IsOMASCOMOEnabledL();
+
                     if (!iOMASCOMOEnabled)
                         nonSilentOperation = 0;
-                    RDEBUG("CApplicationManagementServer: RemoveInternalL - step5 start 1");
 
-                    TInt silentsession = 0;
-                    RProperty::Get(KPSUidNSmlSOSServerKey, KNSmlDMSilentJob,
-                            silentsession);
-
-                    CApplicationManagementUtility::iSilentSession
-                            = silentsession;
-                    TRequestStatus s1 = KRequestPending;
-                    AppMgmtNotifier* note = new AppMgmtNotifier(m_appName);
-                    
-                    // displaying uninstall confirm notes
-                    if (!CApplicationManagementUtility::iSilentSession)
+                    if (nonSilentOperation!=0)
                         {
-                        CDialogWait* wait = CDialogWait::NewL(); 
-                        note->showUninstallDialog(aCompo, wait->iStatus);     
-                        m_Window->raise();   
-                        wait->StartWait();
-                        s1=wait->iStatus;
-                        delete wait;
+
+                        BringServertoForeground();
+
+                        TInt amServerEnabled = 1;
+                        err = RProperty::Set(KUidPSApplicationManagementKeys,
+                                KAMServerUIEnabled, amServerEnabled);
+                        User::LeaveIfError(err); // invalid
+
                         }
-                    if (s1 != KStatusUserCancelled)
+
+                    TRequestStatus s;
+                    TRAP(err,UninstallL( aCompo, s ));
+                    User::WaitForRequest(s);
+                    iInstallInProgress = EFalse;
+                    // Capturing Installer errors,if any
+                    err = s.Int();
+
+                    TInt amServerEnabled = 0;
+                    RProperty::Set(KUidPSApplicationManagementKeys,
+                            KAMServerUIEnabled, amServerEnabled);
+                    //User::LeaveIfError(err); // invalid
+
+                    SendServerToBackground();
+
+                    // Bring DM UI to foreground
+                    if (nonSilentOperation!=0)
                         {
-                        TInt type = EUninstallWaitDlg;
-                        TRequestStatus s;
-                        if (!CApplicationManagementUtility::iSilentSession)
+                        BringDMUItoForeground();
+                        }
+
+                    if (s.Int() == KErrNone)
+                        {
+                        RDEBUG("CApplicationManagementServer::RemoveInternalL Uninstalled");
+                        }
+                    else
+                        if (s.Int() == KErrNotFound)
                             {
-                            m_Dlg = new AMWaitProgDialog(m_appName, *this);
-                            m_Dlg->createWaitDialog(type);
-                            m_Window->raise();
-                            CApplicationManagementUtility::mCurrDlg->setVisible(
-                                        true);
-                                
-                            }
-                        CDialogWait* wait1 = CDialogWait::NewL();           
-                     
-                        TRAP(err,UninstallL( aCompo, wait1->iStatus ));
-                        //wait till uninstall completes
-                        wait1->StartWait();
-                        if (!CApplicationManagementUtility::iSilentSession)
-                            m_Dlg->closeAMWaitDialog();
-                        m_Window->lower();
-                        s = wait1->iStatus;
-                        delete wait1;
-                        iInstallInProgress = EFalse;
-                        // Capturing Installer errors,if any
-                        err = s.Int();
-                        if (s.Int() == KErrNone)
-                            {
-                            note->showUnInstallSuccessNote();
-                            RDEBUG("CApplicationManagementServer::RemoveInternalL Uninstalled");
+                            RDEBUG( "CApplicationManagementServer: RemoveInternalL WARNING component was not found by uninstaller" );
                             }
                         else
                             {
-                            note->showUnInstallFailedNote();
-                            if (s.Int() == KErrNotFound)
-                                {
-                                RDEBUG( "CApplicationManagementServer: RemoveInternalL WARNING component was not found by uninstaller" );
-                                }
-                            else
-                                {
-                                RDEBUG_2("CApplicationManagementServer: RemoveInternalL ERROR uninstall failed %d", s.Int() );
-                                }
+                            RDEBUG_2("CApplicationManagementServer: RemoveInternalL ERROR uninstall failed %d", s.Int() );
+                            
                             }
-                        }
-                    else
-                        {
-                        err = SwiUI::KSWInstErrUserCancel;
-                        aCompo.SetStatusNode(EDelivered_RemoveFailed);
-                        RDEBUG( "CApplicationManagementServer: RemoveInternalL User cancelled" );
-                        }
-                    delete note;
                     }
                 else
                     {
@@ -1291,7 +1392,7 @@ void CApplicationManagementServer::RemoveInternalL(
              */
             if (err == KErrNone)
                 {
-                iStorage->RemoveL(aCompo.InternalId());
+                iStorage->RemoveL(aCompo.InternalId() );
                 }
             }
         else
@@ -1299,24 +1400,16 @@ void CApplicationManagementServer::RemoveInternalL(
             RDEBUG_2("CApplicationManagementServer: RemoveInternalL ERROR called with illegal state component id %d", aCompo.State() );
             User::Leave(KErrArgument);
             }
-        /*  
-         * if error set state to remove failed
-         * Finally call userleaveiferror()
-         * */
-        if (err != KErrNone)
-            {
-            aCompo.SetStatusNode(EDelivered_RemoveFailed);
-            }
-        }
-    else
+    /*  
+     * if error set state to remove failed
+     * Finally call userleaveiferror()
+     * */
+    if (err != KErrNone)
         {
-        err = SwiUI::KSWInstErrUserCancel;
         aCompo.SetStatusNode(EDelivered_RemoveFailed);
         }
-
     User::LeaveIfError(err);
     }
-    
 
 // ------------------------------------------------------------------------------------------------
 // CApplicationManagementServer::CheckCertL()
@@ -1326,20 +1419,20 @@ TBool CApplicationManagementServer::CheckCertL(const TCertInfo &aInfo) const
     {
     TBool go(EFalse);
 
-    if (FeatureManager::FeatureSupported(KFeatureIdSapPolicyManagement))
+    if (FeatureManager::FeatureSupported( KFeatureIdSapPolicyManagement) )
         {
         //	#ifdef __SAP_POLICY_MANAGEMENT
         RPolicyEngine peng;
 
         // The management session
         //
-        TInt err(peng.Connect());
+        TInt err(peng.Connect() );
 
         if (err == KErrNone)
             {
             CleanupClosePushL(peng);
             RPolicyRequest rq;
-            err = rq.Open(peng);
+            err = rq.Open(peng) ;
             if (err == KErrNone)
                 {
                 CleanupClosePushL(rq);
@@ -1375,13 +1468,13 @@ TBool CApplicationManagementServer::CheckCertL(const TCertInfo &aInfo) const
                     {
                     RDEBUG_2( "CApplicationManagementSession::CheckCertL; ERROR making policy request! %d", err);
                     }
-                CleanupStack::PopAndDestroy(&rq);
+                CleanupStack::PopAndDestroy( &rq) ;
                 }
             else
                 {
                 RDEBUG_2( "CApplicationManagementSession::CheckCertL; ERROR Failed to open policy engine session! %d", err);
                 }
-            CleanupStack::PopAndDestroy(&peng);
+            CleanupStack::PopAndDestroy( &peng) ;
             }
         else
             {
@@ -1406,13 +1499,13 @@ TBool CApplicationManagementServer::HasUidL(const TUid &aUid,
     {
     TBool found(EFalse);
     const RComponentIdArray &arrt = iStorage->GetComponentIds();
-    TInt count(arrt.Count());
-    for (TInt i(0); i < count; i++)
+    TInt count(arrt.Count() );
+    for (TInt i( 0); i < count; i++)
         {
         CDeploymentComponent &compo = iStorage->ComponentL(arrt[i]);
         if (compo.Uid() == aUid)
             {
-            if (&compo != aIgnored)
+            if ( &compo != aIgnored)
                 {
                 aCompo = &compo;
                 found = ETrue;
@@ -1424,10 +1517,10 @@ TBool CApplicationManagementServer::HasUidL(const TUid &aUid,
                 }
             }
         }
-    if (!found)
+    if ( !found)
         {
         found = FindInstalledSisUidL(aUid);
-        if (!found)
+        if ( !found)
             {
             found = FindInstalledJavaUidL(aUid);
             }
@@ -1443,24 +1536,24 @@ TBool CApplicationManagementServer::FindInstalledSisUidL(const TUid &aUid) const
     {
     TBool found(EFalse);
     Swi::RSisRegistrySession sisses;
-    TInt r(sisses.Connect());
-    User::LeaveIfError(r);
+    TInt r(sisses.Connect() );
+    User::LeaveIfError(r) ;
     CleanupClosePushL(sisses);
 
     RArray<TUid> uids;
     sisses.InstalledUidsL(uids);
     CleanupClosePushL(uids);
 
-    TInt uidc(uids.Count());
-    for (TInt j(0); found == EFalse && j < uidc; j++)
+    TInt uidc(uids.Count() );
+    for (TInt j( 0); found == EFalse && j < uidc; j++)
         {
         if (uids[j] == aUid)
             {
             found = ETrue;
             }
         }
-    CleanupStack::PopAndDestroy(&uids);
-    CleanupStack::PopAndDestroy(&sisses);
+    CleanupStack::PopAndDestroy( &uids);
+    CleanupStack::PopAndDestroy( &sisses);
 
     return found;
     }
@@ -1484,9 +1577,9 @@ TBool CApplicationManagementServer::FindInstalledJavaUidL(const TUid &aUid) cons
 TUid CApplicationManagementServer::FindNewUid(const RArray<TUid> &aUidsOrig,
         const RArray<TUid> &aUidsNew) const
     {
-    TUid ret(TUid::Null());
-    TInt c1(aUidsOrig.Count());
-    TInt c2(aUidsNew.Count());
+    TUid ret(TUid::Null() );
+    TInt c1(aUidsOrig.Count() );
+    TInt c2(aUidsNew.Count() );
     if (c2 >= c1)
         {
         for (TInt i(c2 - 1); i >= 0 && !ret.iUid; i--)
@@ -1495,6 +1588,7 @@ TUid CApplicationManagementServer::FindNewUid(const RArray<TUid> &aUidsOrig,
                 {
                 ret = aUidsNew[i];
                 }
+
             }
         }
     return ret;
@@ -1515,18 +1609,18 @@ void CApplicationManagementServer::CheckforDuplicateMidletsL(
     {
     RDEBUG( "CApplicationManagementServer::CheckforDuplicateMidletsL: Start");
     const RComponentIdArray &arrt = iStorage->GetComponentIds();
-    TInt cont(arrt.Count());
+    TInt cont(arrt.Count() );
     for (TInt i( 0); i < cont; i++)
-     {
-     CDeploymentComponent &compo = iStorage->ComponentL(arrt[i]);
-     if (((compo.State() == EDCSActive) || (compo.State() == EDCSInactive ))
-     && (compo.MidletName()== amidletParameters.iMidletName)
-     && (compo.MidletVendor()== amidletParameters.iMidletVenorName))
-     {
-     //remove old one
-     iStorage->RemoveL(compo.InternalId() );
-     }
-     }
+        {
+        CDeploymentComponent &compo = iStorage->ComponentL(arrt[i]);
+        if (((compo.State() == EDCSActive) || (compo.State() == EDCSInactive ))
+                && (compo.MidletName()== amidletParameters.iMidletName)
+                && (compo.MidletVendor()== amidletParameters.iMidletVenorName))
+            {
+            //remove old one
+            iStorage->RemoveL(compo.InternalId() );
+            }
+        }
 
     RDEBUG( "CApplicationManagementServer::CheckforDuplicateMidletsL: End");
     }
@@ -1538,57 +1632,33 @@ void CApplicationManagementServer::JavaInstallL(CDeploymentComponent &aCompo)
     {
     RDEBUG( "CApplicationManagementServer::JavaInstallL: Start");
 
-    //TRequestStatus s;
+    TRequestStatus s;
     TInt err(KErrNone);
-    // set state to install progressf
-    CDialogWait* wait = CDialogWait::NewL();
+    // set state to install progress
     aCompo.SetStatusNode(EDelivered_InstallProgress);
-    TRAP(err,InstallL( aCompo,wait->iStatus ));
+    TRAP(err,InstallL( aCompo,s ));
     if (err != KErrNone)
         {
         aCompo.SetStatusNode(EDelivered_InstalledFailedWithData);
-        delete wait;
         User::Leave(err);
         }
-    wait->StartWait();
-    if (!CApplicationManagementUtility::iSilentSession && CApplicationManagementUtility::mCurrDlg)
-        m_Dlg->closeAMWaitDialog();
-    m_Window->lower();
-    TRequestStatus s1 = wait->iStatus;
-    
-    RDEBUG_2( "ApplicationManagementSession: JavaInstallL 1 failed with code %d",
-                s1.Int() );
-
-    TInt usifdeplid = -1;
-        if (iResults && wait->iStatus.Int()!=KErrCancel)
-	  {
-            iResults->GetIntByNameL(Usif::KSifOutParam_ComponentId, usifdeplid);
-    		RDEBUG_2( "ApplicationManagementSession: JavaInstallL usifdeplid %d",
-                usifdeplid);
-
-	  }
-      RDEBUG( "wait->StartWait() CApplicationManagementServer::javainstallL Step3");
-
-        aCompo.SetComponentId(usifdeplid);
-
-         s1 = wait->iStatus;
-        delete wait;
-        RDEBUG_2("ApplicationManagementSession: javainstallL with code %d",
-                        s1.Int() );
-    if (s1 == KErrCancel)
+    User::WaitForRequest(s);
+    SendServerToBackground();
+    if (s != KErrNone)
         {
         RDEBUG_2( "ApplicationManagementSession: JavaInstallL failed with code %d",
-                s1.Int() );
+                s.Int() );
         // set state to install failed with data
         aCompo.SetStatusNode(EDelivered_InstalledFailedWithData);
-        User::Leave(s1.Int());
+        User::Leave(s.Int() );
         }
     else
         {
         TMidletParameters midletParameters;
         iUtility->RefreshJavaRegistryL();
         //Ignore if any error comes
-        TRAPD(err,iUtility->GetInstalledMidletParametersL(midletParameters));
+        TRAPD(err,iUtility->GetInstalledMidletParametersL(midletParameters))
+        ;
         TRAP(err,CheckforDuplicateMidletsL(midletParameters));
 
         if (err != KErrNone)
@@ -1613,7 +1683,7 @@ void CApplicationManagementServer::JavaInstallL(CDeploymentComponent &aCompo)
 
         //Since "C" drive is not removable
 
-        if (midletParameters.iDrive != EDriveC)
+        if (midletParameters.iDrive!=EDriveC)
             {
             status = IsInstalledAppRemovableL(midletParameters.iDrive);
             }
@@ -1641,57 +1711,23 @@ void CApplicationManagementServer::SisInstallL(
         const CDeploymentComponent &aCompo)
     {
     TRequestStatus s;
-    CDialogWait* wait = CDialogWait::NewL();
     // set state to install progress
     aCompo.SetStatusNode(EDelivered_InstallProgress);
     TInt err(KErrNone);
-    TRAP(err,InstallL( aCompo,wait->iStatus ));
+    TRAP(err,InstallL( aCompo,s ));
     if (err != KErrNone)
         {
         aCompo.SetStatusNode(EDelivered_InstalledFailedWithData);
-        delete wait;
         User::Leave(err);
         }
-    RDEBUG_2("ApplicationManagementSession: SisInstallL failed with code before startwait %d",
-            wait->iStatus.Int() );
-    wait->StartWait();
-    RDEBUG_2("ApplicationManagementSession: SisInstallL failed with code after startwait %d",
-                wait->iStatus.Int() );
-    RDEBUG( "wait->StartWait() CApplicationManagementServer::SisInstallL Step1");
-    if (!CApplicationManagementUtility::iSilentSession && CApplicationManagementUtility::mCurrDlg)
-        m_Dlg->closeAMWaitDialog();
-    delete m_Dlg;
-    m_Dlg=NULL;
-    RDEBUG( "wait->StartWait() CApplicationManagementServer::SisInstallL Step2");
-    
-    m_Window->lower();
-    
-    TInt usifdeplid = -1;
-    if (iResults && wait->iStatus.Int()!=KErrCancel)
-        iResults->GetIntByNameL(Usif::KSifOutParam_ComponentId, usifdeplid);
-    
-    RDEBUG( "wait->StartWait() CApplicationManagementServer::SisInstallL Step3");
-
-    iComp->SetComponentId(usifdeplid);
-
-    TRequestStatus s1 = wait->iStatus;
-    delete wait;
-    RDEBUG_2("ApplicationManagementSession: SisInstallL with code %d",
-                    s1.Int() );
-    
-    if(s1 == KErrCancel)
-        {
-        s1 = KStatusUserCancelled;
-        RDEBUG( "KErrCancel visited operation cancelled");
-        mUserCancelled=1;
-        }
-    if (s1 != KErrNone)
+    User::WaitForRequest(s);
+    if (s != KErrNone)
         {
         RDEBUG_2("ApplicationManagementSession: SisInstallL failed with code %d",
-                s1.Int() );
+                s.Int() );
         // set state to install failed with data
         aCompo.SetStatusNode(EDelivered_InstalledFailedWithData);
-        User::Leave(s1.Int());
+        User::Leave(s.Int() );
         }
     else
         {
@@ -1704,87 +1740,47 @@ void CApplicationManagementServer::SisInstallL(
 
 // ------------------------------------------------------------------------------------------------
 // CApplicationManagementServer::DoTheInstallL()
-// ---------------------------------------------------- --------------------------------------------	
+// ------------------------------------------------------------------------------------------------	
 
 void CApplicationManagementServer::DoTheInstallL(CDeploymentComponent &aCompo)
     {
     RDEBUG( "CApplicationManagementServer::DoTheInstallL: Start");
     TInt error(KErrNone);
-    iComp = &aCompo;
-    
-    TDeploymentComponentName name = aCompo.ComponentName();
-    if(name.Compare(KNullDesC8())==0)
+    if (CDeploymentComponent::IsJavaMimeL(aCompo.Data().MimeType() )
+            || CDeploymentComponent::IsJavaMimeL(aCompo.MetaData().MimeType() ) )
         {
-        name = aCompo.UserId();
-        }
-    TBuf<KDeploymentComponentNameMaxLength> nameBuf;
-    nameBuf.Copy(name);
-    m_appName = QString::fromUtf16(nameBuf.Ptr(), nameBuf.Length());
-
-    TRequestStatus stat = KErrCompletion;
-    if (!aCompo.DriveSelected()
-            && !CApplicationManagementUtility::iSilentSession)
-        {
-        // displaying install confirm notes
-        CDialogWait* ao = CDialogWait::NewL();
-        AppMgmtNotifier* note = new AppMgmtNotifier();
-        int err = KErrNone;
-        TRAP( err, QT_TRYCATCH_LEAVING(note->showInstallDialog(iComp, ao->iStatus)));
-        ao->StartWait();
-        stat = ao->iStatus;
-        delete ao;
-        m_Window->lower();
-        delete note;
-        }
-    aCompo.SetDriveSelectionStatus(false);
-    if (stat == KErrCompletion)
-        {
-        if (CDeploymentComponent::IsJavaMimeL(aCompo.Data().MimeType())
-                || CDeploymentComponent::IsJavaMimeL(
-                        aCompo.MetaData().MimeType()))
-            {
-            TRAP( error, JavaInstallL( aCompo ) );
-            }
-        else
-            {
-            TRAP( error, SisInstallL( aCompo ) );
-            if(error==KErrNone)
-                {
-                SetSisAppVersionAndDriveL(aCompo);
-                }
-            }
-      
-
-
-        if (error == KErrNone)
-            {
-            InstallCompleteL(aCompo, ETrue);
-            CDeploymentComponent *old = DoDataUpdateCheckL(aCompo);
-            if (old)
-                {
-                if (aCompo.State() == EDCSDelivered)
-                    {
-                    if (old->State() == EDCSActive || old->State()
-                            == EDCSInactive)
-                        {
-                        RDEBUG("AMSession: DoTheInstallL ** deleting old node **" );
-                        iStorage->RemoveL(old->InternalId());
-                        }
-                    }
-                }
-            iStorage->InstalledL(aCompo);
-            }
-        else
-            {
-            InstallCompleteL(aCompo, EFalse);
-            User::Leave(error);
-            }
+        TRAP( error, JavaInstallL( aCompo ) );
         }
     else
         {
-        aCompo.SetStatusNode(EDelivered_InstallFailedwithOutData);
+        TRAP( error, SisInstallL( aCompo ) );
+        SetSisAppVersionAndDriveL(aCompo);
         }
     
+    SendServerToBackground();
+
+    if (error == KErrNone)
+        {
+        InstallCompleteL(aCompo, ETrue);
+        CDeploymentComponent *old = DoDataUpdateCheckL(aCompo);
+        if (old)
+            {
+            if (aCompo.State() == EDCSDelivered)
+                {
+                if (old->State() == EDCSActive || old->State()== EDCSInactive)
+                    {
+                    RDEBUG("AMSession: DoTheInstallL ** deleting old node **" );
+                    iStorage->RemoveL(old->InternalId() );
+                    }
+                }
+            }
+        iStorage->InstalledL(aCompo);
+        }
+    else
+        {
+        InstallCompleteL(aCompo, EFalse);
+        User::Leave(error);
+        }
     RDEBUG( "CApplicationManagementServer::DoTheInstallL: End");
     }
 
@@ -1795,8 +1791,8 @@ void CApplicationManagementServer::DoTheInstallL(CDeploymentComponent &aCompo)
 CDeploymentComponent *CApplicationManagementServer::DoDataUpdateCheckL(
         CDeploymentComponent &aCompo)
     {
-    CDeploymentComponent *old = NULL;
-    if (aCompo.Uid() != TUid::Null() && HasUidL(aCompo.Uid(), old, &aCompo))
+    CDeploymentComponent *old= NULL;
+    if (aCompo.Uid() != TUid::Null() && HasUidL(aCompo.Uid(), old, &aCompo) )
         {
         // check for Uid component.. Legacy code removed.
         }
@@ -1843,29 +1839,27 @@ void CApplicationManagementServer::FullUpdateL(CDeploymentComponent &scompo,
             if (s2 != KErrNone)
                 {
                 RDEBUG_2( "ApplicationManagementSession: FullUpdateL failed with code %d", s2.Int() );
-                User::Leave(s2.Int());
+                User::Leave(s2.Int() );
                 }
             else
                 {
                 InstallCompleteL(scompo);
                 // Before deleting old node ,copy node values which are not set in new node from old node
-                if (scompo.ComponentId() == KNullDesC8)
-                    scompo.SetIdL(tcompo.ComponentId());
-
-                if (scompo.ComponentName() == KNullDesC8)
-                    scompo.SetNameL(tcompo.ComponentName());
-
-                if (scompo.ComponentVersion() == KNullDesC8)
-                    scompo.SetVersionL(tcompo.ComponentVersion());
-
+                if (scompo.ComponentId()== KNullDesC8)
+                scompo.SetIdL(tcompo.ComponentId());
+                
+                if (scompo.ComponentName()== KNullDesC8)
+                scompo.SetNameL(tcompo.ComponentName());
+                
+                if (scompo.ComponentVersion()== KNullDesC8)
+                scompo.SetVersionL(tcompo.ComponentVersion());
+                
                 //Tag tcompo state for deletion. Cant delete now, since nsmldmtree woudnt be updated
                 //Remove the const'ness since state needs to be updated.
+                
+                iStorage->SetDeploymentComponentState(const_cast <CDeploymentComponent &>(tcompo),EDCSDelete);
 
-                iStorage->SetDeploymentComponentState(
-                        const_cast<CDeploymentComponent &> (tcompo),
-                        EDCSDelete);
-
-                iStorage->InstalledL(scompo);
+                iStorage->InstalledL( scompo );
                 RDEBUG( "ApplicationManagementSession: FullUpdateL ok" );
                 }
             }
@@ -1900,7 +1894,7 @@ TBool CApplicationManagementServer::IsDataFileB64EncodedL(RFile &aFile,
     while (encoded)
         {
         aFile.Read(dataPtr);
-        if (!dataPtr.Length())
+        if ( !dataPtr.Length() )
             {
             break;
             }
@@ -1928,7 +1922,7 @@ TBool CApplicationManagementServer::CheckB64Encode(const TDesC8& aData)
 
     while (inputIndex < inputLen)
         {
-        const TUint8& p = aData[inputIndex];
+        const TUint8& p = aData[ inputIndex ];
 
         if ((p >= 48 && p <= 57) || (p >= 65 && p <= 90) || (p >= 97 && p
                 <= 122) || p == 43 || p == 47 || p == 61 || p == 10 || p
@@ -1971,7 +1965,7 @@ void CApplicationManagementServer::GetAMServerDownloadDBL(TUint32 internalid,
 
     RDEBUG( "CApplicationManagementServer::GetAMServerDownloadDBL(): Step5" );
 
-    if (aItemArray.Count() != 0)
+    if (aItemArray.Count()!=0)
         {
         RDEBUG( "CApplicationManagementServer::GetAMServerDownloadDBL(): Step6" );
 
@@ -2000,8 +1994,7 @@ void CApplicationManagementServer::GetAMServerDownloadDBL(TUint32 internalid,
 // CApplicationManagementServer::DeleteGenericAlertForIDL()
 // ------------------------------------------------------------------------------------------------	
 
-void CApplicationManagementServer::DeleteGenericAlertForIDL(
-        TUint32 internalid)
+void CApplicationManagementServer::DeleteGenericAlertForIDL(TUint32 internalid)
     {
     iAMServerDB->DeleteFromDatabaseL(internalid);
     }
@@ -2015,11 +2008,11 @@ void CApplicationManagementServer::DecodeB64DataFileL(RFile& aSourceFile,
     RDEBUG( "CApplicationManagementServer::DecodeB64DataFileL(): Start" );
     // Create buffers
     //TInt b64bufferSize = 131072;
-    TInt decodedBufferSize = ((KBase64BufSize * 3) / 4 + 16);
+    TInt decodedBufferSize = ( (KBase64BufSize*3) / 4 + 16 );
     HBufC8 *dataBuf = HBufC8::NewLC(KBase64BufSize);
     TPtr8 dataPtr = dataBuf->Des();
     HBufC8* targetBuf = HBufC8::NewLC(decodedBufferSize);
-    TPtr8 targetPtr(targetBuf->Des());
+    TPtr8 targetPtr(targetBuf->Des() );
 
     TInt offset(0);
     TInt length(0);
@@ -2035,7 +2028,7 @@ void CApplicationManagementServer::DecodeB64DataFileL(RFile& aSourceFile,
     while (reading)
         {
         aSourceFile.Read(dataPtr);
-        if (!dataPtr.Length())
+        if ( !dataPtr.Length() )
             {
             // EOF
             break;
@@ -2065,8 +2058,8 @@ HBufC8* CApplicationManagementServer::DecodeB64DataLC(const TDesC8 &aData)
     RDEBUG( "CApplicationManagementServer::DecodeB64DataLC(): Start" );
     TImCodecB64 B64Coder;
     B64Coder.Initialise();
-    HBufC8 *target = HBufC8::NewLC((aData.Length() * 3) / 4 + 16);
-    TPtr8 targetPtr(target->Des());
+    HBufC8 *target = HBufC8::NewLC( (aData.Length() * 3 ) / 4 + 16);
+    TPtr8 targetPtr(target->Des() );
     B64Coder.Decode(aData, targetPtr);
     RDEBUG( "CApplicationManagementServer::DecodeB64DataLC(): End" );
     return target;
@@ -2082,12 +2075,14 @@ void CApplicationManagementServer::EncodeDataL(const TDesC8& aData,
     aTarget.ExpandL(0, outLen);
     TImCodecB64 B64Coder;
     B64Coder.Initialise();
-    TPtr8 target(aTarget.Ptr(0));
-    TInt decoded(B64Coder.Encode(aData, target));
-    TInt s(target.Length());
+    TPtr8 target(aTarget.Ptr(0) );
+    TInt decoded(B64Coder.Encode(aData, target) );
+    TInt s(target.Length() );
     aTarget.ResizeL(s);
+    //	TInt s2( aTarget.Size());
     aTarget.Compress();
-    if (!decoded)
+    //	TInt s3( aTarget.Size() );
+    if ( !decoded)
         {
         RDEBUG( "CApplicationManagementServer::EncodeDataL(): Encoding b64 failed?" );
         }
@@ -2118,7 +2113,7 @@ inline CApplicationManagementSession::CApplicationManagementSession(
 
 inline CApplicationManagementServer& CApplicationManagementSession::Server() const
     {
-    return *static_cast<CApplicationManagementServer*> (const_cast<CServer2*> (CSession2::Server()));
+    return *static_cast<CApplicationManagementServer*>( const_cast<CServer2*>(CSession2::Server()));
     }
 
 // -------------------------------------------------------------------------------------------------------------------
@@ -2131,6 +2126,7 @@ void CApplicationManagementSession::CreateL()
     RDEBUG_2( "ApplicationManagementSession: CApplicationManagementSession::CreateL: 0x%x", this );
 
     Server().AddSession();
+    CAknAppServiceBase::CreateL();
     }
 
 // -------------------------------------------------------------------------------------------------------------------
@@ -2155,7 +2151,8 @@ void CApplicationManagementSession::ServiceL(const RMessage2& aMessage)
     {
     if (aMessage.Function() == EPerformRfs)
         {
-        TRAPD( err, Server().PerformRFSL() );
+        TRAPD( err, Server().PerformRFSL() )
+        ;
         aMessage.Complete(err);
         }
     else
@@ -2163,14 +2160,14 @@ void CApplicationManagementSession::ServiceL(const RMessage2& aMessage)
         TBool handled(EFalse);
         TInt err(KErrNone);
         TRAP( err, handled = PreDispatchMessageL( aMessage ) );
-        if (!handled)
+        if ( !handled)
             {
             TRAP(err,DispatchMessageL(aMessage));
             }
 
         // Some of the functions contains operations that already complete message
         // doing Complete() twice will cause panic
-        if (aMessage.Handle())
+        if (aMessage.Handle() )
             {
             aMessage.Complete(err);
             }
@@ -2185,7 +2182,7 @@ TBool CApplicationManagementSession::PreDispatchMessageL(
     {
     TBool ret(EFalse);
     // These succeed regardless of certificate....
-    switch (aMessage.Function())
+    switch (aMessage.Function() )
         {
         case EGetStateChangingIdsCountOperation:
             {
@@ -2219,8 +2216,7 @@ TBool CApplicationManagementSession::PreDispatchMessageL(
 // CApplicationManagementSession::DispatchMessageL()
 // -------------------------------------------------------------------------------------------------------------------
 
-void CApplicationManagementSession::DispatchMessageL(
-        const RMessage2& aMessage)
+void CApplicationManagementSession::DispatchMessageL(const RMessage2& aMessage)
     {
     RDEBUG_2( "CApplicationManagementSession::DispatchMessageL; %d" ,
             aMessage.Function() );
@@ -2237,7 +2233,7 @@ void CApplicationManagementSession::DispatchMessageL(
 
     if (go)
         {
-        switch (aMessage.Function())
+        switch (aMessage.Function() )
             {
             case EAddTrust:
                 {
@@ -2262,57 +2258,57 @@ void CApplicationManagementSession::DispatchMessageL(
                 }
             case EDeplCompGetOperation:
                 {
-                GetComponentL(aMessage);
+                GetComponentL(aMessage) ;
                 break;
                 }
             case EInstallOperation:
                 {
-                InstallL(aMessage);
+                InstallL(aMessage) ;
                 break;
                 }
             case EDeplCompAttrUpdateOperation:
                 {
-                UpdateL(aMessage);
+                UpdateL(aMessage) ;
                 break;
                 }
             case EDeplCompGetDataOperation:
                 {
-                GetDataL(aMessage);
+                GetDataL(aMessage) ;
                 break;
                 }
             case EDeplCompGetDataLengthOperation:
                 {
-                GetDataLengthL(aMessage);
+                GetDataLengthL(aMessage) ;
                 break;
                 }
             case EDeplCompRemoveOperation:
                 {
-                RemoveL(aMessage);
+                RemoveL(aMessage) ;
                 break;
                 }
             case EDeplCompDeliverStartOperation2:
                 {
-                Deliver2L(aMessage);
+                Deliver2L(aMessage) ;
                 break;
                 }
             case EDeplCompUpdateDataOperation:
                 {
-                UpdateDataL(aMessage);
+                UpdateDataL(aMessage) ;
                 break;
                 }
             case EDeplCompUpdateStreamedDataOperation:
                 {
-                UpdateStreamedDataL(aMessage);
+                UpdateStreamedDataL(aMessage) ;
                 break;
                 }
             case EDeplCompDownloadOperation:
                 {
-                DownloadL(aMessage);
+                DownloadL(aMessage) ;
                 break;
                 }
             case EDeplCompUpdateOperation:
                 {
-                FullUpdateL(aMessage);
+                FullUpdateL(aMessage) ;
                 break;
                 }
             case EDeplCompGetUserIdOperation:
@@ -2439,31 +2435,30 @@ void CApplicationManagementSession::ComponentCountL(const RMessage2& aMessage)
     TDeploymentComponentState st;
     TPckg<TDeploymentComponentState> pk(st);
 
-    TInt read(aMessage.Read(1, pk));
+    TInt read(aMessage.Read( 1, pk) );
     RDEBUG_3( "CApplicationManagementSession: ComponentCountL State is %d, read %d", st, read);
 
     const RComponentIdArray &arrt = Server().Storage()->GetComponentIds();
     RComponentIdArray arr;
     CleanupClosePushL(arr);
-    if ((st == EDCSActive) || (st == EDCSInactive))
+    if ((st == EDCSActive)||(st == EDCSInactive))
         {
-        ActiveComponentsL(arrt, arr, st);
+        ActiveComponentsL(arrt, arr,st);
         }
     else
         {
-        TInt count(arrt.Count());
-        for (TInt i(0); i < count; i++)
+        TInt count(arrt.Count() );
+        for (TInt i( 0); i < count; i++)
             {
-            CDeploymentComponent &compo = Server().Storage()->ComponentL(
-                    arrt[i]);
+            CDeploymentComponent &compo = Server().Storage()->ComponentL(arrt[i]);
             if (st == EDCSNone || compo.State() == st)
                 {
                 arr.Append(arrt[i]);
                 }
             }
         }
-    TInt n(arr.Count());
-    CleanupStack::PopAndDestroy(&arr);
+    TInt n(arr.Count() );
+    CleanupStack::PopAndDestroy( &arr);
 
     RDEBUG_2( "ApplicationManagementServer: ComponentCountL Count is %d", n );
     TPckg<TInt> p(n);
@@ -2477,85 +2472,95 @@ void CApplicationManagementSession::ComponentCountL(const RMessage2& aMessage)
 // -------------------------------------------------------------------------------------------------------------------
 
 void CApplicationManagementSession::ActiveComponentsL(
-        const RComponentIdArray &aArrt, RComponentIdArray &aArr,
-        TDeploymentComponentState &aState) const
+        const RComponentIdArray &aArrt, RComponentIdArray &aArr,TDeploymentComponentState &aState) const
     {
     Swi::RSisRegistrySession sisses;
-    TInt r(sisses.Connect());
-    User::LeaveIfError(r);
+    TInt r(sisses.Connect() );
+    User::LeaveIfError(r) ;
     CleanupClosePushL(sisses);
 
     RArray<TUid> uids;
     sisses.InstalledUidsL(uids);
     CleanupClosePushL(uids);
-    TInt cont(aArrt.Count());
-    TInt uidc(uids.Count());
+    TInt cont(aArrt.Count() );
+    TInt uidc(uids.Count() );
     RArray<TUid> juids;
     Server().JavaUidsL(juids);
     CleanupClosePushL(juids);
-    TInt juidc(juids.Count());
+    TInt juidc(juids.Count() );
     RComponentIdArray rem;
     CleanupClosePushL(rem);
-    for (TInt i(0); i < cont; i++)
+    for (TInt i( 0); i < cont; i++)
         {
-        CDeploymentComponent &compo =
-                Server().Storage()->ComponentL(aArrt[i]);
+        CDeploymentComponent &compo = Server().Storage()->ComponentL(aArrt[i]);
         TDeploymentComponentState state = compo.State();
         if (state == aState)
             {
             TBool add(EFalse);
-            const TUid &uid(compo.Uid());
-            for (TInt j(0); add == EFalse && j < uidc; j++)
+            const TUid &uid(compo.Uid() );
+            for (TInt j( 0); add == EFalse && j < uidc; j++)
                 {
 
                 if (uids[j] == uid)
                     {
+                   
                     RDEBUG( "CApplicationManagementSession::ActiveComponentsL Entered" );
-
+                    
                     // Check if this registry entry is present
                     Swi::RSisRegistrySession sisSession;
-                    User::LeaveIfError(sisSession.Connect());
-                    CleanupClosePushL(sisSession);
+    								User::LeaveIfError(sisSession.Connect());
+    								CleanupClosePushL(sisSession);
 
-                    Swi::RSisRegistryEntry sisEntry;
+    								Swi::RSisRegistryEntry sisEntry;
 
                     //Opens the base package entry by specifying a UID. 
                     User::LeaveIfError(sisEntry.Open(sisSession, compo.Uid()));
-                    CleanupClosePushL(sisEntry);
+                    CleanupClosePushL(sisEntry);   
 
-                    add = sisEntry.IsPresentL();
-
-                    if (add)
-                        {
-                        // If Present update the Version, name and other info to that deployement component. Since application would have got an update
+										add  = sisEntry.IsPresentL();	
+										
+			  if(add)
+                    {
+				
+				// If Present update the Version, name and other info to that deployement component. Since application would have got an update
                         // by some other means
+				
                         TVersion version = sisEntry.VersionL();
                         TBuf8<KVersionLength> pkgDes;
                         pkgDes.AppendNum(version.iMajor);
                         pkgDes.Append(KLiteralPeriod);
                         pkgDes.AppendNum(version.iMinor);
-
-                        HBufC *packagename = sisEntry.PackageNameL();
-                        TBuf8<512> packagename8;
-                        packagename8.Copy(*packagename);
-                        delete packagename;
+                        
+				
+				HBufC *packagename = sisEntry.PackageNameL();
+				TBuf8<512> packagename8;
+				packagename8.Copy(*packagename);
+				delete packagename;
 
                         compo.SetNameL(packagename8);
                         compo.SetVersionL(pkgDes);
+				                        
 
-                        Server().Storage()->UpdateL(compo);
+                        Server().Storage()->UpdateL( compo );
+                        
 
-                        RDEBUG( "CApplicationManagementSession::ActiveComponentsL ETrue" );
+				
 
-                        }
-                    else
-                        RDEBUG( "CApplicationManagementSession::ActiveComponentsL EFalse" );
+				RDEBUG( "CApplicationManagementSession::ActiveComponentsL ETrue" );
+
+
+			  }
+			  else
+			      RDEBUG( "CApplicationManagementSession::ActiveComponentsL EFalse" );
+																	    
+	
                     CleanupStack::PopAndDestroy(2, &sisSession);
+                                   
                     }
                 }
-            if (!add) // go throug java suites
+            if ( !add) // go throug java suites
                 {
-                for (TInt k(0); add == EFalse && k < juidc; k++)
+                for (TInt k( 0); add == EFalse && k < juidc; k++)
                     {
                     if (juids[k] == uid)
                         {
@@ -2575,18 +2580,18 @@ void CApplicationManagementSession::ActiveComponentsL(
                 }
             }
         }
-    TInt rc(rem.Count());
-    for (TInt t(0); t < rc; t++)
+    TInt rc(rem.Count() );
+    for (TInt t( 0); t < rc; t++)
         {
         RDEBUG_2( "ApplicationManagementServer: ActiveComponentCountL removing non existing %d", rem[t] );
         CDeploymentComponent &compo = Server().Storage()->ComponentL(rem[t]);
-        if (!compo.AppRemovable())
-            Server().RemoveInternalL(compo, EFalse);
+        if(!compo.AppRemovable())
+        Server().RemoveInternalL(compo, EFalse);
         }
-    CleanupStack::PopAndDestroy(&rem);
-    CleanupStack::PopAndDestroy(&juids);
-    CleanupStack::PopAndDestroy(&uids);
-    CleanupStack::PopAndDestroy(&sisses);
+    CleanupStack::PopAndDestroy( &rem);
+    CleanupStack::PopAndDestroy( &juids);
+    CleanupStack::PopAndDestroy( &uids);
+    CleanupStack::PopAndDestroy( &sisses);
     }
 
 // -------------------------------------------------------------------------------------------------------------------
@@ -2599,18 +2604,18 @@ void CApplicationManagementSession::ComponentIdsL(const RMessage2& aMessage) con
     TDeploymentComponentState st;
     TPckg<TDeploymentComponentState> pk(st);
 
-    TInt read(aMessage.Read(1, pk));
+    TInt read(aMessage.Read( 1, pk) );
     RDEBUG_3( "CApplicationManagementSession: ComponentIdsL State is %d, read %d", st, read);
 
     const RComponentIdArray &arrt = Server().Storage()->GetComponentIds();
-    TInt buflen(0);
-    TUint32* buf = NULL;
+    TInt buflen( 0);
+    TUint32* buf= NULL;
     if (st == EDCSNone)
         {
-        buflen = arrt.Count();
-        buf = new (ELeave) TUint32[buflen];
+        buflen = arrt.Count() ;
+        buf = new ( ELeave ) TUint32[buflen];
         CleanupArrayDeletePushL(buf);
-        for (TInt i(0); i < buflen; i++)
+        for (TInt i( 0); i < buflen; i++)
             {
             RDEBUG_2("ApplicationManagementSession: ComponentIdsL Adding %d!!", arrt[i]);
             buf[i] = arrt[i];
@@ -2621,26 +2626,25 @@ void CApplicationManagementSession::ComponentIdsL(const RMessage2& aMessage) con
         RComponentIdArray arr;
         if (st == EDCSActive)
             {
-            ActiveComponentsL(arrt, arr, st);
+            ActiveComponentsL(arrt, arr,st);
             }
         else
             {
-            TInt artc(arrt.Count());
-            for (TInt i(0); i < artc; i++)
+            TInt artc(arrt.Count() );
+            for (TInt i( 0); i < artc; i++)
                 {
-                CDeploymentComponent &compo = Server().Storage()->ComponentL(
-                        arrt[i]);
+                CDeploymentComponent &compo = Server().Storage()->ComponentL(arrt[i]);
                 if (compo.State() == st)
                     {
                     arr.Append(arrt[i]);
                     }
                 }
             }
-        buflen = arr.Count();
-        buf = new (ELeave) TUint32[buflen];
+        buflen = arr.Count() ;
+        buf = new ( ELeave ) TUint32[buflen];
         CleanupArrayDeletePushL(buf);
 
-        TUint32 len(aMessage.GetDesMaxLength(0) / 4);
+        TUint32 len(aMessage.GetDesMaxLength( 0) / 4);
         if (buflen == len)
             {
             RDEBUG( "CApplicationManagementSession: ComponentIdsL Right count!!" );
@@ -2653,7 +2657,7 @@ void CApplicationManagementSession::ComponentIdsL(const RMessage2& aMessage) con
                 buflen = len;
                 }
             }
-        for (TInt i(0); i < buflen; i++)
+        for (TInt i( 0); i < buflen; i++)
             {
             RDEBUG_2( "CApplicationManagementSession: ComponentIdsL Adding %d!!",
                     arr[i] );
@@ -2662,8 +2666,8 @@ void CApplicationManagementSession::ComponentIdsL(const RMessage2& aMessage) con
         arr.Close();
         }
 
-    TPtrC8 p((TUint8*) buf, buflen * sizeof(TUint32));
-    aMessage.WriteL(0, p);
+    TPtrC8 p( ( TUint8* ) buf, buflen * sizeof(TUint32));
+    aMessage.WriteL( 0, p);
 
     CleanupStack::PopAndDestroy(buf);
     }
@@ -2671,8 +2675,8 @@ void CApplicationManagementSession::ComponentIdsL(const RMessage2& aMessage) con
 #ifdef _DEBUG
 HBufC* Des8to16LC(const TDesC8 &aDes)
     {
-    HBufC *b = HBufC::NewLC(aDes.Length());
-    TPtr p(b->Des());
+    HBufC *b = HBufC::NewLC(aDes.Length() );
+    TPtr p(b->Des() );
     p.Copy(aDes);
     return b;
     }
@@ -2681,11 +2685,11 @@ HBufC* ToStringLC(TDeploymentComponent &aComp)
     {
     HBufC *b = HBufC::NewLC(aComp.iId.Length() + aComp.iName.Length()
             + aComp.iVersion.Length() + 10 + 50);
-    TPtr p(b->Des());
+    TPtr p(b->Des() );
     _LIT( KFormat, "Id: '%S', Name: '%S', Version: '%S', State: %d, OldState: %d");
     p.Format(KFormat, &*Des8to16LC(aComp.iId), &*Des8to16LC(aComp.iName),
-            &*Des8to16LC(aComp.iVersion), aComp.iState, aComp.iOldState);
-    CleanupStack::PopAndDestroy(3);
+            &*Des8to16LC(aComp.iVersion), aComp.iState, aComp.iOldState) ;
+    CleanupStack::PopAndDestroy( 3);
     return b;
     }
 #endif
@@ -2699,29 +2703,26 @@ void CApplicationManagementSession::Deliver2L(const RMessage2& aMessage) const
     RDEBUG( "ApplicationManagementSession: Deliver2L" );
 
     TDeploymentComponentIPC comp;
-    TPckg<TDeploymentComponentIPC> pcomp(comp);
-    TInt read2(aMessage.Read(0, pcomp));
+    TPckg< TDeploymentComponentIPC> pcomp(comp);
+    TInt read2(aMessage.Read( 0, pcomp) );
 
-    HBufC8 *data = HBufC8::NewLC(aMessage.GetDesLength(1));
+    HBufC8 *data = HBufC8::NewLC(aMessage.GetDesLength( 1) );
     TPtr8 pbuf(data->Des());
-    TInt read(aMessage.Read(1, pbuf));
+    TInt read(aMessage.Read( 1, pbuf) );
 
-    CDeploymentComponent *compo = NULL;
+    CDeploymentComponent *compo= NULL;
     if (iTrustAdded)
         {
-        compo = Server().Storage()->NewComponentL(EDCSDelivered,
-                comp.iUserId, &iCertInfo);
+        compo = Server().Storage()->NewComponentL(EDCSDelivered, comp.iUserId, &iCertInfo);
         }
     else
         {
-        compo
-                = Server().Storage()->NewComponentL(EDCSDelivered,
-                        comp.iUserId);
+        compo = Server().Storage()->NewComponentL(EDCSDelivered, comp.iUserId);
         }
 
     compo->Set(comp.iComponent);
     compo->Data().SetDataL(pbuf, comp.iMimeType);
-    Server().Storage()->UpdateL(*compo);
+    Server().Storage()->UpdateL( *compo);
     compo->CopyStateTo(comp.iComponent);
 
 #ifdef _DEBUG
@@ -2730,42 +2731,41 @@ void CApplicationManagementSession::Deliver2L(const RMessage2& aMessage) const
     CleanupStack::PopAndDestroy();
 #endif
 
-    TPckg<TDeploymentComponent> pcomp2(comp.iComponent);
-    aMessage.Write(0, pcomp2);
-    CleanupStack::PopAndDestroy(data);
-    TInt n(compo->InternalId());
+    TPckg< TDeploymentComponent> pcomp2(comp.iComponent);
+    aMessage.Write( 0, pcomp2);
+    CleanupStack::PopAndDestroy(data) ;
+    TInt n(compo->InternalId() );
     TPckg<TUint32> p(n);
-    aMessage.WriteL(2, p);
+    aMessage.WriteL( 2, p);
     }
 
 // -------------------------------------------------------------------------------------------------------------------
 // CApplicationManagementSession::DeliverCompleteL()
 // -------------------------------------------------------------------------------------------------------------------
 
-void CApplicationManagementSession::DeliverCompleteL(
-        const RMessage2& aMessage) const
+void CApplicationManagementSession::DeliverCompleteL(const RMessage2& aMessage) const
     {
     RDEBUG( "ApplicationManagementSession: DeliverCompleteL" );
     TUint32 id;
     TPckg<TUint32> pid(id);
 
-    TInt read(aMessage.Read(0, pid));
+    TInt read(aMessage.Read( 0, pid) );
     RDEBUG_2( "ApplicationManagementSession: DeliverCompleteL id is %d", id );
 
     CDeploymentComponent &compo = Server().Storage()->ComponentL(id);
 
-    HBufC8 *opts = HBufC8::NewLC(aMessage.GetDesLength(1));
-    TPtr8 popts(opts->Des());
-    TInt read1(aMessage.Read(1, popts));
-    compo.SetInstallOptsL(*opts);
+    HBufC8 *opts = HBufC8::NewLC(aMessage.GetDesLength( 1) );
+    TPtr8 popts(opts->Des() );
+    TInt read1(aMessage.Read( 1, popts) );
+    compo.SetInstallOptsL( *opts);
 
-    HBufC8 *meta = HBufC8::NewLC(aMessage.GetDesLength(2));
-    TPtr8 pmeta(meta->Des());
-    TInt read2(aMessage.Read(2, pmeta));
-    compo.SetMetaDataL(*meta, KNullDesC8);
+    HBufC8 *meta = HBufC8::NewLC(aMessage.GetDesLength( 2) );
+    TPtr8 pmeta(meta->Des() );
+    TInt read2(aMessage.Read( 2, pmeta) );
+    compo.SetMetaDataL( *meta, KNullDesC8);
 
-    CleanupStack::PopAndDestroy(meta);
-    CleanupStack::PopAndDestroy(opts);
+    CleanupStack::PopAndDestroy(meta) ;
+    CleanupStack::PopAndDestroy(opts) ;
     Server().Storage()->UpdateL(compo);
     }
 
@@ -2778,7 +2778,7 @@ void CApplicationManagementSession::GetComponentL(const RMessage2& aMessage) con
     RDEBUG( "ApplicationManagementSession: GetComponentL" );
     TUint32 id;
     TPckg<TUint32> pid(id);
-    TInt read(aMessage.Read(0, pid));
+    TInt read(aMessage.Read( 0, pid) );
 
     RDEBUG_2( "ApplicationManagementSession: GetComponentL id is %d", id );
     CDeploymentComponent &compo = Server().Storage()->ComponentL(id);
@@ -2786,8 +2786,8 @@ void CApplicationManagementSession::GetComponentL(const RMessage2& aMessage) con
     TDeploymentComponent comp;
     compo.CopyStateTo(comp);
 
-    TPckg<TDeploymentComponent> pcomp(comp);
-    aMessage.Write(1, pcomp);
+    TPckg< TDeploymentComponent> pcomp(comp);
+    aMessage.Write( 1, pcomp);
     }
 
 // -------------------------------------------------------------------------------------------------------------------
@@ -2799,15 +2799,15 @@ void CApplicationManagementSession::StartDownloadL(const RMessage2& aMessage) co
     RDEBUG( "ApplicationManagementSession: StartDownloadL" );
     TUint32 id = 0;
     TPckg<TUint32> pid(id);
-    TInt read(aMessage.Read(0, pid));
+    TInt read(aMessage.Read( 0, pid) );
 
     TPckgBuf<TDownloadTarget> target;
-    read = aMessage.Read(1, target);
+    read = aMessage.Read( 1, target) ;
     RDEBUG_2( "ApplicationManagementSession: StartDownloadL id is %d", id );
 
     CDeploymentComponent &compo = Server().Storage()->ComponentL(id);
-    compo.SetDownloadTarget(target());
-    Server().AddDownloadL(&compo);
+    compo.SetDownloadTarget(target() );
+    Server().AddDownloadL( &compo);
     }
 
 // -------------------------------------------------------------------------------------------------------------------
@@ -2819,11 +2819,13 @@ void CApplicationManagementSession::DeactivateL(const RMessage2& aMessage) const
     RDEBUG( "ApplicationManagementSession: DeactivateL" );
     TUint32 id = 0;
     TPckg<TUint32> pid(id);
-    TInt read(aMessage.Read(0, pid));
+    TInt read(aMessage.Read( 0, pid) );
 
     RDEBUG_2( "ApplicationManagementSession: DeactivateL id is %d", id );
     CDeploymentComponent &compo = Server().Storage()->ComponentL(id);
     Server().Storage()->DeactivateL(compo);
+    
+   
     }
 
 // -------------------------------------------------------------------------------------------------------------------
@@ -2835,11 +2837,13 @@ void CApplicationManagementSession::ActivateL(const RMessage2& aMessage) const
     RDEBUG( "ApplicationManagementSession: ActivateL" );
     TUint32 id;
     TPckg<TUint32> pid(id);
-    TInt read(aMessage.Read(0, pid));
+    TInt read(aMessage.Read( 0, pid) );
 
     RDEBUG_2( "ApplicationManagementSession: ActivateL id is %d", id );
     CDeploymentComponent &compo = Server().Storage()->ComponentL(id);
     Server().Storage()->ActivateL(compo);
+    
+    
     }
 
 // -------------------------------------------------------------------------------------------------------------------
@@ -2851,13 +2855,15 @@ void CApplicationManagementSession::GetUserIdL(const RMessage2& aMessage) const
     RDEBUG( "ApplicationManagementSession: GetUserIdL" );
     TUint32 id = 0;
     TPckg<TUint32> pid(id);
-    TInt read(aMessage.Read(0, pid));
+    TInt read(aMessage.Read( 0, pid) );
 
     RDEBUG_2( "ApplicationManagementSession: GetUserIdL id is %d", id );
     CDeploymentComponent &compo = Server().Storage()->ComponentL(id);
 
-    aMessage.Write(1, compo.UserId());
+    aMessage.Write( 1, compo.UserId() );
     }
+
+
 
 // -------------------------------------------------------------------------------------------------------------------
 // CApplicationManagementSession::GetTemporaryInstFileL()
@@ -2870,11 +2876,11 @@ void CApplicationManagementSession::GetTemporaryInstFileL(
     RDEBUG( "ApplicationManagementSession: GetTemporaryInstFileL" );
     TUint32 id;
     TPckg<TUint32> pid(id);
-    TInt read(aMessage.Read(0, pid));
+    TInt read(aMessage.Read( 0, pid) );
 
     TDeplCompAttrType item;
     TPckg<TDeplCompAttrType> itemid(item);
-    read = aMessage.Read(1, itemid);
+    read = aMessage.Read( 1, itemid);
 
     RDEBUG_2( "ApplicationManagementSession: GetTemporaryInstFileL id is %d", id );
     CDeploymentComponent &compo = Server().Storage()->ComponentL(id);
@@ -2883,31 +2889,32 @@ void CApplicationManagementSession::GetTemporaryInstFileL(
 
     if (item == EDCData)
         {
-        fileName.Copy(compo.Data().DataFileName());
-        }
-    else if (item == EDCMetaData)
-        {
-        fileName.Copy(compo.MetaData().DataFileName());
+        fileName.Copy(compo.Data().DataFileName() );
         }
     else
-        {
-        RDEBUG_2( "ApplicationManagementSession: GetTemporaryInstFileL: Not supported type: (%d)", item);
-        User::Leave(KErrNotSupported);
-        }
+        if (item == EDCMetaData)
+            {
+            fileName.Copy(compo.MetaData().DataFileName() );
+            }
+        else
+            {
+            RDEBUG_2( "ApplicationManagementSession: GetTemporaryInstFileL: Not supported type: (%d)", item);
+            User::Leave(KErrNotSupported);
+            }
 
     RDEBUG_2( "ApplicationManagementSession: GetTemporaryInstFileL: (%S)", &fileName);
 
     RFs fs;
-    User::LeaveIfError(fs.Connect());
-    User::LeaveIfError(fs.ShareProtected());
+    User::LeaveIfError(fs.Connect() );
+    User::LeaveIfError(fs.ShareProtected() );
     CleanupClosePushL(fs);
     RFile file;
-    User::LeaveIfError(file.Open(fs, fileName, EFileWrite));
+    User::LeaveIfError(file.Open(fs, fileName, EFileWrite) );
     CleanupClosePushL(file);
 
     // Takes care of completing with session (RFs), 
     // SendReceieve returns session handle at client side
-    User::LeaveIfError(file.TransferToClient(aMessage, 2));
+    User::LeaveIfError(file.TransferToClient(aMessage, 2) );
     CleanupStack::PopAndDestroy(2, &fs); // fs , file	
     }
 
@@ -2944,7 +2951,7 @@ TInt CApplicationManagementSession::PackageSizeL(
         }
 
     listPackages.ResetAndDestroy();
-    CleanupStack::PopAndDestroy(&listPackages);
+    CleanupStack::PopAndDestroy( &listPackages);
 
     if (err != KErrNone)
         {
@@ -2973,7 +2980,7 @@ TInt CApplicationManagementSession::AugmentationSizeL(
     regEntry.OpenL(aSession, aPackage);
     size += PackageSizeL(aSession, regEntry);
 
-    CleanupStack::PopAndDestroy(&regEntry);
+    CleanupStack::PopAndDestroy( &regEntry);
 
     return size;
     }
@@ -2985,12 +2992,12 @@ TInt CApplicationManagementSession::AugmentationSizeL(
 void CApplicationManagementSession::LookupSisRegistryL()
     {
     Swi::RSisRegistrySession sisses;
-    TInt r(sisses.Connect());
+    TInt r(sisses.Connect() );
     RPointerArray<Swi::CSisRegistryPackage> pkgs(12);
     sisses.InstalledPackagesL(pkgs);
 
-    TInt count(pkgs.Count());
-    for (TInt i(0); i < count; i++)
+    TInt count(pkgs.Count() );
+    for (TInt i( 0); i < count; i++)
         {
         Swi::CSisRegistryPackage* p = pkgs[i];
 
@@ -3012,12 +3019,12 @@ void CApplicationManagementSession::InstallL(const RMessage2& aMessage) const
     RDEBUG( "ApplicationManagementSession: InstallL" );
     TUint32 id;
     TPckg<TUint32> pid(id);
-    TInt read(aMessage.Read(0, pid));
+    TInt read(aMessage.Read( 0, pid) );
 
     TDeploymentComponentState targetst;
     TPckg<TDeploymentComponentState> pk(targetst);
 
-    read = aMessage.Read(1, pk);
+    read = aMessage.Read( 1, pk) ;
 
     RDEBUG_3( "ApplicationManagementSession: InstallL id is %d, targetstate %d",
             id, targetst );
@@ -3025,7 +3032,30 @@ void CApplicationManagementSession::InstallL(const RMessage2& aMessage) const
     CDeploymentComponent &compo = Server().Storage()->ComponentL(id);
     if (compo.State() == EDCSDelivered)
         {
-        Server().DoTheInstallL(compo);
+        TInt err(KErrNone);
+	  		TRAP(err, Server().DoTheInstallL(compo)) ;
+        TBuf8<256> targetURI;
+        TDeploymentComponentState state = compo.State();
+        if( state == EDCSDelivered)
+        	{
+        			targetURI.Append(KDeliveredState);
+              targetURI.Append(compo.UserId());
+          }
+          else if (state == EDCSActive|| state == EDCSInactive)
+          {
+          		targetURI.Append(KDeployedState);
+              targetURI.Append(compo.UserId());  
+        	} 
+        	
+        	//Set Targeturi to cenrep
+        	CRepository* cenrep = NULL;
+	  			TRAP(err, cenrep = CRepository::NewL( KCRUidDeviceManagementInternalKeys ));
+	  			if(err == KErrNone)
+	  			{		  				
+    				err = cenrep->Set( KNSmlDMSCOMOTargetRef, targetURI );    				
+    				delete cenrep;
+    				cenrep = NULL;
+    			} 
         }
     else
         {
@@ -3044,23 +3074,22 @@ void CApplicationManagementSession::UpdateDataL(const RMessage2& aMessage) const
 
     TDeplCompDataIPC ipc;
     TPckg<TDeplCompDataIPC> pipc(ipc);
-    TInt read(aMessage.Read(0, pipc));
+    TInt read(aMessage.Read( 0, pipc) );
     RDEBUG_2( "ApplicationManagementSession: UpdateDataL id is %d", ipc.iInternalId );
 
-    HBufC8 *buf = HBufC8::NewLC(aMessage.GetDesLength(1));
-    TPtr8 pbuf(buf->Des());
-    TInt read2(aMessage.Read(1, pbuf));
+    HBufC8 *buf = HBufC8::NewLC(aMessage.GetDesLength( 1) );
+    TPtr8 pbuf(buf->Des() );
+    TInt read2(aMessage.Read( 1, pbuf) );
 
-    CDeploymentComponent &compo = Server().Storage()->ComponentL(
-            ipc.iInternalId);
+    CDeploymentComponent &compo = Server().Storage()->ComponentL(ipc.iInternalId);
 
-    if (Server().CheckB64Encode(pbuf))
+    if (Server().CheckB64Encode(pbuf) )
         {
         RDEBUG( "ApplicationManagementSession: UpdateDataL data is base64 encoded");
         // b64 encoded data, decode it 
         HBufC8* tmp;
         tmp = Server().DecodeB64DataLC(pbuf);
-        pbuf.Copy(*tmp);
+        pbuf.Copy( *tmp);
         pbuf = buf->Des();
         CleanupStack::PopAndDestroy(tmp);
         }
@@ -3071,15 +3100,16 @@ void CApplicationManagementSession::UpdateDataL(const RMessage2& aMessage) const
             {
             compo.SetDataL(pbuf, ipc.iDataMime);
             }
-        else if (ipc.iAttrType == EDCMetaData)
-            {
-            compo.SetMetaDataL(pbuf, ipc.iDataMime);
-            }
         else
-            {
-            RDEBUG_2( "ApplicationManagementSession::UpdateDataL -  ERROR UpdateDataL called for illegal item: %d!", ipc.iAttrType );
-            User::Leave(KErrArgument);
-            }
+            if (ipc.iAttrType == EDCMetaData)
+                {
+                compo.SetMetaDataL(pbuf, ipc.iDataMime);
+                }
+            else
+                {
+                RDEBUG_2( "ApplicationManagementSession::UpdateDataL -  ERROR UpdateDataL called for illegal item: %d!", ipc.iAttrType );
+                User::Leave(KErrArgument);
+                }
 
         Server().Storage()->UpdateL(compo);
         }
@@ -3101,16 +3131,15 @@ void CApplicationManagementSession::UpdateStreamedDataL(
     RDEBUG( "ApplicationManagementSession: UpdateStreamedDataL() Start");
     TDeplCompDataIPC ipc;
     TPckg<TDeplCompDataIPC> pipc(ipc);
-    TInt read(aMessage.Read(0, pipc));
+    TInt read(aMessage.Read( 0, pipc) );
     RDEBUG_2( "ApplicationManagementSession: UpdateStreamedDataL id is %d", ipc.iInternalId );
 
-    CDeploymentComponent &compo = Server().Storage()->ComponentL(
-            ipc.iInternalId);
+    CDeploymentComponent &compo = Server().Storage()->ComponentL(ipc.iInternalId);
 
     if (compo.State() == EDCSDelivered)
         {
         RFs fs;
-        User::LeaveIfError(fs.Connect());
+        User::LeaveIfError(fs.Connect() );
         CleanupClosePushL(fs);
         RFile file;
         TFileName dataFileName;
@@ -3118,24 +3147,25 @@ void CApplicationManagementSession::UpdateStreamedDataL(
 
         if (ipc.iAttrType == EDCData)
             {
-            dataFileName.Copy(compo.Data().DataFileName());
-            }
-        else if (ipc.iAttrType == EDCMetaData)
-            {
-            dataFileName.Copy(compo.MetaData().DataFileName());
+            dataFileName.Copy(compo.Data().DataFileName() ) ;
             }
         else
-            {
-            RDEBUG_2( "ApplicationManagementSession::UpdateStreamedDataL -  ERROR called for illegal item: %d!", ipc.iAttrType );
-            User::Leave(KErrArgument);
-            }
+            if (ipc.iAttrType == EDCMetaData)
+                {
+                dataFileName.Copy(compo.MetaData().DataFileName() ) ;
+                }
+            else
+                {
+                RDEBUG_2( "ApplicationManagementSession::UpdateStreamedDataL -  ERROR called for illegal item: %d!", ipc.iAttrType );
+                User::Leave(KErrArgument);
+                }
 
         RDEBUG_2( "ApplicationManagementSession::UpdateStreamedDataL(): using dataFile: (%S)", &dataFileName );
 
         // EFileWrite So we can delete the original decoded data file
-        User::LeaveIfError(file.Open(fs, dataFileName, EFileWrite));
-        CleanupClosePushL(file);
-        if (Server().IsDataFileB64EncodedL(file, length))
+        User::LeaveIfError(file.Open(fs, dataFileName, EFileWrite) );
+        CleanupClosePushL(file) ;
+        if (Server().IsDataFileB64EncodedL(file, length) )
             {
             RDEBUG( "CApplicationManagementServer::UpdateStreamedDataL(): data is decoded" );
 
@@ -3159,24 +3189,24 @@ void CApplicationManagementSession::UpdateStreamedDataL(
             if (err != KErrNone)
                 {
                 RDEBUG_2( "ApplicationManagementSession::UpdateStreamedDataL -  failed to decode datafile: %d", err );
-                CleanupStack::PopAndDestroy(2, &file);
+                CleanupStack::PopAndDestroy( 2, &file);
                 compo.ResetDataL(fs); // Remove both files if exists
                 User::Leave(err);
                 }
             else
                 {
                 // close both files, delete decode file and rename temp file to correct one
-                CleanupStack::PopAndDestroy(2, &file);
+                CleanupStack::PopAndDestroy( 2, &file);
                 fs.Delete(dataFileName);
                 err = fs.Rename(tempFileName, dataFileName);
                 RDEBUG_2( "ApplicationManagementSession::UpdateStreamedDataL -  successfully decoded datafile: %d", err );
                 }
-            CleanupStack::PopAndDestroy(&fs);
+            CleanupStack::PopAndDestroy( &fs);
             }
         else
             {
             RDEBUG( "ApplicationManagementSession::UpdateStreamedDataL(): data is NOT decoded" );
-            CleanupStack::PopAndDestroy(2, &fs);
+            CleanupStack::PopAndDestroy( 2, &fs);
             }
 
         if (ipc.iAttrType == EDCData)
@@ -3208,18 +3238,18 @@ void CApplicationManagementSession::UpdateL(const RMessage2& aMessage) const
 
     TUint32 id;
     TPckg<TUint32> pid(id);
-    TInt read(aMessage.Read(0, pid));
+    TInt read(aMessage.Read( 0, pid) );
     RDEBUG_2("ApplicationManagementSession: UpdateL id is %d", id );
 
     TDeplCompAttrType item;
     TPckg<TDeplCompAttrType> itemid(item);
-    TInt read1(aMessage.Read(1, itemid));
-    HBufC8 *buf = HBufC8::NewLC(aMessage.GetDesLength(2));
-    TPtr8 pbuf(buf->Des());
-    TInt read2(aMessage.Read(2, pbuf));
+    TInt read1(aMessage.Read( 1, itemid) );
+    HBufC8 *buf = HBufC8::NewLC(aMessage.GetDesLength( 2) );
+    TPtr8 pbuf(buf->Des() );
+    TInt read2(aMessage.Read( 2, pbuf) );
 
     CDeploymentComponent &c = Server().Storage()->ComponentL(id);
-    TDeploymentComponentState st(c.State());
+    TDeploymentComponentState st(c.State() );
     if (st == EDCSDelivered || st == EDCSDownload)
         {
         switch (item)
@@ -3287,83 +3317,85 @@ void CApplicationManagementSession::UpdateL(const RMessage2& aMessage) const
                             }
                         }
                     }
-                else if (st == EDCSDownload)
-                    {
-                    switch (item)
+                else
+                    if (st == EDCSDownload)
                         {
-                        case EDCId:
+                        switch (item)
                             {
-                            c.SetIdL(pbuf);
-                            break;
-                            }
-                        case EDCName:
-                            {
-                            c.SetNameL(pbuf);
-                            break;
-                            }
-                        case EDCVersion:
-                            {
-                            c.SetVersionL(pbuf);
-                            break;
-                            }
-                        case EDCDownloadURI:
-                            {
-                            c.SetDownloadURIL(pbuf);
-                            break;
-                            }
-                        case EDCConRef:
-                            {
-                            TPckgBuf<TInt> aInt;
-                            aInt.Copy(pbuf);
-                            c.SetIAPL(aInt());
-                            break;
-                            }
-                        default:
-                            {
-                            RDEBUG_2( "ApplicationManagementSession: ERROR UpdateL called for illegal item type!!!! %d", item );
-                            User::Leave(KErrArgument);
-                            break;
+                            case EDCId:
+                                {
+                                c.SetIdL(pbuf);
+                                break;
+                                }
+                            case EDCName:
+                                {
+                                c.SetNameL(pbuf);
+                                break;
+                                }
+                            case EDCVersion:
+                                {
+                                c.SetVersionL(pbuf);
+                                break;
+                                }
+                            case EDCDownloadURI:
+                                {
+                                c.SetDownloadURIL(pbuf);
+                                break;
+                                }
+                            case EDCConRef:
+                                {
+                                TPckgBuf<TInt> aInt;
+                                aInt.Copy(pbuf);
+                                c.SetIAPL(aInt() );
+                                break;
+                                }
+                            default:
+                                {
+                                RDEBUG_2( "ApplicationManagementSession: ERROR UpdateL called for illegal item type!!!! %d", item );
+                                User::Leave(KErrArgument);
+                                break;
+                                }
                             }
                         }
-                    }
-                break;
-                }
-            }
-        Server().Storage()->UpdateL(c);
-        }
-    else if (st == EDCSActive || st == EDCSInactive)
-        {
-        switch (item)
-            {
-            case EDCName:
-                {
-                c.SetNameL(pbuf);
-                break;
-                }
-            case EDCVersion:
-                {
-                c.SetVersionL(pbuf);
-                break;
-                }
-            case EDCDescriptionRef:
-                {
-                c.SetDescriptionL(pbuf);
-                break;
-                }
-            default:
-                {
-                RDEBUG_2( "ApplicationManagementSession: ERROR UpdateL called for illegal item type!!!! %d", item );
-                User::Leave(KErrArgument);
                 break;
                 }
             }
         Server().Storage()->UpdateL(c);
         }
     else
-        {
-        RDEBUG( "ApplicationManagementSession: ERROR UpdateL called for illegal state message!" );
-        User::Leave(KErrArgument);
-        }
+        if (st == EDCSActive ||st == EDCSInactive)
+            {
+            switch (item)
+                {
+                case EDCName:
+                    {
+                    c.SetNameL(pbuf);
+                    break;
+                    }
+                case EDCVersion:
+                    {
+                    c.SetVersionL(pbuf);
+                    break;
+                    }
+                case EDCDescriptionRef:
+                {
+                c.SetDescriptionL(pbuf);
+                break;
+                }
+                default:
+                    {
+                    RDEBUG_2( "ApplicationManagementSession: ERROR UpdateL called for illegal item type!!!! %d", item );
+                    User::Leave(KErrArgument);
+                    break;
+                    }
+                }
+            Server().Storage()->UpdateL(c);
+            }
+        else
+            {
+            RDEBUG( "ApplicationManagementSession: ERROR UpdateL called for illegal state message!" );
+            User::Leave(KErrArgument);
+            }
     CleanupStack::PopAndDestroy(buf);
     }
 
@@ -3377,74 +3409,80 @@ void CApplicationManagementSession::GetDataLengthL(const RMessage2& aMessage) co
     TUint32 id;
     TPckg<TUint32> pid(id);
 
-    TInt read(aMessage.Read(0, pid));
+    TInt read(aMessage.Read( 0, pid) );
 
-    TInt length(0);
+    TInt length( 0);
 
     TDeplCompAttrType dt;
-    TPckg<TDeplCompAttrType> pdt(dt);
-    read = aMessage.Read(1, pdt);
+    TPckg< TDeplCompAttrType> pdt(dt);
+    read = aMessage.Read( 1, pdt) ;
     CDeploymentComponent &compo = Server().Storage()->ComponentL(id);
     if (compo.State() == EDCSDelivered)
         {
         if (dt == EDCInstallOptions)
             {
-            if (compo.InstallOptsSet())
+            if (compo.InstallOptsSet() )
                 {
                 length = sizeof(TAMInstallOptions);
                 }
             }
-        else if (dt == EDCData)
-            {
-            length = compo.Data().DataLengthL();
-            }
-        else if (dt == EDCDataMime)
-            {
-            length = compo.Data().MimeType().Length();
-            }
-        else if (dt == EDCMetaData)
-            {
-            length = compo.MetaData().DataLengthL();
-            }
-        else if (dt == EDCMetaDataMime)
-            {
-            length = compo.MetaData().MimeType().Length();
-            }
         else
-            {
-            RDEBUG_2( "ApplicationManagementSession: GetDataLengthL ERROR called with illegal type %d", dt );
-            User::Leave(KErrArgument);
-            }
+            if (dt == EDCData)
+                {
+                length = compo.Data().DataLengthL();
+                }
+            else
+                if (dt == EDCDataMime)
+                    {
+                    length = compo.Data().MimeType().Length();
+                    }
+                else
+                    if (dt == EDCMetaData)
+                        {
+                        length = compo.MetaData().DataLengthL();
+                        }
+                    else
+                        if (dt == EDCMetaDataMime)
+                            {
+                            length = compo.MetaData().MimeType().Length();
+                            }
+                        else
+                            {
+                            RDEBUG_2( "ApplicationManagementSession: GetDataLengthL ERROR called with illegal type %d", dt );
+                            User::Leave(KErrArgument);
+                            }
         }
-    else if (compo.State() == EDCSDownload)
-        {
-        if (dt == EDCDownloadURI)
+    else
+        if (compo.State() == EDCSDownload)
             {
-            length = compo.DownloadURI().Length();
-            }
-        else if (dt == EDCInstallOptions)
-            {
-            if (compo.InstallOptsSet())
+            if (dt == EDCDownloadURI)
                 {
-                length = sizeof(TAMInstallOptions);
+                length = compo.DownloadURI().Length();
                 }
+            else
+                if (dt == EDCInstallOptions)
+                    {
+                    if (compo.InstallOptsSet() )
+                        {
+                        length = sizeof(TAMInstallOptions);
+                        }
+                    }
+                else
+                    {
+                    RDEBUG_2( "ApplicationManagementSession: GetDataLengthL ERROR Download / called with illegal state component id %d",
+                            compo.State() );
+                    User::Leave(KErrArgument);
+                    }
             }
         else
             {
-            RDEBUG_2( "ApplicationManagementSession: GetDataLengthL ERROR Download / called with illegal state component id %d",
+            RDEBUG_2( "ApplicationManagementSession: GetDataLengthL ERROR called with illegal state component id %d",
                     compo.State() );
             User::Leave(KErrArgument);
             }
-        }
-    else
-        {
-        RDEBUG_2( "ApplicationManagementSession: GetDataLengthL ERROR called with illegal state component id %d",
-                compo.State() );
-        User::Leave(KErrArgument);
-        }
 
-    TPckg<TInt> pcomp(length);
-    aMessage.Write(2, pcomp);
+    TPckg< TInt> pcomp(length);
+    aMessage.Write( 2, pcomp);
     }
 
 // -------------------------------------------------------------------------------------------------------------------
@@ -3457,91 +3495,100 @@ void CApplicationManagementSession::GetDataL(const RMessage2& aMessage) const
     TUint32 id;
     TPckg<TUint32> pid(id);
 
-    TInt read(aMessage.Read(0, pid));
+    TInt read(aMessage.Read( 0, pid) );
 
     TDeplCompAttrType dt;
-    TPckg<TDeplCompAttrType> pdt(dt);
-    read = aMessage.Read(1, pdt);
+    TPckg< TDeplCompAttrType> pdt(dt);
+    read = aMessage.Read( 1, pdt) ;
 
     RDEBUG_3( "ApplicationManagementSession: GetDataL id is %d, and attribute %d", id, dt );
     CDeploymentComponent &compo = Server().Storage()->ComponentL(id);
     if (dt == EDCStatus)
         {
-        TPckg<TInt> p(compo.Status());
-        aMessage.Write(2, p);
-        }
-    else if (compo.State() == EDCSDelivered)
-        {
-        if (dt == EDCInstallOptions)
-            {
-            if (compo.InstallOptsSet())
-                {
-                TAMInstallOptionsPckgBuf pckg(compo.InstallOpts());
-                aMessage.Write(2, pckg);
-                }
-            else
-                {
-                aMessage.Write(2, KNullDesC8);
-                }
-            }
-        else if (dt == EDCData)
-            {
-            aMessage.Write(2, compo.Data().Data());
-            }
-        else if (dt == EDCDataMime)
-            {
-            aMessage.Write(2, compo.Data().MimeType());
-            }
-        else if (dt == EDCMetaData)
-            {
-            aMessage.Write(2, compo.MetaData().Data());
-            }
-        else if (dt == EDCMetaDataMime)
-            {
-            aMessage.Write(2, compo.MetaData().MimeType());
-            }
-        else
-            {
-            RDEBUG_2( "ApplicationManagementSession: GetDataL ERROR called with illegal type %d", dt );
-            User::Leave(KErrArgument);
-            }
-        }
-    else if (compo.State() == EDCSDownload)
-        {
-
-        if (dt == EDCDownloadURI)
-            {
-            aMessage.Write(2, compo.DownloadURI());
-            }
-
-        else if (dt == EDCInstallOptions)
-            {
-            if (compo.InstallOptsSet())
-                {
-                TAMInstallOptionsPckgBuf pckg(compo.InstallOpts());
-                aMessage.Write(2, pckg);
-                }
-            else
-                {
-                aMessage.Write(2, KNullDesC8);
-                }
-            }
-        else if (dt == EDCConRef)
-            {
-            TPckg<TInt> p(compo.GetIAP());
-            aMessage.Write(2, p);
-            }
-        else
-            {
-            RDEBUG_2( "ApplicationManagementSession:GetDataL ERROR called with illegal type %d", dt );
-            User::Leave(KErrArgument);
-            }
+        TPckg<TInt> p(compo.Status() );
+        aMessage.Write( 2, p);
         }
     else
-        {
-        RDEBUG_2("ApplicationManagementSession: GetDataL ERROR called with illegal state component id %d", compo.State() );
-        User::Leave(KErrArgument);
-        }
+        if (compo.State() == EDCSDelivered)
+            {
+            if (dt == EDCInstallOptions)
+                {
+                if (compo.InstallOptsSet() )
+                    {
+                    TAMInstallOptionsPckgBuf pckg(compo.InstallOpts() );
+                    aMessage.Write( 2, pckg);
+                    }
+                else
+                    {
+                    aMessage.Write( 2, KNullDesC8);
+                    }
+                }
+            else
+                if (dt == EDCData)
+                    {
+                    aMessage.Write( 2, compo.Data().Data() );
+                    }
+                else
+                    if (dt == EDCDataMime)
+                        {
+                        aMessage.Write( 2, compo.Data().MimeType() );
+                        }
+                    else
+                        if (dt == EDCMetaData)
+                            {
+                            aMessage.Write( 2, compo.MetaData().Data() );
+                            }
+                        else
+                            if (dt == EDCMetaDataMime)
+                                {
+                                aMessage.Write( 2, compo.MetaData().MimeType() );
+                                }
+                            else
+                                {
+                                RDEBUG_2( "ApplicationManagementSession: GetDataL ERROR called with illegal type %d", dt );
+                                User::Leave(KErrArgument);
+                                }
+            }
+        else
+            if (compo.State() == EDCSDownload)
+                {
+
+                if (dt == EDCDownloadURI)
+                    {
+                    aMessage.Write( 2, compo.DownloadURI() );
+                    }
+
+                else
+                    if (dt == EDCInstallOptions)
+                        {
+                        if (compo.InstallOptsSet() )
+                            {
+                            TAMInstallOptionsPckgBuf
+                                    pckg(compo.InstallOpts() );
+                            aMessage.Write( 2, pckg);
+                            }
+                        else
+                            {
+                            aMessage.Write( 2, KNullDesC8);
+                            }
+                        }
+                    else
+                        if (dt == EDCConRef)
+                            {
+                            TPckg<TInt> p(compo.GetIAP() );
+                            aMessage.Write( 2, p);
+                            }
+                        else
+                            {
+                            RDEBUG_2( "ApplicationManagementSession:GetDataL ERROR called with illegal type %d", dt );
+                            User::Leave(KErrArgument);
+                            }
+                }
+            else
+                {
+                RDEBUG_2("ApplicationManagementSession: GetDataL ERROR called with illegal state component id %d", compo.State() );
+                User::Leave(KErrArgument);
+                }
     }
 
 // -------------------------------------------------------------------------------------------------------------------
@@ -3553,7 +3600,7 @@ void CApplicationManagementSession::RemoveL(const RMessage2& aMessage) const
     RDEBUG( "ApplicationManagementSession: RemoveL" );
     TUint32 id;
     TPckg<TUint32> pid(id);
-    TInt read(aMessage.Read(0, pid));
+    TInt read(aMessage.Read( 0, pid) );
     RDEBUG_2( "ApplicationManagementSession: RemoveL id is %d", id );
     RemoveInternalL(id);
     }
@@ -3578,22 +3625,20 @@ void CApplicationManagementSession::DownloadL(const RMessage2& aMessage) const
     RDEBUG( "ApplicationManagementSession: DownloadL" );
 
     TDCUserId userId;
-    aMessage.ReadL(1, userId);
-    CDeploymentComponent *compo = NULL;
+    aMessage.ReadL( 1, userId);
+    CDeploymentComponent *compo= NULL;
 
     if (iTrustAdded)
         {
-        compo = Server().Storage()->NewComponentL(EDCSDownload, userId,
-                &iCertInfo);
+        compo = Server().Storage()->NewComponentL(EDCSDownload, userId, &iCertInfo);
         }
     else
         {
         compo = Server().Storage()->NewComponentL(EDCSDownload, userId);
         }
-    TUint32 i(compo->InternalId());
+    TUint32 i(compo->InternalId() );
     TPckg<TUint32> p(i);
     aMessage.WriteL(0, p);
-    RDEBUG( "ApplicationManagementSession: DownloadL end" );
     }
 
 // -------------------------------------------------------------------------------------------------------------------
@@ -3607,10 +3652,10 @@ void CApplicationManagementSession::FullUpdateL(const RMessage2& aMessage) const
     TUint32 sid;
 
     TPckg<TUint32> psid(sid);
-    TInt read(aMessage.Read(0, psid));
+    TInt read(aMessage.Read( 0, psid) );
     TUint32 tid;
     TPckg<TUint32> ptid(tid);
-    TInt read2(aMessage.Read(1, ptid));
+    TInt read2(aMessage.Read( 1, ptid) );
 
     RDEBUG_3( "ApplicationManagementSession: FullUpdateL sid is %d, tid is %d", sid, tid );
     CApplicationManagementServer &server = Server();
@@ -3635,7 +3680,7 @@ void CApplicationManagementSession::ServiceError(const RMessage2& aMessage,
 void CApplicationManagementSession::AddTrustL(const RMessage2 &aMessage)
     {
     TPckg<TCertInfo> pkg(iCertInfo);
-    aMessage.ReadL(0, pkg);
+    aMessage.ReadL( 0, pkg);
     iTrustAdded = ETrue;
     }
 
@@ -3649,16 +3694,16 @@ void CApplicationManagementSession::StateChangeComponentIdsL(
     RDEBUG( "CApplicationManagementSession: StateChangeComponentIdsL" );
     RComponentIdArray arr;
     Server().Storage()->GetStateChangeComponentIdsL(arr);
-    TInt buflen(arr.Count());
-    TUint32* buf = new (ELeave) TUint32[buflen];
+    TInt buflen(arr.Count() );
+    TUint32* buf = new ( ELeave ) TUint32[buflen];
     CleanupArrayDeletePushL(buf);
-    for (TInt i(0); i < buflen; i++)
+    for (TInt i( 0); i < buflen; i++)
         {
         RDEBUG_2( "ApplicationManagementSession:ComponentIdsL Adding %d!!", arr[i]);
         buf[i] = arr[i];
         }
-    TPtrC8 p((TUint8*) buf, buflen * sizeof(TUint32));
-    aMessage.WriteL(0, p);
+    TPtrC8 p( ( TUint8* ) buf, buflen * sizeof(TUint32));
+    aMessage.WriteL( 0, p);
     arr.Close();
     CleanupStack::PopAndDestroy(buf);
     RDEBUG( "CApplicationManagementSession: StateChangeComponentIdsL end" );
@@ -3673,59 +3718,10 @@ void CApplicationManagementSession::StateChangeComponentIdsCountL(
         const RMessage2& aMessage) const
     {
     RDEBUG( "CApplicationManagementSession: StateChangeComponentIdsCountL" );
-    RPointerArray<TPreInstalledAppParams> preInstalledAppParams;
-    CAMPreInstallApp* preInstallApp = CAMPreInstallApp::NewL();
-    preInstallApp->GetPreInstalledAppsL(preInstalledAppParams);
-    TInt count = 0;
-    for (count = 0; count < preInstalledAppParams.Count(); count++)
-        {
-        RDEBUG8_2("CApplicationManagementSession::DownloadL: Installed App Name is: %S",&(preInstalledAppParams[count]->iPreInstalledAppame));
-        RDEBUG8_2("CApplicationManagementSession::DownloadL: Installed App Vendor is: %S",&(preInstalledAppParams[count]->iPreInstalledAppVendorName));
-        RDEBUG_2("CApplicationManagementSession::DownloadL: Installed App UID is : '0x%X'",preInstalledAppParams[count]->iPreInstalledAppUid);
-
-        TBool found = EFalse;
-        const RComponentIdArray &arrt = Server().Storage()->GetComponentIds();
-        TInt countval(arrt.Count());
-        for (TInt i(0); i < countval; i++)
-            {
-            CDeploymentComponent &compo = Server().Storage()->ComponentL(
-                    arrt[i]);
-            if (compo.Uid()
-                    == preInstalledAppParams[count]->iPreInstalledAppUid)
-                {
-                RDEBUG( "CApplicationManagementSession: ActiveComponentsL found= TRUE" );
-                found = ETrue;
-                }
-            }
-        if (!found)
-            {
-            RDEBUG( "CApplicationManagementSession: Adding Pre-installed app" );
-            TDCUserId preInstalledAppName;
-            preInstalledAppName.Copy(
-                    preInstalledAppParams[count]->iPreInstalledAppame);
-            CDeploymentComponent *preInstallCompo = NULL;
-            RDEBUG8_2("CApplicationManagementSession: Installed App Name is: %S",&preInstalledAppName);
-            preInstallCompo = Server().Storage()->NewComponentL(EDCSActive,
-                    preInstalledAppName);
-            preInstallCompo->SetUid(
-                    preInstalledAppParams[count]->iPreInstalledAppUid);
-            preInstallCompo->SetNameL(preInstalledAppName);
-            preInstallCompo->SetVersionL(
-                    preInstalledAppParams[count]->iVersion);
-            preInstallCompo->SetMimeTypeL(
-                    preInstalledAppParams[count]->iMimeType);
-            preInstallCompo->SetAppRemovableStatus(ETrue);
-
-            Server().Storage()->UpdateL(*preInstallCompo);
-            Server().Storage()->CheckForDuplicateNodesInDeployedL(
-                    *preInstallCompo);
-            }
-        }
-    delete preInstallApp;
     RComponentIdArray arr;
     Server().Storage()->GetStateChangeComponentIdsL(arr);
-    TPckgBuf<TInt> buflen(arr.Count());
-    aMessage.WriteL(0, buflen);
+    TPckgBuf<TInt> buflen(arr.Count() );
+    aMessage.WriteL( 0, buflen);
     arr.Close();
     RDEBUG( "CApplicationManagementSession: StateChangeComponentIdsCountL end" );
     }
@@ -3740,15 +3736,15 @@ void CApplicationManagementSession::StateChangeCompleteL(
     RDEBUG( "CApplicationManagementSession: StateChangeCompleteL" );
     TUint32 tid;
     TPckg<TUint32> ptid(tid);
-    TInt read2(aMessage.Read(0, ptid));
+    TInt read2(aMessage.Read( 0, ptid) );
     Server().Storage()->StateChangedL(tid);
     }
 void CApplicationManagementSession::CheckStatusNodesValuesL()
     {
     const RComponentIdArray &arrt = Server().Storage()->GetComponentIds();
-    TInt cont(arrt.Count());
+    TInt cont(arrt.Count() );
     TBool isUpdateRequired = ETrue;
-    for (TInt i(0); i < cont; i++)
+    for (TInt i( 0); i < cont; i++)
         {
         CDeploymentComponent &compo = Server().Storage()->ComponentL(arrt[i]);
         isUpdateRequired = EFalse;
@@ -3757,31 +3753,37 @@ void CApplicationManagementSession::CheckStatusNodesValuesL()
             compo.SetStatusNode(EDownload_DownloadFailed);
             isUpdateRequired = ETrue;
             }
-        else if (compo.Status() == EDelivered_InstallProgress)
-            {
-            compo.SetStatusNode(EDelivered_InstalledFailedWithData);
-            isUpdateRequired = ETrue;
-            }
-        else if (compo.Status() == EDelivered_RemoveProgress)
-            {
-            compo.SetStatusNode(EDelivered_RemoveFailed);
-            isUpdateRequired = ETrue;
-            }
-        else if (compo.Status() == EDeployed_RemoveProgress)
-            {
-            compo.SetStatusNode(EDeployed_RemoveFailed);
-            isUpdateRequired = ETrue;
-            }
-        else if (compo.Status() == EDeployed_ActivateProgress)
-            {
-            compo.SetStatusNode(EDeployed_ActivateFailed);
-            isUpdateRequired = ETrue;
-            }
-        else if (compo.Status() == EDeployed_DeactivateProgress)
-            {
-            compo.SetStatusNode(EDeployed_DeactivateFailed);
-            isUpdateRequired = ETrue;
-            }
+        else
+            if (compo.Status() == EDelivered_InstallProgress)
+                {
+                compo.SetStatusNode(EDelivered_InstalledFailedWithData);
+                isUpdateRequired = ETrue;
+                }
+            else
+                if (compo.Status() == EDelivered_RemoveProgress)
+                    {
+                    compo.SetStatusNode(EDelivered_RemoveFailed);
+                    isUpdateRequired = ETrue;
+                    }
+                else
+                    if (compo.Status() == EDeployed_RemoveProgress)
+                        {
+                        compo.SetStatusNode(EDeployed_RemoveFailed);
+                        isUpdateRequired = ETrue;
+                        }
+                    else
+                        if (compo.Status() == EDeployed_ActivateProgress)
+                            {
+                            compo.SetStatusNode(EDeployed_ActivateFailed);
+                            isUpdateRequired = ETrue;
+                            }
+                        else
+                            if (compo.Status()
+                                    == EDeployed_DeactivateProgress)
+                                {
+                                compo.SetStatusNode(EDeployed_DeactivateFailed);
+                                isUpdateRequired = ETrue;
+                                }
         if (isUpdateRequired)
             Server().Storage()->UpdateL(compo);
         }
@@ -3793,41 +3795,42 @@ void CApplicationManagementServer::SetSisAppVersionAndDriveL(
     {
     RDEBUG( "CApplicationManagementSession: SetSisAppVersionAndDriveL: Begin" );
 
-    Swi::RSisRegistrySession sisSession;
-    User::LeaveIfError(sisSession.Connect());
-    CleanupClosePushL(sisSession);
-
-    Swi::RSisRegistryEntry sisEntry;
-
-    //Opens the base package entry by specifying a UID. 
-    User::LeaveIfError(sisEntry.Open(sisSession, aCompo.Uid()));
-    CleanupClosePushL(sisEntry);
+        Swi::RSisRegistrySession sisSession;
+        User::LeaveIfError(sisSession.Connect());
+        CleanupClosePushL(sisSession);
+        
+        Swi::RSisRegistryEntry sisEntry;
+        
+        //Opens the base package entry by specifying a UID. 
+        User::LeaveIfError(sisEntry.Open(sisSession, aCompo.Uid()));
+        CleanupClosePushL(sisEntry);
 
     TUint drivesMask = sisEntry.InstalledDrivesL();
-
-    TInt drive = EDriveA;
+    
+    TInt drive= EDriveA;
     TDriveNumber installedDrive = EDriveC;
-
-    if (drivesMask)
-        {
-        // Select the highest drive as location drive. That's the case when 
-        // all installation is not in same drive
-
-        while (drivesMask >>= 1)
-            {
-            drive++;
-            }
-
-        RDEBUG_2( "drive -> SetSisAppVersionAndDriveL %d", drive);
-
-        installedDrive = (TDriveNumber) drive;
-        }
+    
+    if( drivesMask )
+    {
+    // Select the highest drive as location drive. That's the case when 
+    // all installation is not in same drive
+    
+    while( drivesMask >>= 1 )
+    {
+    drive++;
+    }
+    
+    RDEBUG_2( "drive -> SetSisAppVersionAndDriveL %d", drive);
+    
+    installedDrive = (TDriveNumber)drive;
+    }
+    
 
     TBool status = EFalse;
 
     //Since "C" drive is not removable
 
-    if (installedDrive != EDriveC)
+    if (installedDrive!=EDriveC)
         {
         status = IsInstalledAppRemovableL(installedDrive);
         }
@@ -3839,10 +3842,10 @@ void CApplicationManagementServer::SetSisAppVersionAndDriveL(
         {
         RDEBUG( "IsInstalledAppRemovableL(SetSisAppVersionAndDriveL); False");
         }
-
+   
     //check for status drive
     aCompo.SetAppRemovableStatus(status);
-
+    
     TVersion version = sisEntry.VersionL();
 
     if (aCompo.ComponentVersion() == KNullDesC8)
@@ -3862,10 +3865,11 @@ void CApplicationManagementServer::SetSisAppVersionAndDriveL(
 TBool CApplicationManagementServer::IsInstalledAppRemovableL(
         TDriveNumber &iDrive)
     {
+
     RDEBUG( "IsInstalledAppRemovableL: Step1" );
-    TBool removable = EFalse;
+    TBool removable=EFalse;
     RFs rfs;
-    User::LeaveIfError(rfs.Connect());
+    User::LeaveIfError(rfs.Connect() );
     CleanupClosePushL(rfs);
     TDriveList driveList;
     TInt driveCount;
@@ -3884,8 +3888,10 @@ TBool CApplicationManagementServer::IsInstalledAppRemovableL(
     buf.Copy(driveList);
     RDEBUG_2( "Drive Info (%S)", &buf);
 
-    for (TInt i = 0; i < max; ++i)
+    for (TInt i=0; i<max; ++i)
         {
+
+        //RDEBUG( "IsInstalledAppRemovableL: Step2" );
         if (driveList[i])
             {
             TUint status;
@@ -3901,64 +3907,16 @@ TBool CApplicationManagementServer::IsInstalledAppRemovableL(
                 if (i == iDrive)
                     {
                     RDEBUG( "IsInstalledAppRemovableL: Step5" );
-                    removable = ETrue;
+                    removable=ETrue;
                     break;
                     }
                 }
             }
         }
 
-    CleanupStack::PopAndDestroy(&rfs);
+    CleanupStack::PopAndDestroy( &rfs);
 
     return removable;
+
     }
-
-// -----------------------------------------------------------------------------
-// CShutDown::CShutdown()
-// ------------------------------------------------------------------------------------------------
-
-inline CShutdown::CShutdown() :
-    CTimer(-1)
-    {
-    CActiveScheduler::Add(this);
-    }
-
-// ------------------------------------------------------------------------------------------------
-// CShutDown::ConstructL()
-// ------------------------------------------------------------------------------------------------
-
-inline void CShutdown::ConstructL()
-    {
-    CTimer::ConstructL();
-    }
-
-// ------------------------------------------------------------------------------------------------
-// CShutDown::Start()
-// ------------------------------------------------------------------------------------------------
-
-inline void CShutdown::Start()
-    {
-    RDEBUG( "ApplicationManagementServer: starting shutdown timeout" );
-    After(KApplicationManagementShutdownDelay);
-    }
-
-// ------------------------------------------------------------------------------------------------
-// CShutDown::RunL()
-// ------------------------------------------------------------------------------------------------
-
-void CShutdown::RunL()
-    {
-    RDEBUG( "ApplicationManagementServer timeout ... closing" );
-    HbApplication::exit(0);
-    }
-
-// ------------------------------------------------------------------------------------------------
-// CShutDown::Start()
-// ------------------------------------------------------------------------------------------------
-inline void CShutdown::Stop()
-    {
-    RDEBUG( "ApplicationManagementServer: Stop" );
-    HbApplication::exit(0);
-    }
-
 //  End of File

@@ -1,0 +1,536 @@
+/*
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Resource file for DiagAudioPlugin
+*
+*/
+
+
+//  RESOURCE IDENTIFIER
+NAME    ADIO // 4 letter ID
+
+//  INCLUDES
+#include    <eikon.rh>
+#include    "diagaudioplugin.hrh"
+#include    <diagaudioplugin.loc>
+#include    <diagplugincommon.loc>
+
+#include    <avkon.loc>
+#include    <avkon.mbg>
+#include    <avkon.rsg>
+#include    <avkon.rh>
+
+#include    <AvkonIcons.hrh>
+#include    <bldvariant.hrh>
+#include    <data_caging_paths_strings.hrh>
+#include    <eikcore.rsg>
+#include    <eikon.rsg>
+#include    <uikon.rh>
+
+// CONSTANTS
+
+// Camera Plugin : Bitmap File for Icons 
+#define BMPFILE_NAME    "\\resource\\apps\\avkon2.mbm"
+
+
+// ========================== RESOURCE DEFINITIONS ===========================
+// Resource Identifiers
+RESOURCE RSS_SIGNATURE { }
+RESOURCE TBUF { buf="ADIO"; }
+
+//----------------------------------------------------
+// r_diag_audio_plugin_list_single_graphic_heading_pane
+// Audio Plugin caption 
+//----------------------------------------------------
+//
+RESOURCE TBUF r_diag_audio_plugin_list_single_graphic_heading_pane
+    {
+    buf = qtn_diag_lst_earpiece;
+    }
+
+//----------------------------------------------------
+// r_diag_audio_plugin_list_single_graphic_pane
+// Audio Plugin caption 
+//----------------------------------------------------
+//
+RESOURCE TBUF r_diag_audio_plugin_list_single_graphic_pane
+    {
+    buf = qtn_diag_lst_test_earpiece;
+    }
+
+//----------------------------------------------------
+// r_diag_audio_plugin_title_pane
+// Audio Plugin caption 
+//----------------------------------------------------
+//
+RESOURCE TBUF r_diag_audio_plugin_title_pane
+    {
+    buf = qtn_diag_title_test_earpiece;
+    }
+
+//----------------------------------------------------
+// r_diag_audio_plugin_popup_info_list_pane
+// Audio Plugin caption 
+//----------------------------------------------------
+//
+RESOURCE TBUF r_diag_audio_plugin_popup_info_list_pane
+    {
+    buf = qtn_diag_conf_test_failed_earpiece;
+    }
+
+//----------------------------------------------------
+// r_diag_audio_plugin_heading_pane
+// Audio Plugin caption 
+//----------------------------------------------------
+//
+RESOURCE TBUF r_diag_audio_plugin_heading_pane
+    {
+    buf = qtn_diag_msg_title_earpiece;
+    }
+
+//----------------------------------------------------
+// r_diag_audio_softkeys_skip_cancel__ok
+// CBA for SKIP_CANCEL__OK
+//----------------------------------------------------
+//
+RESOURCE CBA r_diag_audio_softkeys_skip_cancel__ok
+{
+    buttons = 
+    {
+        CBA_BUTTON 
+        { 
+            id  = ECBACmdSkip;          // .hrh
+            txt = qtn_diag_softk_skip;  // .rls or .loc
+        },
+        CBA_BUTTON 
+        { 
+            id  = ECBACmdCancel;       // .hrh
+            txt = text_softkey_cancel; // .rls or .loc
+        }, 
+        CBA_BUTTON 
+        { 
+            id  = EAknSoftkeyOk; // in order to Exit
+            txt = text_softkey_ok;
+        }
+    };
+}
+
+//----------------------------------------------------
+// r_diag_audio_softkeys_ok_cancel
+// CBA for OK_CANCEL
+//----------------------------------------------------
+//
+RESOURCE CBA r_diag_audio_softkeys_ok_cancel
+{
+    buttons = 
+    {
+        CBA_BUTTON 
+        { 
+            id  = EAknSoftkeyOk; // in order to Exit
+            txt = text_softkey_ok;
+        },
+        CBA_BUTTON 
+        { 
+            id  = ECBACmdCancel;       // .hrh
+            txt = text_softkey_cancel; // .rls or .loc
+        } 
+
+    };
+}
+
+//----------------------------------------------------
+// r_diag_audio_softkeys_ok_skip
+// CBA for OK_CANCEL
+//----------------------------------------------------
+//
+RESOURCE CBA r_diag_audio_softkeys_ok_skip
+{
+    buttons = 
+    {
+        CBA_BUTTON 
+        { 
+            id  = EAknSoftkeyOk; // in order to Exit
+            txt = text_softkey_ok;
+        },
+        CBA_BUTTON 
+        { 
+            id  = ECBACmdSkip;       // .hrh
+            txt = qtn_diag_softk_skip; // .rls or .loc
+        } 
+
+    };
+}
+
+//----------------------------------------------------
+// r_diag_audio_softkeys_skip_cancel__start
+// CBA for SKIP_CANCEL__START
+//----------------------------------------------------
+//
+RESOURCE CBA r_diag_audio_softkeys_skip_cancel__start
+{
+    buttons = 
+    {
+        CBA_BUTTON 
+        { 
+            id  = ECBACmdSkip;          // .hrh
+            txt = qtn_diag_softk_skip;  // .rls or .loc
+        },
+        CBA_BUTTON 
+        { 
+            id  = ECBACmdCancel;       // .hrh
+            txt = text_softkey_cancel; // .rls or .loc
+        }, 
+        CBA_BUTTON 
+        { 
+            id  = EAknSoftkeyOk;
+            txt = qtn_msk_record;
+        }
+    };
+}
+
+//----------------------------------------------------
+// r_diag_audio_softkeys_start_cancel
+// CBA for SRART_CANCEL
+//----------------------------------------------------
+//
+RESOURCE CBA r_diag_audio_softkeys_start_cancel
+{
+    buttons = 
+    {
+       CBA_BUTTON 
+        { 
+            id  = EAknSoftkeyOk;
+            txt = qtn_msk_record;
+        },
+
+        CBA_BUTTON 
+        { 
+            id  = ECBACmdCancel;       // .hrh
+            txt = text_softkey_cancel; // .rls or .loc
+        }
+    };
+}
+
+//----------------------------------------------------
+// r_diag_audio_softkeys_skip_cancel__play
+// CBA for SKIP_CANCEL__PLAY
+//----------------------------------------------------
+//
+RESOURCE CBA r_diag_audio_softkeys_skip_cancel__play
+{
+    buttons = 
+    {
+        CBA_BUTTON 
+        { 
+            id  = ECBACmdSkip;          // .hrh
+            txt = qtn_diag_softk_skip;  // .rls or .loc
+	},
+        CBA_BUTTON 
+	{ 
+            id  = ECBACmdCancel;      // .hrh
+            txt = text_softkey_cancel;// .rls or .loc
+	}, 
+	CBA_BUTTON 
+	{ 
+            id  = EAknSoftkeyOk; 
+            txt = qtn_msk_play;
+	}
+    };
+}
+
+//----------------------------------------------------
+// r_diag_audio_softkeys_play_cancel
+// CBA for PLAY_CANCEL__PLAY
+//----------------------------------------------------
+//
+RESOURCE CBA r_diag_audio_softkeys_play_cancel
+{
+    buttons = 
+    {
+	CBA_BUTTON 
+	{ 
+            id  = EAknSoftkeyOk; 
+            txt = qtn_msk_play;
+	},
+
+        CBA_BUTTON 
+	{ 
+            id  = ECBACmdCancel;      // .hrh
+            txt = text_softkey_cancel;// .rls or .loc
+	}
+    };
+}
+
+//----------------------------------------------------
+// r_diag_audio_softkeys_skip_cancel__stop
+// CBA for SKIP_CANCEL__STOP
+//----------------------------------------------------
+//
+RESOURCE CBA r_diag_audio_softkeys_skip_cancel__stop
+{
+    buttons = 
+    {
+        CBA_BUTTON 
+        { 
+            id  = ECBACmdSkip;          // .hrh
+            txt = qtn_diag_softk_skip;  // .rls or .loc
+	},
+        CBA_BUTTON 
+	{ 
+            id  = ECBACmdCancel;       // .hrh
+            txt = text_softkey_cancel; // .rls or .loc
+	}, 
+	CBA_BUTTON 
+	{ 
+            id  = EAknSoftkeyOk; 
+            txt = qtn_msk_stop;
+	}
+    };
+}
+
+//----------------------------------------------------
+// r_diag_audio_softkeys_stop_cancel
+// CBA for STOP_CANCEL
+//----------------------------------------------------
+//
+RESOURCE CBA r_diag_audio_softkeys_stop_cancel
+{
+    buttons = 
+    {
+	CBA_BUTTON 
+	{ 
+            id  = EAknSoftkeyOk; 
+            txt = qtn_msk_stop;
+	},
+
+        CBA_BUTTON 
+	{ 
+            id  = EEikBidCancel; //ECBACmdCancel;       // .hrh
+            txt = text_softkey_cancel; // .rls or .loc
+	}
+    };
+}
+
+// ---------------------------------------------------------------------------
+// r_messagequery_title
+// The dialog shown when the plugin begins execution.
+// ---------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_messagequery_title
+    {
+     flags   = EGeneralQueryFlags | 
+               EEikDialogFlagNoBorder |
+               EEikDialogFlagNoTitleBar;
+
+     buttons =  r_diag_audio_softkeys_ok_cancel;
+
+     items=
+         {
+         DLG_LINE
+             {
+             type    = EAknCtPopupHeadingPane;
+             id      = EAknMessageQueryHeaderId;
+             control = AVKON_HEADING
+                 {              
+                    //label         = qtn_diag_msg_title_audio;
+                    label         = qtn_diag_msg_title_earpiece;
+                    headinglayout = R_AVKON_WML_SIGN_QUERY_HEADING_PANE;
+                 };
+             },
+         DLG_LINE
+             {
+             type    = EAknCtMessageQuery;
+             id      = EAknMessageQueryContentId;
+             control = AVKON_MESSAGE_QUERY
+                 {
+                 message = qtn_diag_msg_info_earpiece;
+                 };
+             }
+         };
+     }
+
+// ---------------------------------------------------------------------------
+// r_messagequery_ask_record
+// The dialog shown before start recording
+// ---------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_messagequery_ask_record
+    {
+     flags   = EGeneralQueryFlags | 
+               EEikDialogFlagNoBorder |
+               EEikDialogFlagNoTitleBar;
+
+     buttons = r_diag_audio_softkeys_skip_cancel__start;
+
+     items=
+         {
+         DLG_LINE
+             {
+             type    = EAknCtPopupHeadingPane;
+             id      = EAknMessageQueryHeaderId;
+             control = AVKON_HEADING
+                 { 
+                 label         = qtn_diag_msg_title_record_audio;
+                 headinglayout = R_AVKON_WML_SIGN_QUERY_HEADING_PANE;         
+                 };
+             },
+         DLG_LINE
+             {
+             type    = EAknCtMessageQuery;
+             id      = EAknMessageQueryContentId;
+             control = AVKON_MESSAGE_QUERY
+                 {
+                 message = qtn_diag_msg_record_audio;
+                 };
+             }
+         };
+     }
+
+// ---------------------------------------------------------------------------
+// r_progress_note_recording
+// The dialog shown during recording
+// ---------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_progress_note_recording
+    {
+    flags   = EAknProgressNoteFlags;
+    buttons = r_diag_audio_softkeys_skip_cancel__stop;
+    items   =
+        {
+        DLG_LINE
+            {
+            type    = EAknCtNote;
+            id      = EGeneralNote;
+            control = AVKON_NOTE
+                {
+                layout         = EProgressLayout;
+                singular_label = qtn_diag_note_record_audio;
+                
+                imagefile = BMPFILE_NAME;
+                imageid   = EMbmAvkonQgn_note_voice;
+                imagemask = EMbmAvkonQgn_note_voice_mask;
+                };
+            }
+        };
+    }
+
+// ---------------------------------------------------------------------------
+// r_confquery_ask_play
+// The dialog shown when recording has finished and ask to play
+// ---------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_confquery_ask_play
+    {
+    flags   = EGeneralQueryFlags;                 
+    buttons = r_diag_audio_softkeys_play_cancel; // custom key
+    items   =
+        {
+        DLG_LINE
+            {
+            type    = EAknCtQuery;             
+            id      = EGeneralQuery;           
+            control = AVKON_CONFIRMATION_QUERY 
+                {   
+                layout  = EConfirmationQueryLayout;      
+                label   = qtn_diag_conf_start_play_earpiece;
+		bmpfile = BMPFILE_NAME;                  
+                bmpid   = EMbmAvkonQgn_note_info;
+                bmpmask = EMbmAvkonQgn_note_info_mask;
+                };
+            }
+        };
+    }
+
+// ---------------------------------------------------------------------------
+// r_confquery_ask_heard
+// The dialog shown when ask to result of playing
+// ---------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_confquery_ask_heard
+    {
+    flags   = EGeneralQueryFlags;           
+    buttons = R_AVKON_SOFTKEYS_YES_NO__YES;
+    items   =
+        {
+        DLG_LINE
+            {
+            type    = EAknCtQuery;             
+            id      = EGeneralQuery;           
+            control = AVKON_CONFIRMATION_QUERY 
+                {   
+                layout  = EConfirmationQueryLayout;
+                label   = qtn_diag_conf_earpiece;
+                bmpfile = BMPFILE_NAME;
+                bmpid   = EMbmAvkonQgn_note_query;
+                bmpmask = EMbmAvkonQgn_note_query_mask;
+                };
+            }
+        };
+    }
+
+// ---------------------------------------------------------------------------
+// r_confquery_ask_repeat
+// The dialog shown when ask to repeat test again
+// ---------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_confquery_ask_repeat
+    {
+    flags   = EGeneralQueryFlags; 
+    buttons = R_AVKON_SOFTKEYS_YES_NO__YES;
+    items   =
+        {
+        DLG_LINE
+            {
+            type = EAknCtQuery;
+            id   = EGeneralQuery;
+            control = AVKON_CONFIRMATION_QUERY
+                {
+                layout  = EConfirmationQueryLayout;
+                label   = qtn_diag_conf_repeat_earpiece;
+                bmpfile = BMPFILE_NAME;
+                bmpid   = EMbmAvkonQgn_note_query;
+                bmpmask = EMbmAvkonQgn_note_query_mask;
+                };
+            }
+        };
+    }
+
+// ---------------------------------------------------------------------------
+// r_progress_note_playing
+// The dialog shown during playing
+// ---------------------------------------------------------------------------
+//
+RESOURCE DIALOG r_progress_note_playing
+    {
+    flags   = EAknProgressNoteFlags;
+    buttons = r_diag_audio_softkeys_skip_cancel__stop;
+    items   =
+        {
+        DLG_LINE
+            {
+            type    = EAknCtNote;
+            id      = EGeneralNote;
+            control = AVKON_NOTE
+                {
+                layout         = EProgressLayout;
+                singular_label = qtn_diag_note_play_earpiece;
+                plural_label   = qtn_diag_note_play_earpiece;
+                imagefile      = BMPFILE_NAME;
+                imageid        = EMbmAvkonQgn_note_voice;
+                imagemask      = EMbmAvkonQgn_note_voice_mask;
+                };
+            }
+        };
+    }
+
+//End of File

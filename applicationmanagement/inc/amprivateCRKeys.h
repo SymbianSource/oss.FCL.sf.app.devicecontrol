@@ -21,7 +21,7 @@
 /**
 * Application Management Internal Keys UID
 */
-const TUid KCRUidPrivateApplicationManagementKeys = {	0x200267FB };
+const TUid KCRUidPrivateApplicationManagementKeys = {	0x1020781C };
 
 /**
 * CenRep key that holds smallest supported Internal Component Id 

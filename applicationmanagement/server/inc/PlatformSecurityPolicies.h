@@ -21,6 +21,7 @@
 // INCLUDES
 
 #include <e32base.h>
+
 #include "ApplicationManagementClientServer.h"
 
 // CONSTANTS

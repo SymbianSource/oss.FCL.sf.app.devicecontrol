@@ -1,0 +1,62 @@
+/*
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Project definition file for project Diagnostics Hardware Suite.
+*
+*/
+
+
+#include <platform_paths.hrh>
+#include  <data_caging_paths.hrh>
+
+TARGET                  devdiaghardwaresuiteplugin.dll
+TARGETTYPE              PLUGIN
+UID                     0x10009D8D 0x2000E569
+
+CAPABILITY              CAP_ECOM_PLUGIN
+VENDORID                VID_DEFAULT
+
+SOURCEPATH              ../src
+SOURCE                  diaghardwaresuitepluginimplementationtable.cpp
+SOURCE                  diaghardwaresuiteplugin.cpp
+
+START RESOURCE          ../data/devdiaghardwaresuiteplugin.rss
+TARGET                  devdiaghardwaresuiteplugin.rsc
+TARGETPATH              ECOM_RESOURCE_DIR
+END // RESOURCE
+
+START RESOURCE          ../data/devdiaghardwaresuitepluginrsc.rss
+HEADER
+TARGETPATH              RESOURCE_FILES_DIR
+LANGUAGE_IDS
+END // RESOURCE
+
+USERINCLUDE             .
+USERINCLUDE             ../inc
+USERINCLUDE             ../data
+USERINCLUDE             ../loc
+
+APP_LAYER_SYSTEMINCLUDE
+SYSTEMINCLUDE           /epoc32/include/ecom
+
+LIBRARY                 euser.lib
+LIBRARY                 ecom.lib
+LIBRARY                 commonengine.lib
+LIBRARY                 aknicon.lib
+LIBRARY                 egul.lib
+LIBRARY                 flogger.lib
+LIBRARY                 diagframework.lib
+LIBRARY                 diagpluginbase.lib
+
+// End of File
+

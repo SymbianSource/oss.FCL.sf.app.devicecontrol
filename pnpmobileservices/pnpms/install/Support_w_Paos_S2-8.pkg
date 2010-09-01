@@ -1,0 +1,149 @@
+;
+; Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
+; All rights reserved.
+; This component and the accompanying materials are made available
+; under the terms of "Eclipse Public License v1.0"
+; which accompanies this distribution, and is available
+; at the URL "http://www.eclipse.org/legal/epl-v10.html".
+;
+; Initial Contributors:
+; Nokia Corporation - initial contribution.
+;
+; Contributors:
+;
+; Description:
+;
+;
+; Installation file for OnlineSupport application with PAOS filter
+;
+;Languages
+&EN
+;
+; UID is the app's UID
+;
+#{"Online Support wPaos (S2*8)"},(0x10272D34),1,5,2
+;
+
+;Supports Series 60 v 2.8
+(0x102032BD), 0, 0, 0, {"Series60ProductID"} 
+
+;
+; Files to install
+;
+
+; Online Support
+"\Epoc32\release\thumb\urel\OnlineSupport.app"						-"!:\system\apps\OnlineSupport\OnlineSupport.app"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r01"			-"!:\system\apps\OnlineSupport\onlinesupport.r01"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r02"			-"!:\system\apps\OnlineSupport\onlinesupport.r02"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r03"			-"!:\system\apps\OnlineSupport\onlinesupport.r03"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r04"			-"!:\system\apps\OnlineSupport\onlinesupport.r04"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r05"			-"!:\system\apps\OnlineSupport\onlinesupport.r05"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r06"			-"!:\system\apps\OnlineSupport\onlinesupport.r06"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r07"			-"!:\system\apps\OnlineSupport\onlinesupport.r07"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r08"			-"!:\system\apps\OnlineSupport\onlinesupport.r08"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r09"			-"!:\system\apps\OnlineSupport\onlinesupport.r09"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r10"			-"!:\system\apps\OnlineSupport\onlinesupport.r10"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r13"			-"!:\system\apps\OnlineSupport\onlinesupport.r13"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r14"			-"!:\system\apps\OnlineSupport\onlinesupport.r14"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r15"			-"!:\system\apps\OnlineSupport\onlinesupport.r15"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r16"			-"!:\system\apps\OnlineSupport\onlinesupport.r16"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r17"			-"!:\system\apps\OnlineSupport\onlinesupport.r17"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r18"			-"!:\system\apps\OnlineSupport\onlinesupport.r18"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r25"			-"!:\system\apps\OnlineSupport\onlinesupport.r25"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r26"			-"!:\system\apps\OnlineSupport\onlinesupport.r26"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r27"			-"!:\system\apps\OnlineSupport\onlinesupport.r27"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r28"			-"!:\system\apps\OnlineSupport\onlinesupport.r28"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r29"			-"!:\system\apps\OnlineSupport\onlinesupport.r29"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r30"			-"!:\system\apps\OnlineSupport\onlinesupport.r30"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r31"			-"!:\system\apps\OnlineSupport\onlinesupport.r31"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r32"			-"!:\system\apps\OnlineSupport\onlinesupport.r32"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r33"			-"!:\system\apps\OnlineSupport\onlinesupport.r33"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r37"			-"!:\system\apps\OnlineSupport\onlinesupport.r37"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r39"			-"!:\system\apps\OnlineSupport\onlinesupport.r39"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r42"			-"!:\system\apps\OnlineSupport\onlinesupport.r42"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r45"			-"!:\system\apps\OnlineSupport\onlinesupport.r45"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r49"			-"!:\system\apps\OnlineSupport\onlinesupport.r49"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r51"			-"!:\system\apps\OnlineSupport\onlinesupport.r51"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r54"			-"!:\system\apps\OnlineSupport\onlinesupport.r54"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r57"			-"!:\system\apps\OnlineSupport\onlinesupport.r57"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r59"			-"!:\system\apps\OnlineSupport\onlinesupport.r59"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r67"			-"!:\system\apps\OnlineSupport\onlinesupport.r67"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r68"			-"!:\system\apps\OnlineSupport\onlinesupport.r68"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r70"			-"!:\system\apps\OnlineSupport\onlinesupport.r70"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r76"			-"!:\system\apps\OnlineSupport\onlinesupport.r76"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r78"			-"!:\system\apps\OnlineSupport\onlinesupport.r78"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r79"			-"!:\system\apps\OnlineSupport\onlinesupport.r79"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r83"			-"!:\system\apps\OnlineSupport\onlinesupport.r83"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r93"			-"!:\system\apps\OnlineSupport\onlinesupport.r93"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r157"			-"!:\system\apps\OnlineSupport\onlinesupport.r157"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r158"			-"!:\system\apps\OnlineSupport\onlinesupport.r158"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r159"			-"!:\system\apps\OnlineSupport\onlinesupport.r159"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r160"			-"!:\system\apps\OnlineSupport\onlinesupport.r160"
+"\Epoc32\data\z\system\apps\OnlineSupport\onlinesupport.r161"			-"!:\system\apps\OnlineSupport\onlinesupport.r161"
+"\epoc32\data\Z\PRIVATE\10003A3F\APPS\OnlineSupport_reg.rsc"	-"!:\private\10003A3F\apps\OnlineSupport_reg.rsc"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport_aif.mbm"			-"!:\system\apps\OnlineSupport\OnlineSupport_aif.mbm"
+"\epoc32\data\Z\System\shareddata\10204338.ini"							-"C:\System\SharedData\10204338.ini"
+
+
+; PNP provisioning
+"\Epoc32\release\thumb\urel\PnpProvisioning.app"							-"!:\system\apps\PnpProvisioning\PnpProvisioning.app"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r01"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r01"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r02"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r02"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r03"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r03"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r04"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r04"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r05"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r05"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r06"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r06"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r07"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r07"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r08"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r08"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r09"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r09"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r10"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r10"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r13"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r13"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r14"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r14"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r15"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r15"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r16"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r16"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r17"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r17"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r18"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r18"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r25"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r25"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r26"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r26"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r27"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r27"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r28"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r28"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r29"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r29"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r30"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r30"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r31"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r31"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r32"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r32"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r33"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r33"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r37"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r37"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r39"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r39"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r42"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r42"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r45"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r45"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r49"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r49"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r51"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r51"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r54"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r54"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r57"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r57"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r59"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r59"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r67"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r67"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r68"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r68"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r70"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r70"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r76"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r76"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r78"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r78"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r79"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r79"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r83"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r83"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r93"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r93"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r157"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r157"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r158"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r158"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r159"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r159"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r160"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r160"
+"\Epoc32\data\z\system\apps\PnpProvisioning\pnpprovisioning.r161"			-"!:\system\apps\PnpProvisioning\pnpprovisioning.r161"
+"\Epoc32\data\Z\Private\10003A3F\APPS\PnpProvisioning_REG.rsc"			-"!:\Private\10003A3F\APPS\PnpProvisioning_REG.rsc"
+"\Epoc32\data\z\system\apps\PnpProvisioning\PnpProvisioning_aif.mbm"			-"!:\system\apps\PnpProvisioning\PnpProvisioning_aif.mbm"
+"\epoc32\data\Z\System\shareddata\10204339.ini"							-"C:\System\SharedData\10204339.ini"
+"\epoc32\release\thumb\urel\RECnhwr.MDL"											-"!:\system\recogs\RECnhwr.MDL"
+"\Epoc32\release\thumb\urel\PnP.dll"													-"!:\system\libs\PnP.dll"
+"\epoc32\data\Z\System\shareddata\1020433A.ini"							-"C:\System\SharedData\1020433A.ini"
+"\Epoc32\release\thumb\urel\NHwrParser.dll"										-"!:\system\libs\NHwrParser.dll"
+"\Epoc32\release\thumb\urel\PnPRedirect.exe"											-"!:\system\apps\PnpProvisioning\PnPRedirect.exe"
+
+
+; PAOS
+"\epoc32\release\thumb\urel\PnpPaosFilter.dll" - "!:\System\Libs\Plugins\PnpPaosFilter.dll"
+"\epoc32\data\z\system\Libs\Plugins\10272D33.rsc" - "!:\System\Libs\Plugins\10272D33.rsc"

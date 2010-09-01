@@ -1,0 +1,44 @@
+/*
+* Copyright (c) 2001 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  ECOM plugin resource file for ServiceHelpPlugin.
+*
+*/
+
+#include <ecom/registryinfo.rh>
+
+RESOURCE REGISTRY_INFO theInfo
+    {
+    dll_uid     = 0x20019597;
+    interfaces  =
+        {
+        INTERFACE_INFO
+            {
+            interface_uid   = 0x10207236;
+            implementations =
+                {
+                IMPLEMENTATION_INFO
+                    {
+			implementation_uid  = 0x20019598;
+                        version_no          = 1;
+                        display_name        = "ServiceHelp Plugin";
+                        default_data        = "0x10283317 "; //CP Plugin id of Device Management
+                		opaque_data         = "45";         // Order number 
+
+                    
+                    }
+                };
+            }
+        };
+    }
+

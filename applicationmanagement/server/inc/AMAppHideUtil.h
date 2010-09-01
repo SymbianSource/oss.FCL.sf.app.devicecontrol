@@ -21,6 +21,8 @@
 
 #include <e32base.h>
 
+
+
 namespace NApplicationManagement
     {
 

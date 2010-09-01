@@ -1,0 +1,42 @@
+/*
+* Copyright (c) 2003-2006 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Localization strings for OnlineSupport
+*
+*/
+
+
+
+// LOCALISATION STRINGS
+
+// d: When the phone is started for the first time, following confirmation query is shown.
+// d: If user cancels the query startup is continued. If the user accepts the query,
+// d: Browser is launched and Plug and Play Mobile Services URL is loaded.
+// l: popup_note_window/opt2
+// r: 3.1
+#define qtn_op_pnp_query "Open Service Help for fetching phone settings?"
+
+// d: If opening browser and loading Plug and Play Mobile Services URL takes more than
+// d: 1 second, a wait note is displayed until the URL can be displayed in the Browser.
+// l: popup_note_wait_window
+// r: 3.1
+#define qtn_op_pnp_wait "Opening Service Help"
+
+// d: If Plug and Play Mobile Services URL cannot be loaded for some reason e.g.
+// d: incorrect Browser settings, an error note is displayed and startup is continued.
+// l: popup_note_window/opt2
+// r: 3.1
+#define qtn_op_pnp_error "Unable to open Service Help"
+
+
+// End of File

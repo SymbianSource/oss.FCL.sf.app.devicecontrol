@@ -59,7 +59,6 @@ public:
         TBool RecognizeL(TDesC& aPathAndName, HBufC* aMimeType);
         void MakeAllInstallPathsL();
         void GetPreInstalledAppsL(RPointerArray<TPreInstalledAppParams> &aPreInstalledAppParams);
-        void Listallapps();
 private:
         CAMPreInstallApp();
 
@@ -77,7 +76,7 @@ private:
         RFs iFs;
         CDeliveryComponentStorage *iStorage;
         RPointerArray<TPreInstalledAppParams> iPreInstalledAppParams;
-
+        
         };
 
 

@@ -48,6 +48,7 @@
 #include <e32property.h>
 #include <centralrepository.h>
 #include <DevManInternalCRKeys.h>
+#include <httpdownloadmgrcommon.h>
 
 #include "NSmlPrivateAPI.h"
 
@@ -55,7 +56,7 @@
 #include "ampskeys.h"
 
 #include "nsmldmtreedbclient.h"
-//#include "SyncService.h"
+#include "SyncService.h"
 #include "amprivateCRKeys.h"
 #include <e32cmn.h>
 #include <SWInstDefs.h>
@@ -221,8 +222,6 @@ void CSCOMOAdapter::DDFStructureL(MSmlDmDDFObject& aDDF)
 	    accessTypesAdd;
     accessTypesAddReplace.SetReplace();
 
-	RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step1" );
-
     /*
      Node: ./SCOMO
      AM node is the common parent to all application management functionality nodes. 
@@ -238,8 +237,6 @@ void CSCOMOAdapter::DDFStructureL(MSmlDmDDFObject& aDDF)
             MSmlDmDDFObject::EPermanent, MSmlDmDDFObject::ENode,
             KAMNodeDescription);
 
-	RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 2" );
-
     /*
      Node: ./SCOMO/Inventory
      This node is start node to application inventory. 
@@ -254,8 +251,6 @@ void CSCOMOAdapter::DDFStructureL(MSmlDmDDFObject& aDDF)
             MSmlDmDDFObject::EPermanent, MSmlDmDDFObject::ENode,
             KAMInventoryNodeDescription);
 
-	RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 3" );
-
     /*
      Node: ./SCOMO/Inventory/Delivered
      This is node under which applications that are delivered but not installed are found.
@@ -269,8 +264,6 @@ void CSCOMOAdapter::DDFStructureL(MSmlDmDDFObject& aDDF)
     FillNodeInfoL(del, accessTypesGetAdd, MSmlDmDDFObject::EOne,
             MSmlDmDDFObject::EPermanent, MSmlDmDDFObject::ENode,
             KAMDeliveredNodeDescription);
-
-	RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 4" );
 
     /*
      Node: ./SCOMO/Inventory/Deployed
@@ -288,8 +281,6 @@ void CSCOMOAdapter::DDFStructureL(MSmlDmDDFObject& aDDF)
             MSmlDmDDFObject::EPermanent, MSmlDmDDFObject::ENode,
             KAMDeployedNodeDescription);
 
-
-	RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 5" );
     /*
      Node: ./SCOMO/Inventory/Delivered/<X>
      This dynamic node is placeholder applications that are in Delivered state. 
@@ -304,8 +295,6 @@ void CSCOMOAdapter::DDFStructureL(MSmlDmDDFObject& aDDF)
             MSmlDmDDFObject::EZeroOrMore, MSmlDmDDFObject::EDynamic,
             MSmlDmDDFObject::ENode, KAMDeliveredDynaNodeDescription);
 
-
-	RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 6" );
     /*
      Node: ./SCOMO/Inventory/Delivered/<X>/PkgID
      This leaf node holds an identifier for an application.
@@ -320,7 +309,6 @@ void CSCOMOAdapter::DDFStructureL(MSmlDmDDFObject& aDDF)
             MSmlDmDDFObject::EPermanent, MSmlDmDDFObject::EChr,
             KAMPkgIDNodeDescription);
 
-	RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 7" );
     /*
      Node: ./SCOMO/Inventory/Delivered/<X>/Name
      This leaf node holds name of an application. 
@@ -335,7 +323,7 @@ void CSCOMOAdapter::DDFStructureL(MSmlDmDDFObject& aDDF)
             MSmlDmDDFObject::EZeroOrOne, MSmlDmDDFObject::EPermanent,
             MSmlDmDDFObject::EChr, KAMNameNodeDescription);
 
-    RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 8" );
+    
     /*
      Node: ./SCM/Inventory/Delivered/<X>/Status
      This leaf node holds the status of the Delivered. The client updates the node value. 
@@ -351,8 +339,6 @@ void CSCOMOAdapter::DDFStructureL(MSmlDmDDFObject& aDDF)
             MSmlDmDDFObject::EPermanent, MSmlDmDDFObject::EInt,
             KAMStatusNodeDescription);
 
-
-	RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 9" );
     /*
      Node: ./SCOMO/Inventory/Delivered/<X>/PkgType
      This leaf node holds an identifier for an application.
@@ -367,7 +353,7 @@ void CSCOMOAdapter::DDFStructureL(MSmlDmDDFObject& aDDF)
             MSmlDmDDFObject::EPermanent, MSmlDmDDFObject::EChr,
             KAMPkgTypeNodeDescription);
     
-    RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 10" );
+    
     /*
      Node: ./SCOMO/Inventory/Delivered/<X>/Data
      This leaf node holds the data of an application. 
@@ -382,24 +368,18 @@ void CSCOMOAdapter::DDFStructureL(MSmlDmDDFObject& aDDF)
             MSmlDmDDFObject::EZeroOrOne, MSmlDmDDFObject::EPermanent,
             MSmlDmDDFObject::EBin, KAMDataNodeDescription);
 
-	RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 11" );
-
     delda.AddDFTypeMimeTypeL(KSisxMimeType);
     delda.AddDFTypeMimeTypeL(KSisMimeType);
     delda.AddDFTypeMimeTypeL(KPipMimeType);
 
-	RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 12" );
-
     FeatureManager::InitializeLibL();
     if (FeatureManager::FeatureSupported(KFeatureIdJavaMIDP20) )
         {
-	    RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 13" );
         delda.AddDFTypeMimeTypeL(KJadMIMEType);
         delda.AddDFTypeMimeTypeL(KJarMIMEType);
         delda.AddDFTypeMimeTypeL(KJavaMIMEType);
         }
 
-	RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 14" );
     FeatureManager::UnInitializeLib();
 
     /*
@@ -416,7 +396,6 @@ void CSCOMOAdapter::DDFStructureL(MSmlDmDDFObject& aDDF)
             MSmlDmDDFObject::EZeroOrOne, MSmlDmDDFObject::EPermanent,
             MSmlDmDDFObject::EBin, KAMDescriptorNodeDescription);
 
-	RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 15" );
      /*
      Node: ./SCOMO/Inventory/Delivered/<X>/State
      This leaf node holds state value of an application. 
@@ -431,7 +410,7 @@ void CSCOMOAdapter::DDFStructureL(MSmlDmDDFObject& aDDF)
     FillNodeInfoL(delstate, accessTypesGet, MSmlDmDDFObject::EOne,
             MSmlDmDDFObject::EPermanent, MSmlDmDDFObject::EChr,
             KAMStateValueNodeDescription);
-    RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 16" );
+    
     /*
      Node: ./SCOMO/Inventory/Delivered/<X>/Operations
      This is a node that allows vendors to extend functionality.
@@ -495,7 +474,7 @@ void CSCOMOAdapter::DDFStructureL(MSmlDmDDFObject& aDDF)
     /*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=
      DEPLOYED
      *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*/
-    RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 17" );
+
     /*
      Node: ./SCOMO/Inventory/Deployed/<X>
      This dynamic node is placeholder applications that are in Inactive state. 
@@ -551,7 +530,7 @@ void CSCOMOAdapter::DDFStructureL(MSmlDmDDFObject& aDDF)
     FillNodeInfoL(deplver, accessTypesGetAddReplace,
             MSmlDmDDFObject::EZeroOrOne, MSmlDmDDFObject::EPermanent,
             MSmlDmDDFObject::EChr, KAMVersionNodeDescription);
-    RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 18" );
+    
     /*
      Node: ./SCOMO/Inventory/Deployed/<X>/Description
      This leaf node holds the version of an application.
@@ -609,7 +588,7 @@ void CSCOMOAdapter::DDFStructureL(MSmlDmDDFObject& aDDF)
     FillNodeInfoL(deplstate, accessTypesGet, MSmlDmDDFObject::EOne,
             MSmlDmDDFObject::EPermanent, MSmlDmDDFObject::EChr,
             KAMStateValueNodeDescription);
-    RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 19" );
+
     /*
      Node: ./SCOMO/Inventory/Deployed/<X>/Operations
      This is a node that allows vendors to extend functionality.
@@ -640,7 +619,7 @@ void CSCOMOAdapter::DDFStructureL(MSmlDmDDFObject& aDDF)
     FillNodeInfoL(deplrem, accessTypesExecReplace, MSmlDmDDFObject::EOne,
             MSmlDmDDFObject::EPermanent, MSmlDmDDFObject::ENode,
             KAMRemoveNodeDescription);
-    RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 20" );
+
     /*
      Node: ./SCOMO/Inventory/Deployed/<X>/Operations/Activate
      Exec command causes device to activate an application. 
@@ -717,7 +696,7 @@ void CSCOMOAdapter::DDFStructureL(MSmlDmDDFObject& aDDF)
     FillNodeInfoL(dowid, accessTypesGetAddReplace, MSmlDmDDFObject::EOne,
             MSmlDmDDFObject::EPermanent, MSmlDmDDFObject::EChr,
             KAMPkgIDNodeDescription);
-    RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 21" );
+
     /*
      Node: ./SCOMO/Download/<X>/Name
      This leaf node holds name of an application. 
@@ -850,7 +829,7 @@ void CSCOMOAdapter::DDFStructureL(MSmlDmDDFObject& aDDF)
             MSmlDmDDFObject::EPermanent, MSmlDmDDFObject::ENode,
             KAMDownloadAndInstallAndInActivateNodeName);
 
-    RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 22" );
+    
 #ifdef __AM_LASTERROR_NODE
     MSmlDmDDFObject& amext = am.AddChildObjectL(KAMExtNodeName);
     FillNodeInfoL(amext, accessTypesGet, MSmlDmDDFObject::EOne,
@@ -864,16 +843,13 @@ void CSCOMOAdapter::DDFStructureL(MSmlDmDDFObject& aDDF)
 #endif
 
     // Ignore generic alert error status if any otherwise adapter fails to load 
-    RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 23" );
+    
     TRAP_IGNORE(SendPendingGenericAlertL());
-	RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 24" );
-    //if (GetAdapterValue() == KAMSCOMOAdapter)
+    if (GetAdapterValue() == KAMSCOMOAdapter)
         {
-		RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 25" );
         CheckStateChangesL();
         SetAdapterValue(KAMDefaultValue);
         }
-	RDEBUG( "CSCOMOAdapter::DDFStructureL(): Step 26" );
     CheckAndAddPredefinedNodeL();
     RDEBUG( "CSCOMOAdapter::DDFStructureL(): end" );
     }
@@ -946,8 +922,11 @@ void CSCOMOAdapter::SendPendingGenericAlertL()
             TBuf8<6> dataresult;
             dataresult.Num(finalresult);
             
-            TPtrC8 mapping(NSmlDmURI::LastURISeg(targetURIGet) );
+            RDEBUG8_2("CSCOMOAdapter::GetIdentifierIdL is targetURIGet '%S'", &targetURIGet);
             
+            //TPtrC8 mapping(NSmlDmURI::LastURISeg(targetURIGet) );
+            
+            HBufC8* identifier=GetIdentifierIdL(internalid );
             
             TInt retryupdate = iAMdb->GetRetryCountForLuidL(internalid);
             
@@ -986,7 +965,7 @@ void CSCOMOAdapter::SendPendingGenericAlertL()
             ptr.Append(dataresult);
             ptr.Append(KResultCodeEnd);
             ptr.Append(KIdentifierStart);
-            ptr.Append(mapping);
+            ptr.Append(*identifier);
             ptr.Append(KIdentifierEnd);
             //ptr.Append(KDataEnd);
 
@@ -1016,18 +995,29 @@ void CSCOMOAdapter::SendPendingGenericAlertL()
             
             TRAP_IGNORE(privateAPI.AddDMGenericAlertRequestL(              
                     *genericalerts[i]->iCorrelator,iItemArray ));
-                    
-                    
+                 
+            
+            //cleanup all the allocated heap cells
+            if(data)        
             delete data;
             
+            if(metamark)
             delete metamark;
             
+            if(metaformat)
             delete metaformat;
             
+            if(metatype)
             delete metatype;
             
+            if(targeturi)
             delete targeturi;
+
+            if(item)
             delete item;
+            
+            if(identifier)
+            delete identifier;
                     
             iItemArray.Reset();			
 			iItemArray.Close();
@@ -1061,7 +1051,9 @@ RApplicationManagement &CSCOMOAdapter::SessionL()
             TPckg<TCertInfo> pcert(info);
             errx = re->Get(KCertKey, pcert) ;
 
-            RDEBUG_2("aCertInfo.iFingerprint.Length() is  %u",info.iFingerprint.Length() );
+            RDEBUG("CSCOMOAdapter::SessionL() aCertInfo");
+
+            //RDEBUG_2("aCertInfo.iFingerprint.Length() is  %u",info.iFingerprint.Length() );
             if (errx == KErrNone)
                 {
                 RDEBUG("CSCOMOAdapter::SessionL() errx == KErrNone");
@@ -1294,6 +1286,7 @@ void CSCOMOAdapter::_UpdateLeafObjectL(const TDesC8& aURI,
                 
                 TDeplCompAttrType fl(UpdateFlagFromMapping(mapping) );
 
+                           
                 if (mapping == KAMDataNodeName || mapping
                         == KAMDescriptorNodeName)
                     {
@@ -1762,12 +1755,13 @@ void CSCOMOAdapter::InstallL(TUint aLuidi, const TDesC8& aURI,
         iManagement.StateChangeComplete(aLuidi);
 
         DeactivateIfInactive(aLuidi, aTargetState);
-        aRet = EOk;
+        aRet = EExecSuccess;
         }
     else
         {
         RDEBUG_2( "CSCOMOAdapter::InstallL(): INSTALL FAILED '%d'" , err);
-        MAPERROR( err, aRet, _L8("Install %d") );
+        //MAPERROR( err, aRet, _L8("Install %d") );
+	  aRet = EExecInstallFailed;
         }
     }
 
@@ -1861,7 +1855,7 @@ void CSCOMOAdapter::ExecuteCommandL(const TDesC8& aURI, const TDesC8& aLUID,
         const TDesC8& aArgument, const TDesC8& /*aType*/, TInt aStatusRef)
     {
 
-#ifdef __TARM_SYMBIAN_CONVERGENCY	//Done by Dipak
+#ifdef __TARM_SYMBIAN_CONVERGENCY	
     TPtrC8 uriPtrc = NSmlDmURI::RemoveDotSlash(aURI);
 #else
     //nothing
@@ -1870,14 +1864,14 @@ void CSCOMOAdapter::ExecuteCommandL(const TDesC8& aURI, const TDesC8& aLUID,
     RDEBUG8_3("CSCOMOAdapter::ExecuteCommandL(): begin, '%S', '%S'", &aURI, &aLUID );
     SetAdapterValue(KAMSCOMOAdapter);
     CheckStateChangesL();
-    TError ret(EError);
+    TError ret(EExecUndefError);
 
     if (aLUID == KNullDesC8)
         {
         RDEBUG("CSCOMOAdapter::ExecuteCommandL(): WARNING no valid luid provided" );
         }
 
-#ifdef __TARM_SYMBIAN_CONVERGENCY	//Done by Dipak
+#ifdef __TARM_SYMBIAN_CONVERGENCY
     TInt cnt( NSmlDmURI::NumOfURISegs( uriPtrc ) );
 #else
     TInt cnt(NSmlDmURI::NumOfURISegs(aURI) );
@@ -1960,18 +1954,19 @@ void CSCOMOAdapter::ExecuteCommandL(const TDesC8& aURI, const TDesC8& aLUID,
                     else
                         if (errx == KErrArgument)
                             {
-                            ret = EInvalidObject ;
+                            ret = EExecUndefError;
                             }
                         else
                             {
-                            ret = EError;
+                            ret = EExecUndefError;
                             }
                     }
+			SetSCOMOTargetURIL(*iUriDel, mapping, ret);
 
                 }
             else
                 {
-                ret = ENotFound;
+                ret = EExecUndefError;
                 RDEBUG( "CSCOMOAdapter::ExecuteCommandL(): case 5 Not found node" );
                 }
             break;
@@ -2015,7 +2010,7 @@ void CSCOMOAdapter::ExecuteCommandL(const TDesC8& aURI, const TDesC8& aLUID,
                     }
                 else
                     {
-                    ret = ENotFound;
+                    ret = EExecInstallFailed;
                     RDEBUG( "CSCOMOAdapter::ExecuteCommandL(): case 6 install Not found node" );
                     }
                 }
@@ -2054,7 +2049,7 @@ void CSCOMOAdapter::ExecuteCommandL(const TDesC8& aURI, const TDesC8& aLUID,
                            err = iDbSession.RemoveMappingInfoL(KAMAdapterImplUid, aclmapping);
                             if (err == KErrNone)
                                 {
-                                ret = EOk;
+                                ret = EExecSuccess;
                                 }
                             if (iInAtomic)
                                 {
@@ -2067,16 +2062,17 @@ void CSCOMOAdapter::ExecuteCommandL(const TDesC8& aURI, const TDesC8& aLUID,
                             RDEBUG_2( "CSCOMOAdapter::ExecuteCommandL(): Remove FAILED '%d'", err);
 
                             if (err == SwiUI::KSWInstErrUserCancel)
-                                ret = EError;
+                                ret = EExecUserCancelled;
                             else
                                 MAPERROR( err, ret, _L8("Execute Remove %d") );
                             }
                         }
                     else
                         {
-                        ret = ENotFound;
+                        ret = EExecRemoveFailed;
                         RDEBUG( "CSCOMOAdapter::ExecuteCommandL(): case 6 remove Not found node" );
                         }
+                    SetSCOMOTargetURIL(*iUriDel, mapping, ret);
                     }
                         else
                             if (mapping == KAMActivateNodeName)
@@ -2096,15 +2092,17 @@ void CSCOMOAdapter::ExecuteCommandL(const TDesC8& aURI, const TDesC8& aLUID,
                                 if (iluid > 0)
                                     {
                                     TRAP_IGNORE( SessionL().ActivateL( iluid ) );
-                                    ret = EOk;
+                                    ret = EExecSuccess;
 								
                                     //MAPERROR( erx, ret, _L8("Activate %d") );
                                     }
                                 else
                                     {
-                                    ret = ENotFound;
+                                    ret = EExecActivateFailed;
                                     RDEBUG( "CSCOMOAdapter::ExecuteCommandL(): case 6 Activate Not found node" );
                                     }
+
+                                SetSCOMOTargetURIL(*iUriDel, mapping, ret);
                                 }
                             else
                                 if (mapping == KAMDeActivateNodeName)
@@ -2128,20 +2126,23 @@ void CSCOMOAdapter::ExecuteCommandL(const TDesC8& aURI, const TDesC8& aLUID,
                                         {
                                         TRAP_IGNORE(SessionL().DeactivateL( iluid ) )
                                         ;
-										ret = EOk;
+										ret = EExecSuccess;
                                         //MAPERROR( erx, ret,_L8("Dectivate %d") );
                                         }
                                     else
                                         {
-                                        ret = ENotFound;
+                                        ret = EExecDeactivateFailed;
                                         RDEBUG( "CSCOMOAdapter::ExecuteCommandL(): case 6 DeActivate Not found node" );
                                         }
+
+                                    SetSCOMOTargetURIL(*iUriDel, mapping, ret);
+						
                                     }
                                 else
                                     {
                                     RDEBUG8_2( "CSCOMOAdapter::ExecuteCommandL(): ASKED NOT SUPPORTED OPERATION '%S'", &mapping );
                                     
-                                    ret = EError;
+                                    ret = EExecUndefError;
                                     }
             break;
             }
@@ -2150,20 +2151,128 @@ void CSCOMOAdapter::ExecuteCommandL(const TDesC8& aURI, const TDesC8& aLUID,
             {
             RDEBUG8_3( "CSCOMOAdapter::ExecuteCommandL(): ILLEGAL LEVEL %d NODE %S", cnt, &aURI );
             
-            ret = EInvalidObject;
+            ret = EExecUndefError;
             break;
             }
         }
     SetStatusL(aStatusRef, ret) ;
     }
 
+
+void CSCOMOAdapter::SetSCOMOTargetURIL(const TDesC8& aURI,
+        const TDesC8& aMapping,const TError& aErrorStatus)
+    {
+
+    RDEBUG( "CSCOMOAdapter:: SetSCOMOTargetURI" );
+
+    TInt cnt(NSmlDmURI::NumOfURISegs(aURI));
+    _LIT8( KNSmlNull, "null" );
+
+    CRepository* cenrep = NULL;
+    TInt errr(KErrNone);
+
+    TRAP(errr, cenrep = CRepository::NewL( KCRUidDeviceManagementInternalKeys ));
+
+    if (errr == KErrNone)
+        {
+
+        switch (cnt)
+            {
+            case 3:
+                {
+
+                RDEBUG( "CSCOMOAdapter:: SetSCOMOTargetURI case 3" );
+
+                TInt ASyncSupported = -1;
+
+                CRepository *repository = CRepository::NewLC(
+                        KCRUidPrivateApplicationManagementKeys);
+                repository->Get(KAsyncEnabled, ASyncSupported);
+                CleanupStack::PopAndDestroy();
+
+                //means accepted for processing set <Target><LOCURI> to NULL.
+                if (ASyncSupported)
+                    {
+                    RDEBUG( "CSCOMOAdapter:: ASyncSupported" );
+
+                    TInt err1 = cenrep->Set(KNSmlDMSCOMOTargetRef, KNSmlNull);
+
+                    RDEBUG_2( "CSCOMOAdapter:: ASyncSupported %d", err1 );
+
+                    }
+
+                }
+                break;
+
+            case 4:
+                {
+
+                RDEBUG( "CSCOMOAdapter:: SetSCOMOTargetURI case 4" );
+
+                if (aMapping == KAMRemoveNodeName)
+                    {
+
+                    if (aErrorStatus == EExecSuccess)
+                        {
+                        cenrep->Set(KNSmlDMSCOMOTargetRef, KNSmlNull);
+                        }
+                    }
+
+                if (aMapping == KAMActivateNodeName || aMapping
+                        == KAMDeActivateNodeName)
+                    {
+
+                    RDEBUG( "CSCOMOAdapter:: SetSCOMOTargetURI case KAMActivateNodeName or KAMDeActivateNodeName " );
+
+                    if (aErrorStatus == EExecSuccess)
+                        {
+                        RDEBUG( "CSCOMOAdapter:: EExecSuccess " );
+                        _LIT8( KAMInitial, "./" );
+                        _LIT8( KAMSeparator8, "/" );
+                        _LIT8( KAMStateValueNodeName, "State" );
+                        TBuf8<256> targetStateURI;
+                        targetStateURI.Append(KAMInitial);
+                        targetStateURI.Append(aURI);
+
+                        targetStateURI.Append(KAMSeparator8);
+                        targetStateURI.Append(KAMStateValueNodeName);
+
+                        cenrep->Set(KNSmlDMSCOMOTargetRef, targetStateURI);
+                        RDEBUG( "CSCOMOAdapter:: EExecSuccess End" );
+                        }
+                    else
+                        {
+                        cenrep->Set(KNSmlDMSCOMOTargetRef, KNSmlNull);
+                        }
+
+                    }
+
+                }
+
+                break;
+            }
+
+        }
+
+    if (cenrep)
+        {
+        delete cenrep;
+        cenrep = NULL;
+        }
+
+    }
+
+
 void CSCOMOAdapter::ASyncReportL(TUint32 aLuid, const TDesC8& aArgument,
         const TDownloadTarget aTarget,const TDesC8& aURI)
     {
+
     // while sending generic alert
     // adapter uses entry stored in database and constructs generic alert
     // using SyncML framework API.
+
     TInt index = 0;
+
 	// Default max retry count is 5. It is also cenep configurable
 	// Cenrep configuration responsible can change the max retry 
 	// count
@@ -2185,7 +2294,7 @@ void CSCOMOAdapter::ASyncReportL(TUint32 aLuid, const TDesC8& aArgument,
     //Add Download entry to database
 
     iAMdb->SaveToDatabaseL(index, aLuid, profId, retrycount, aURI,
-           *serverId, aArgument);
+            *serverId, aArgument);
 
     CleanupStack::PopAndDestroy(serverId);
 
@@ -2201,13 +2310,13 @@ void CSCOMOAdapter::SyncReportL(TUint32 aLuid, const TDesC8& aArgument,
             EOwnerThread);
     User::LeaveIfError(r);
 
-    /*CSyncService *syncService = CSyncService::NewL(NULL, KDevManServiceStart);
+    CSyncService *syncService = CSyncService::NewL(NULL, KDevManServiceStart);
     if (syncService)
         {
         syncService->EnableProgressNoteL(EFalse);
         }
 
-    delete syncService;*/
+    delete syncService;
 
     // wait for the previously attached ‘counter’ property to be updated
     TRequestStatus s;
@@ -2222,61 +2331,61 @@ void CSCOMOAdapter::SyncReportL(TUint32 aLuid, const TDesC8& aArgument,
 		{
 			case KStatusUserCancelled:
 			{
-				aRet = MSmlDmAdapter::EError;
+				aRet = MSmlDmAdapter::EExecUserCancelled;
 				break;
 			}
 			               
 			case KStatusDowloadFailedOOM:
 			{
-				aRet = MSmlDmAdapter::EError;
+				aRet = MSmlDmAdapter::EExecDownFailOOM;
 				break;
 			}
 
 			case KStatusAlternateDownldAuthFail:
 			{
-			    aRet = MSmlDmAdapter::EError;
+			    aRet = MSmlDmAdapter::EExecAltDwnldAuthFail;
 			    break;	
 			}
 
 			case KStatusDownloadFailed:
 			{
-				aRet = MSmlDmAdapter::EError;
+				aRet = MSmlDmAdapter::EExecDownloadFailed;
 				break;
 			}
 
 			case KStatusPkgValidationFailed:
 			{
-				aRet = MSmlDmAdapter::EError;
+				aRet = MSmlDmAdapter::EExecPkgValidationFail;
 				break;
 			}
 
 			case KStatusInstallFailedOOM:
 			{
-				aRet = MSmlDmAdapter::EError;
+				aRet = MSmlDmAdapter::EExecInstallOOM;
 				break;
 			}
 
 			case KStatusInstallFailed:
 			{
-				aRet = MSmlDmAdapter::EError;
+				aRet = MSmlDmAdapter::EExecInstallFailed;
 				break;
 			}
 		
 		  case KStatusUnSupportedEnvironment:
 			{
-				aRet = MSmlDmAdapter::EError;
+				aRet = MSmlDmAdapter::EExecOperationReject;
 				break;
 			}
 			
 			case KStatusAltDowldUnavailable:
 			{
-				aRet = MSmlDmAdapter::EError;
+				aRet = MSmlDmAdapter::EExecAltDwnldSrvUnavailable;
 				break;
 			}
 		
 			default:
 			{
-			    aRet = MSmlDmAdapter::EOk;
+			    aRet = MSmlDmAdapter::EExecSuccess;
 				break;
 			}
 		}                
@@ -4363,29 +4472,20 @@ TInt CSCOMOAdapter::DesToInt(const TDesC8& aLuid)
 void CSCOMOAdapter::CheckAndAddPredefinedNodeL()
     {
 
-    RDEBUG("CSCOMOAdapter::CheckAndAddPredefinedNodeL(): begin");
-
     // Check if SCOMODefault node addition is enabled.
     TInt staticnodeenabled = 0;
     CRepository* cenrep = CRepository::NewLC( KCRUidPrivateApplicationManagementKeys );
     cenrep->Get( KAMStaticNodeEnabled, staticnodeenabled ); 
     CleanupStack::PopAndDestroy(); //cenrep
         
-    RDEBUG("CSCOMOAdapter::CheckAndAddPredefinedNodeL(): step1");
-
+    
     if(staticnodeenabled)
     {
       TBuf8<KMaxFullName> temp;
-
-      RDEBUG("CSCOMOAdapter::CheckAndAddPredefinedNodeL(): step2");
       GetPredefinedNodeL(temp);
-
-      RDEBUG("CSCOMOAdapter::CheckAndAddPredefinedNodeL(): step3");
       if (temp.Length())
         {
 
-
-        RDEBUG("CSCOMOAdapter::CheckAndAddPredefinedNodeL(): step4");
         TBuf8<KMaxFullName> temp1;
         temp1.Zero();
         temp1.Copy(KAMNodeName);
@@ -4393,10 +4493,7 @@ void CSCOMOAdapter::CheckAndAddPredefinedNodeL()
         temp1.Append(KAMDownloadNodeName);
         temp1.Append(KAMSeparator8);
         temp1.Append(temp);
-       
         HBufC8* luid = DirectGetLuidAllocLC(temp1);
-
-         RDEBUG("CSCOMOAdapter::CheckAndAddPredefinedNodeL(): step5");
 
         if (luid->Length() > 0)
             {
@@ -4405,20 +4502,16 @@ void CSCOMOAdapter::CheckAndAddPredefinedNodeL()
             }
         else
             {
-            RDEBUG("CSCOMOAdapter::CheckAndAddPredefinedNodeL(): step6");
             // Not found, add node and mapping ... 
             //TError status(EError);
             TPtrC8 mapping(NSmlDmURI::LastURISeg(temp1) );
             TPtrC8 parent(NSmlDmURI::RemoveLastSeg(temp1) );
             TPtrC8 parentMapping(NSmlDmURI::LastURISeg(parent) );
             TInt cnt(NSmlDmURI::NumOfURISegs(temp1) );
-             RDEBUG("CSCOMOAdapter::CheckAndAddPredefinedNodeL(): step7");
             TUint32 newLuid(SessionL().DownloadL(mapping));
             //Callback().SetMappingL( temp1, *IntToDes8LC( newLuid ) );
             //CleanupStack::PopAndDestroy();
-            RDEBUG("CSCOMOAdapter::CheckAndAddPredefinedNodeL(): step8");
             DirectSetMappingL(temp1, *IntToDes8LC(newLuid) );
-            RDEBUG("CSCOMOAdapter::CheckAndAddPredefinedNodeL(): step9");
             CleanupStack::PopAndDestroy(); // for IntToDes8LC()
             CleanupStack::PopAndDestroy(luid);
             }
@@ -4466,8 +4559,6 @@ TInt CSCOMOAdapter::GetAdapterValue()
     TInt adapterValue;
     CRepository *repository = NULL;
     TRAPD( err, repository = CRepository::NewL ( KCRUidPrivateApplicationManagementKeys ) );
-
-    RDEBUG_2("error reading cenrep %d", err);
     if (err == KErrNone)
         {
         err = repository->Get(KAMAdapterValue, adapterValue);
@@ -4497,6 +4588,38 @@ TBool CSCOMOAdapter::RecognizeMimeType(const TDesC8& aMimeType)
         isSupportedMimeType = ETrue;
         }
     return isSupportedMimeType;
+    }
+
+HBufC8* CSCOMOAdapter::GetIdentifierIdL(const TUint32 aluid)
+    {
+    RDEBUG( "CSCOMOAdapter::GetIdentifierIdL: const TUint32 aluid, const TDesC8& aTargetUri" );
+    
+    _LIT8(KNull, "null");
+    TDeploymentComponent comp;
+    HBufC8 *id = NULL;
+    TInt err(SessionL().DeploymentComponent(aluid, comp) );
+    RDEBUG( "CSCOMOAdapter::GetIdentifierIdL: Step 1" );
+    
+    if(err == KErrNone)
+        {
+            RDEBUG( "CSCOMOAdapter::GetIdentifierIdL: Step 1.1" );
+            if(comp.iState == EDCSDelivered || comp.iState ==EDCSDownload)    
+                {
+                RDEBUG( "CSCOMOAdapter::GetIdentifierIdL: iState EDCSActive,EDCSInactive" );  
+                id = (comp.iPkgID).AllocL();
+                }
+            else if(comp.iState==EDCSActive || comp.iState ==EDCSInactive)
+                {
+                RDEBUG( "CSCOMOAdapter::GetIdentifierIdL: iState EDCSDelivered,EDCSDownload" ); 
+                id = (comp.iId).AllocL();
+                }
+            else
+                {
+                id = KNull().AllocL();
+                }
+        }
+    RDEBUG( "CSCOMOAdapter::GetIdentifierIdL: Step 1 end" );
+    return id;
     }
 // End of File
 

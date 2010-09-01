@@ -1,0 +1,89 @@
+/*
+* Copyright (c) 2002 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description: Implementation of customization components
+*
+*/
+
+
+PRJ_PLATFORMS
+DEFAULT
+
+PRJ_TESTEXPORTS
+// Nothing
+
+PRJ_EXPORTS
+
+/*
+../internal/test/TestFramework.ini                          /epoc32/data/z/system/data/TestFramework.ini
+../internal/test/TestFramework.ini                          /epoc32/data/z/testframework/TestFramework.ini
+../internal/test/TestFramework.ini                          /epoc32/RELEASE/winscw/UDEB/Z/testframework/TestFramework.ini
+../internal/test/TestFramework.ini                          /epoc32/RELEASE/winscw/UREL/Z/testframework/TestFramework.ini
+
+../internal/test/SupAdapter/SupAdapterTestScript.cfg        /epoc32/data/c/testframework/SupAdapter/SupAdapterTestScript.cfg
+
+../internal/test/SupAdapter/SupAdapterTestScript.cfg        /epoc32/RELEASE/winscw/UDEB/Z/testframework/SupAdapter/SupAdapterTestScript.cfg
+
+../internal/test/SupAdapter/SupAdapterTestScript.cfg        /epoc32/RELEASE/winscw/UREL/Z/testframework/SupAdapter/SupAdapterTestScript.cfg
+
+
+../internal/test/IsAdapter/IsAdapterTestScript.cfg          /epoc32/data/c/testframework/IsAdapter/IsAdapterTestScript.cfg
+../internal/test/IsAdapter/IsAdapterTestScript.cfg          /epoc32/RELEASE/winscw/UDEB/Z/testframework/IsAdapter/IsAdapterTestScript.cfg
+../internal/test/IsAdapter/IsAdapterTestScript.cfg          /epoc32/RELEASE/winscw/UREL/Z/testframework/IsAdapter/IsAdapterTestScript.cfg
+../internal/test/IsAdapter/dontpush.jpg                     /epoc32/data/c/testframework/IsAdapter/dontpush.jpg
+../internal/test/IsAdapter/dontpush.jpg                     /epoc32/RELEASE/winscw/UDEB/Z/testframework/IsAdapter/dontpush.jpg
+../internal/test/IsAdapter/dontpush.jpg                     /epoc32/RELEASE/winscw/UREL/Z/testframework/IsAdapter/dontpush.jpg
+
+../internal/test/TcAdapter/TcAdapterTestScript.cfg          /epoc32/data/c/testframework/TcAdapter/TcAdapterTestScript.cfg
+../internal/test/TcAdapter/tcadapter_expected1.log          /epoc32/data/c/testframework/TcAdapter/tcadapter_expected1.log
+../internal/test/TcAdapter/tcadapter_expected2.log          /epoc32/data/c/testframework/TcAdapter/tcadapter_expected2.log
+../internal/test/TcAdapter/TcAdapterPolicy1.txt             /epoc32/data/c/testframework/TcAdapter/TcAdapterPolicy1.txt
+../internal/test/TcAdapter/TcAdapterPolicy2.txt             /epoc32/data/c/testframework/TcAdapter/TcAdapterPolicy2.txt
+../internal/test/TcAdapter/TcAdapterPolicy3.txt             /epoc32/data/c/testframework/TcAdapter/TcAdapterPolicy3.txt
+../internal/test/TcAdapter/TcAdapterTestScript.cfg          /epoc32/RELEASE/winscw/UDEB/Z/testframework/TcAdapter/TcAdapterTestScript.cfg
+../internal/test/TcAdapter/tcadapter_expected1.log          /epoc32/RELEASE/winscw/UDEB/Z/testframework/TcAdapter/tcadapter_expected1.log
+../internal/test/TcAdapter/tcadapter_expected2.log          /epoc32/RELEASE/winscw/UDEB/Z/testframework/TcAdapter/tcadapter_expected2.log
+../internal/test/TcAdapter/TcAdapterPolicy_NokiaCert.txt    /epoc32/RELEASE/winscw/UDEB/Z/testframework/TcAdapter/TcAdapterPolicy_NokiaCert.txt
+../internal/test/TcAdapter/TcAdapterPolicy1.txt             /epoc32/RELEASE/winscw/UDEB/Z/testframework/TcAdapter/TcAdapterPolicy1.txt
+../internal/test/TcAdapter/TcAdapterPolicy2.txt             /epoc32/RELEASE/winscw/UDEB/Z/testframework/TcAdapter/TcAdapterPolicy2.txt
+../internal/test/TcAdapter/TcAdapterTestScript.cfg          /epoc32/RELEASE/winscw/UREL/Z/testframework/TcAdapter/TcAdapterTestScript.cfg
+../internal/test/TcAdapter/tcadapter_expected1.log          /epoc32/RELEASE/winscw/UREL/Z/testframework/TcAdapter/tcadapter_expected1.log
+../internal/test/TcAdapter/tcadapter_expected2.log          /epoc32/RELEASE/winscw/UREL/Z/testframework/TcAdapter/tcadapter_expected2.log
+../internal/test/TcAdapter/TcAdapterPolicy_NokiaCert.txt    /epoc32/RELEASE/winscw/UREL/Z/testframework/TcAdapter/TcAdapterPolicy_NokiaCert.txt
+../internal/test/TcAdapter/TcAdapterPolicy1.txt             /epoc32/RELEASE/winscw/UREL/Z/testframework/TcAdapter/TcAdapterPolicy1.txt
+../internal/test/TcAdapter/TcAdapterPolicy2.txt             /epoc32/RELEASE/winscw/UREL/Z/testframework/TcAdapter/TcAdapterPolicy2.txt
+*/
+// Add here...
+
+PRJ_MMPFILES
+// Specify the .mmp files required for building the important component
+// releasables.
+//
+// Specify "tidy" if the component you need to build doesn't need to be
+// released. Specify "ignore" if the MMP file exists but should be
+// ignored.
+// Example:
+/*
+/agnmodel/group/agnmodel.mmp
+#if defined(MARM)
+/agnmodel/group/agsvexe.mmp
+#endif
+*/
+
+PRJ_TESTMMPFILES
+// NOTE: If using ARS requirements .mmp file operation should be done under this.
+// 'abld test build'
+
+ThemesTest.mmp
+
+//  End of File

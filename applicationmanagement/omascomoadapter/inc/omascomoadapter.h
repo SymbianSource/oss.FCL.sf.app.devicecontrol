@@ -34,8 +34,6 @@
 
 #include "ApplicationManagementClient.h"
 
-const TInt KMaxUrlLength = 2048;
-
 namespace NApplicationManagement
     {
 
@@ -182,6 +180,11 @@ _LIT8( KAMInventoryDeliveredDynaChilds, "PkgID/Data/Name/Description/Status/Stat
 
     _LIT8( KNSmlDMSCOMOMetaType,"org.openmobilealliance.dm.softwarecomponent.OperationComplete" );
     _LIT8( KNSmlDMSCOMOMetaFormat, "text/plain" );
+    
+    //OMA SCOMO Specific
+    _LIT8(KDownloadState, "./SCOMO/Download/");
+    _LIT8(KDeliveredState, "./SCOMO/Inventory/Delivered/");
+    _LIT8(KDeployedState, "./SCOMO/Inventory/Deployed/");
     
     _LIT8(KDataStart, "<![CDATA[");
             _LIT8(KDataEnd, "]]>");
@@ -813,6 +816,9 @@ private:
 	TInt GetAdapterValue();
 	void SetAdapterValue(TInt aAdapterValue);
 	TBool RecognizeMimeType(const TDesC8& aMimeType);
+
+	void SetSCOMOTargetURIL(const TDesC8& aURI, const TDesC8& aMapping,const TError& aErrorStatus);
+	HBufC8* GetIdentifierIdL(const TUint32 aluid);
 
 private:
 

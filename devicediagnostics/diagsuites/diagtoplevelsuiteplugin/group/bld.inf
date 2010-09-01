@@ -1,0 +1,36 @@
+/*
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Build information file for project Diagnostics Top-Level Suite.
+*
+*/
+
+#include <platform_paths.hrh>
+PRJ_PLATFORMS
+DEFAULT
+
+PRJ_EXPORTS
+//../loc/diagtoplevelsuiteplugin.loc        MW_LAYER_LOC_EXPORT_PATH(diagtoplevelsuiteplugin.loc)
+../rom_files/devdiagtoplevelsuiteplugin.iby   CORE_MW_LAYER_IBY_EXPORT_PATH(devdiagtoplevelsuiteplugin.iby)
+
+PRJ_MMPFILES
+diagtoplevelsuiteplugin.mmp
+
+PRJ_TESTMMPFILES
+// None
+
+PRJ_TESTEXPORTS
+// None
+
+//  End of File
+

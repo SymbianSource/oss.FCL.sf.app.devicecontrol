@@ -1,0 +1,93 @@
+/*
+* Copyright (c) 2003-2006 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Project definition file for project ServiceHelp
+*
+*/
+
+
+// To get the APP_LAYER_SYSTEMINCLUDE-definition
+#include <platform_paths.hrh>
+#include <bldvariant.hrh>
+#include <data_caging_paths.hrh>
+
+TARGET		    onlinesupport.exe
+TARGETTYPE	    exe
+EPOCSTACKSIZE	0x5000 //define our own stack as this is no longer provided by apprun
+UID		        0x100039CE 0x10204338
+SECUREID        0x10204338
+VENDORID		VID_DEFAULT
+CAPABILITY		CAP_APPLICATION PowerMgmt AllFiles
+
+
+SOURCEPATH      ../OnlineSupport/src
+SOURCE          CCMApplication.cpp
+SOURCE          CCMAppUi.cpp
+SOURCE          CCMDocument.cpp
+SOURCE          Ccmregistrationmonitor.cpp
+SOURCE          Ccmsocketsengine.cpp
+SOURCE			MiniBrowser.cpp
+SOURCE			ccmdialogmonitor.cpp
+
+
+
+START RESOURCE ../data/OnlineSupport.rss
+HEADER
+TARGETPATH APP_RESOURCE_DIR
+LANGUAGE_IDS
+END // RESOURCE
+
+START RESOURCE  ../aif/OnlineSupport_reg.rss
+DEPENDS onlinesupport.rsg
+// Do not change the UID below.
+TARGETPATH      /private/10003a3f/apps
+END
+
+USERINCLUDE     . ../OnlineSupport/inc
+USERINCLUDE     ../PnP/NHwrParser
+USERINCLUDE     ../PnpPaosFilter/src
+
+// Default system include paths for application layer modules.
+APP_LAYER_SYSTEMINCLUDE
+
+
+LIBRARY	        euser.lib 
+LIBRARY	        apparc.lib 
+LIBRARY	        cone.lib 
+LIBRARY	        eikcore.lib 
+LIBRARY	        avkon.lib
+LIBRARY	        apgrfx.lib
+LIBRARY	        commdb.lib          // for commdb
+LIBRARY	        efsrv.lib 
+LIBRARY	        aknnotify.lib
+LIBRARY	        filelist.lib        // for CFLDFileListContainer
+LIBRARY	        profileeng.lib      // for profileeng
+LIBRARY	        esock.lib           // for sockets
+LIBRARY	        etelmm.lib
+LIBRARY	        etel.lib
+LIBRARY	        inetprotutil.lib 
+LIBRARY	        commonengine.lib
+LIBRARY	        centralrepository.lib
+LIBRARY	        apengine.lib        // for creating new Init Access
+LIBRARY	        sysutil.lib
+LIBRARY	        http.lib            // for RHttpTransaction
+LIBRARY	        bafl.lib            // for RStringPool
+LIBRARY	        nhwrparser.lib
+LIBRARY	        provisioningengine.lib
+LIBRARY	        insock.lib
+LIBRARY	        httpfiltercommon.lib // for HttpFilterCommonStringsExt
+LIBRARY	        pnp.lib             // for CPnpUtilImpl
+LIBRARY	        aknskins.lib        // for CAknsBasicBackgroundControlContext
+DEBUGLIBRARY    flogger.lib         // for logging
+
+SMPSAFE

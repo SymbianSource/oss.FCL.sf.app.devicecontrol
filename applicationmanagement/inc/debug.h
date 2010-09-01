@@ -28,7 +28,7 @@
 _LIT( KTarmLogFolderName, "tarm" );
 _LIT( KTarmLogFileName, "tarm.log" );
 // MACROS
-//#define _TARM_FILE_DEBUG
+
 #ifdef _TARM_FILE_DEBUG
 		#define RDEBUG(X)					RFileLogger::Write( KTarmLogFolderName, KTarmLogFileName, EFileLoggingModeAppend, _L(X) )
 		#define RDEBUG_2(X,Y)			RFileLogger::WriteFormat( KTarmLogFolderName, KTarmLogFileName, EFileLoggingModeAppend, _L(X),Y )	

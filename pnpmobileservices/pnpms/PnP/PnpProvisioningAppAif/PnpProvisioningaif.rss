@@ -1,0 +1,35 @@
+/*
+* Copyright (c) 2004-2006 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Resource definitions for project PnpProvisioningApp
+*
+*/
+
+
+#include <aiftool.rh>
+
+RESOURCE AIF_DATA
+    {
+    app_uid=0x10204339;
+    num_icons = 0; //1;
+    //embeddability = KAppEmbeddableOnly;
+    embeddability = KAppNotEmbeddable;
+    newfile = KAppDoesNotSupportNewFile;
+    hidden = KAppIsHidden;
+
+    datatype_list= { 
+        DATATYPE { priority= EDataTypePriorityHigh; type="application/vnd.nokia.headwrapper";} 
+        };
+    }
+
+// End of File

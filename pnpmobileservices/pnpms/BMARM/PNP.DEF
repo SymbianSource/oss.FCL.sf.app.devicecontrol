@@ -1,0 +1,29 @@
+EXPORTS
+	NewPnpUtilLC__Fv @ 1 NONAME R3UNUSED ; NewPnpUtilLC(void)
+	"_._12CPnpUtilImpl" @ 2 NONAME R3UNUSED ; CPnpUtilImpl::~CPnpUtilImpl(void)
+	CreateNewToken__12CPnpUtilImplUlRi @ 3 NONAME R3UNUSED ; CPnpUtilImpl::CreateNewToken(unsigned long, int &)
+	FetchHomeNetworkInfoL__12CPnpUtilImpl @ 4 NONAME R3UNUSED ; CPnpUtilImpl::FetchHomeNetworkInfoL(void)
+	FetchNetworkInfoL__12CPnpUtilImpl @ 5 NONAME R3UNUSED ; CPnpUtilImpl::FetchNetworkInfoL(void)
+	FormatMncCodeL__C12CPnpUtilImplGt4TBuf1i4Gt4TBuf1i8Rt4TBuf1i8 @ 6 NONAME ; CPnpUtilImpl::FormatMncCodeL(TBuf<4>, TBuf<8>, TBuf<8> &) const
+	GetKeyInfoL__12CPnpUtilImplR5TDes8 @ 7 NONAME R3UNUSED ; CPnpUtilImpl::GetKeyInfoL(TDes8 &)
+	GetNonceL__12CPnpUtilImplR5TDes8 @ 8 NONAME R3UNUSED ; CPnpUtilImpl::GetNonceL(TDes8 &)
+	GetNonceValidityTimeL__12CPnpUtilImpl @ 9 NONAME R3UNUSED ; CPnpUtilImpl::GetNonceValidityTimeL(void)
+	GetTokenValidityTime__12CPnpUtilImpl @ 10 NONAME R3UNUSED ; CPnpUtilImpl::GetTokenValidityTime(void)
+	GetTokenValue__12CPnpUtilImplRi @ 11 NONAME R3UNUSED ; CPnpUtilImpl::GetTokenValue(int &)
+	HomeMccL__C12CPnpUtilImpl @ 12 NONAME R3UNUSED ; CPnpUtilImpl::HomeMccL(void) const
+	HomeMncL__C12CPnpUtilImpl @ 13 NONAME R3UNUSED ; CPnpUtilImpl::HomeMncL(void) const
+	ImsiL__C12CPnpUtilImplRt4TBuf1i15 @ 14 NONAME R3UNUSED ; CPnpUtilImpl::ImsiL(TBuf<15> &) const
+	NetworkMccL__C12CPnpUtilImpl @ 15 NONAME R3UNUSED ; CPnpUtilImpl::NetworkMccL(void) const
+	NetworkMncL__C12CPnpUtilImpl @ 16 NONAME R3UNUSED ; CPnpUtilImpl::NetworkMncL(void) const
+	NewLC__12CPnpUtilImpl @ 17 NONAME R3UNUSED ; CPnpUtilImpl::NewLC(void)
+	OperatorLongName__12CPnpUtilImplRt4TBuf1i20 @ 18 NONAME R3UNUSED ; CPnpUtilImpl::OperatorLongName(TBuf<20> &)
+	RegisteredInHomeNetworkL__12CPnpUtilImpl @ 19 NONAME R3UNUSED ; CPnpUtilImpl::RegisteredInHomeNetworkL(void)
+	SetHomeMccL__12CPnpUtilImplGt4TBuf1i4 @ 20 NONAME ; CPnpUtilImpl::SetHomeMccL(TBuf<4>)
+	SetHomeMncL__12CPnpUtilImplGt4TBuf1i8 @ 21 NONAME ; CPnpUtilImpl::SetHomeMncL(TBuf<8>)
+	SetNetworkMccL__12CPnpUtilImplGt4TBuf1i4 @ 22 NONAME ; CPnpUtilImpl::SetNetworkMccL(TBuf<4>)
+	SetNetworkMncL__12CPnpUtilImplGt4TBuf1i8 @ 23 NONAME ; CPnpUtilImpl::SetNetworkMncL(TBuf<8>)
+	StoreAccessPoint__12CPnpUtilImplUl @ 24 NONAME R3UNUSED ; CPnpUtilImpl::StoreAccessPoint(unsigned long)
+	VerifySignatureL__12CPnpUtilImplRC6TDesC8N31 @ 25 NONAME ; CPnpUtilImpl::VerifySignatureL(TDesC8 const &, TDesC8 const &, TDesC8 const &, TDesC8 const &)
+	Version__12CPnpUtilImplR6TDes16 @ 26 NONAME R3UNUSED ; CPnpUtilImpl::Version(TDes16 &)
+	CreateNewNonceL__12CPnpUtilImplUiR5TDes8 @ 27 NONAME R3UNUSED ; CPnpUtilImpl::CreateNewNonceL(unsigned int, TDes8 &)
+

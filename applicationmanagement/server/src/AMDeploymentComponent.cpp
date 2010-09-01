@@ -15,21 +15,22 @@
  *
  */
 
+#include "AMDownload.h"
+#include "AMDeploymentComponent.h"
+#include "debug.h"
 #include <e32debug.h>
 #include <s32mem.h>
 #include <featmgr.h>
-#include <ssl.h>
-#include <apgcli.h>
-#include <apmrec.h>
-#include <apmstd.h>
+#include "amprivateCRKeys.h"
+//#include "aminstalloptions.h"
+#include <ssl.h>	
 #ifdef __SERIES60_30__
 #include <CMenuClient.h>
 #endif
 #include "amsmlhelper.h"
-#include "amprivateCRKeys.h"
-#include "AMDeploymentComponent.h"
-#include "debug.h"
-
+#include "apgcli.h"
+#include "apmrec.h"
+#include "apmstd.h"
 
 using namespace NApplicationManagement;
 
@@ -128,8 +129,6 @@ CDeploymentComponent &CDeploymentComponent::operator=( const CDeploymentComponen
         iPkgIDRef = aData.PkgIDRef();
         iPkgType = aData.PkgType();
         iRemovableApp = aData.AppRemovable();
-        iDriveSelection = aData.DriveSelected();
-        iComponentId = aData.iComponentId;
         iInstallOptsSet = aData.InstallOptsSet();
         iPkgVersion = aData.iPkgVersion;
         iDownloadStatus = aData.iDownloadStatus;
@@ -254,11 +253,11 @@ TInt CDeploymentComponent::SerializedFormLength() const
     // iUserId , iState, iPkgVer, iUid, iIdLen, iNameLen, iVersLen, iDownState, iOwner, iOldState ,iDownUriLen, iInstallOptsset
     return (20*4)+iUserId.Length() + iId.Length() + iName.Length()
             + iVersion.Length() +
-            
+
     iMidletName.Length() + iMideltVendorName.Length()
             + iMidletVersion.Length()+ iDownloadURI.Length()
             + iDescription.Length()+ iPkgID.Length()+iPkgIDRef.Length()
-            +iPkgType.Length()+ sizeof(iRemovableApp)+sizeof(iDriveSelection)+sizeof(iComponentId) + iData->SerializedFormLength()
+            +iPkgType.Length()+ sizeof(iRemovableApp) + iData->SerializedFormLength()
             + iMetaData->SerializedFormLength() + sizeof(TAMInstallOptions);
     }
 
@@ -305,8 +304,6 @@ TInt CDeploymentComponent::SerializedFormL(RWriteStream &aBuffer) const
     aBuffer.WriteUint32L(iPkgType.Length() );
     aBuffer.WriteL(iPkgType);
     aBuffer.WriteUint32L(iRemovableApp);
-    aBuffer.WriteUint32L(iDriveSelection);
-    aBuffer.WriteInt32L(iComponentId);
     iData->SerializedFormL(aBuffer);
     iMetaData->SerializedFormL(aBuffer);
     aBuffer.WriteUint32L(iInstallOptsSet);
@@ -376,8 +373,6 @@ void CDeploymentComponent::ConstructLoadL(const TDesC8 &aBuffer)
     stream.ReadL(iPkgType, len);
 
     iRemovableApp = stream.ReadUint32L();
-    iDriveSelection = stream.ReadUint32L();
-    iComponentId = stream.ReadInt32L();
     iData = CDeploymentComponentData::LoadL(stream);
     iMetaData = CDeploymentComponentData::LoadL(stream);
 
@@ -428,15 +423,6 @@ TBool CDeploymentComponent::AppRemovable() const
     return iRemovableApp;
     }
 
-TBool CDeploymentComponent::DriveSelected() const
-        {
-        return iDriveSelection;
-        }
-
-TInt CDeploymentComponent::GetComponentId() const
-        {
-        return iComponentId;
-        }
 void CDeploymentComponent::SetMetaDataL(const TDesC8 &aMimeType)
     {
     iMetaData->DataFileName();
@@ -452,11 +438,6 @@ void CDeploymentComponent::SetMetaDataL(const TDesC8 &aMetaData,
 void CDeploymentComponent::SetAppRemovableStatus(const TBool &aRemovable)
     {
     iRemovableApp = aRemovable;
-    }
-
-void CDeploymentComponent::SetDriveSelectionStatus(const TBool &aDriveSelection)
-    {
-    iDriveSelection = aDriveSelection;
     }
 
 void CDeploymentComponent::SetInstallOptsL(const TDesC8 &aInstallOpts)
@@ -724,8 +705,7 @@ void CDeploymentComponent::SuccessStatusUpdateL(const TDesC &aDlFileName,
         const TDesC8& aDlMimeType)
     {
     RDEBUG( "CDeploymentComponent::SuccessStatusUpdateL : start");
-    
-   
+    SetDataL(aDlFileName, aDlMimeType);
     
     TBuf<256> FileType;
     TBuf8<256> FileType8;
@@ -738,18 +718,14 @@ void CDeploymentComponent::SuccessStatusUpdateL(const TDesC &aDlFileName,
         RSession.AppForDocument(aDlFileName,uid, datatype );
          
         FileType.Copy(datatype.Des()); 
-        RDEBUG_2( "CDeploymentComponent::Pkg Id: %d ", uid.iUid);  
-        RDEBUG_2( "CDeploymentComponent::Pkg MIME: '%S' ", &FileType);  
+            
+           
         }
     RSession.Close();
     
     FileType8.Copy(FileType);
     
-    SetDataL(aDlFileName, FileType8);
-    
-    
-    
-    //SetDataL(FileType8);
+    SetDataL(FileType8);
 
     RDEBUG8_2( "CDeploymentComponent::Pkg MIME: '%S' ", &FileType8);
 
@@ -857,11 +833,6 @@ void CDeploymentComponent::DestroyL(CRepository &aRepository)
 void CDeploymentComponent::SetOwner(const TInt &aInfo)
     {
     iOwner = aInfo;
-    }
-
-void CDeploymentComponent::SetComponentId(const TInt &aComponentId)
-    {
-    iComponentId = aComponentId;
     }
 
 void CDeploymentComponent::SetIAPL(const TInt aIap)

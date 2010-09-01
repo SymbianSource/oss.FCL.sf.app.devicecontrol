@@ -20,11 +20,8 @@
 
 //  EXTERNAL INCLUDES
 #include <e32base.h>
-#include <hbdialog.h>
 #include "ApplicationManagementCommon.h"
 #include "javaregistryentry.h"
-
-
 namespace NApplicationManagement
     {
 
@@ -78,15 +75,6 @@ public:
         virtual void GetInstalledMidletParametersL(
                 TMidletParameters& aMidletParameters);
 
-	static void SetFileName(const TFileName& aFileName);
-	static void GetFileName(TFileName& aFileName);
-        
-public:
-        static TInt mHidden;
-        static HbDialog* mCurrDlg;
-        static TInt iSilentSession;
-        static TFileName iFileName;
-        
         };
 
     }

@@ -15,21 +15,19 @@
  *
  */
 
-
+#include "AMPreInstallApp.h"
 #include <pathinfo.h>
 #include <driveinfo.h>
+#include "debug.h"
 #include <apmstd.h>  //for KMaxDataTypeLength
 #include <sisregistrysession.h>
 #include <sisregistrypackage.h>
 #include <e32cmn.h> 
-#include <utf.h>
-#include <sisregistryentry.h>
+#include<utf.h>
+#include<sisregistryentry.h>
 #include <caf/caf.h>
 #include <apgcli.h>
 #include <SWInstDefs.h>
-
-#include "AMPreInstallApp.h"
-#include "debug.h"
 
 using namespace NApplicationManagement;
 CAMPreInstallApp* CAMPreInstallApp::NewL()
@@ -39,13 +37,11 @@ CAMPreInstallApp* CAMPreInstallApp::NewL()
     return self;
 
     }
-
-
 CAMPreInstallApp* CAMPreInstallApp::NewLC()
     {
-    CAMPreInstallApp *self = new (ELeave) CAMPreInstallApp();
-    CleanupStack::PushL(self);
-    self->ConstructL();
+    CAMPreInstallApp *self = new ( ELeave ) CAMPreInstallApp(  );
+    CleanupStack::PushL( self ) ;
+    self->ConstructL() ;
     return self;
 
     }
@@ -69,8 +65,7 @@ void CAMPreInstallApp::ConstructL()
       iPreInstallPath.Append(mmcDrive);
       iPreInstallPath.Append(KPreInstallPath);
     }
-void CAMPreInstallApp::GetPreInstalledAppsL(RPointerArray<
-        TPreInstalledAppParams> &aPreInstalledAppParams)
+void CAMPreInstallApp::GetPreInstalledAppsL(RPointerArray<TPreInstalledAppParams> &aPreInstalledAppParams)
     {
 
     MakeAllInstallPathsL();
@@ -115,8 +110,7 @@ void CAMPreInstallApp::ListPreInstalledAppL(const TDesC& installDocPath)
                 }
 
 #ifdef RD_MULTIPLE_DRIVE
-            if (TParsePtrC(installDocPath).Path().CompareF(KPreInstallPath)
-                    == 0)
+            if ( TParsePtrC( installDocPath ).Path().CompareF(KPreInstallPath) == 0 )
 #else
             if (installDocPath.CompareF(iPreInstallPath) == 0)
 #endif
@@ -161,8 +155,6 @@ void CAMPreInstallApp::ListPreInstalledAppL(const TDesC& installDocPath)
 		    {
                 CleanupClosePushL(registryEntry);
                 TBool isPreInstalled = registryEntry.PreInstalledL();
-               // TBool isPreInstalled = ETrue;
-
                 RDEBUG_4("Clist_PreInstallAppUi: ListPreInstalledApp: UID is : '0x%X', installed:, preinstalled %d  %d",appUid,installed,isPreInstalled);
 
                 for (TInt i(0); isPreInstalled && i < uids.Count(); i++)
@@ -233,13 +225,9 @@ void CAMPreInstallApp::ListPreInstalledAppL()
     if (iPreInstallDocumentPath.Length() > 0)
         {
         ListPreInstalledAppL(iPreInstallDocumentPath);
-        //_LIT(KInstallpath,"C:\\private\\10202dce\\");
-        //ListPreInstalledAppL(KInstallpath);
         }
 #endif
-
     }
-    
 TBool CAMPreInstallApp::RecognizeL(TDesC& aPathAndName, HBufC* aMimeType)
     {
     TBool IsOK(ETrue);

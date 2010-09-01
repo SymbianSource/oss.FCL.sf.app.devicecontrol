@@ -20,10 +20,19 @@
 #define __AMRFS_H__
 
 #include <e32std.h>
+#include <AknServerApp.h>
+#include <e32std.h>
+#include "ApplicationManagementClientServer.h"
+#include <ssl.h>
+#include <f32file.h>
+#include <AknServerApp.h>
+#include <uikon.hrh>
 
-class RAppMgmtRfs : public RSessionBase
+class RAppMgmtRfs : public RAknAppServiceBase
 	{
-	public:
+	public: // Constructors 
+
+	IMPORT_C RAppMgmtRfs();
 	
 	/**
 	 * Connect Connects to ApplicationManagmeent server (starts it if it's not 

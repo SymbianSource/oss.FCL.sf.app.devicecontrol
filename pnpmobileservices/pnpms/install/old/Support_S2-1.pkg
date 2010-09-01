@@ -1,0 +1,69 @@
+;
+; Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
+; All rights reserved.
+; This component and the accompanying materials are made available
+; under the terms of "Eclipse Public License v1.0"
+; which accompanies this distribution, and is available
+; at the URL "http://www.eclipse.org/legal/epl-v10.html".
+;
+; Initial Contributors:
+; Nokia Corporation - initial contribution.
+;
+; Contributors:
+;
+; Description:
+;
+;
+; Description: Implementation of PnPMS components
+;
+;Languages
+&EN
+;
+; UID is the app's UID
+;
+#{"Online Support wProvisioning (S2*1)"},(0x10204341),1,5,2
+;
+;Supports Series 60 v 2.0
+;This line indicates that this installation is for the Series 60 platform v2.0
+;This line must appear _exactly_ as shown below in the sis file
+;If this line is missing or incorrect, the sis file will not be able
+;to be installed on Series 60 v2.0 platforms
+(0x101F7960), 0, 0, 0, {"Series60ProductID"} 
+;
+; Files to install
+;
+;@"..\..\Pnp\install\Support S2-1.SIS",(0x10204338) 
+
+"\Epoc32\release\thumb\urel\OnlineSupport.app"							-"!:\system\apps\OnlineSupport\OnlineSupport.app"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport.r01"			-"!:\system\apps\OnlineSupport\OnlineSupport.r01"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport_caption.r01"	-"!:\system\apps\OnlineSupport\OnlineSupport_caption.r01"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport.r02"			-"!:\system\apps\OnlineSupport\OnlineSupport.r02"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport_caption.r02"	-"!:\system\apps\OnlineSupport\OnlineSupport_caption.r02"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport.r03"			-"!:\system\apps\OnlineSupport\OnlineSupport.r03"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport_caption.r03"	-"!:\system\apps\OnlineSupport\OnlineSupport_caption.r03"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport.r04"			-"!:\system\apps\OnlineSupport\OnlineSupport.r04"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport_caption.r04"	-"!:\system\apps\OnlineSupport\OnlineSupport_caption.r04"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport.r05"			-"!:\system\apps\OnlineSupport\OnlineSupport.r05"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport_caption.r05"	-"!:\system\apps\OnlineSupport\OnlineSupport_caption.r05"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport.r06"			-"!:\system\apps\OnlineSupport\OnlineSupport.r06"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport_caption.r06"	-"!:\system\apps\OnlineSupport\OnlineSupport_caption.r06"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport.r09"			-"!:\system\apps\OnlineSupport\OnlineSupport.r09"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport_caption.r09"	-"!:\system\apps\OnlineSupport\OnlineSupport_caption.r09"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport.r13"			-"!:\system\apps\OnlineSupport\OnlineSupport.r13"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport_caption.r13"	-"!:\system\apps\OnlineSupport\OnlineSupport_caption.r13"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport.r29"			-"!:\system\apps\OnlineSupport\OnlineSupport.r29"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport_caption.r29"	-"!:\system\apps\OnlineSupport\OnlineSupport_caption.r29"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport.r30"			-"!:\system\apps\OnlineSupport\OnlineSupport.r30"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport_caption.r30"	-"!:\system\apps\OnlineSupport\OnlineSupport_caption.r30"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport.r31"			-"!:\system\apps\OnlineSupport\OnlineSupport.r31"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport_caption.r31"	-"!:\system\apps\OnlineSupport\OnlineSupport_caption.r31"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport.r32"			-"!:\system\apps\OnlineSupport\OnlineSupport.r32"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport_caption.r32"	-"!:\system\apps\OnlineSupport\OnlineSupport_caption.r32"
+"\Epoc32\data\z\system\apps\OnlineSupport\OnlineSupport.aif"			-"!:\system\apps\OnlineSupport\OnlineSupport.aif"
+"\epoc32\release\thumb\urel\RECnhwr.MDL"									-"!:\system\recogs\RECnhwr.MDL"
+"\Epoc32\release\thumb\urel\PnP.dll"										-"!:\system\libs\PnP.dll"
+"\epoc32\data\Z\System\shareddata\1020433A.ini"							-"C:\System\SharedData\1020433A.ini"
+"\Epoc32\release\thumb\urel\PnPRedirect.exe"									-"!:\system\apps\OnlineSupport\PnPRedirect.exe"
+
+"\epoc32\data\Z\System\shareddata\10204339.ini"							-"C:\System\SharedData\10204339.ini"
+@"..\..\PnP\install\PnPProv S2-1.sis",(0x10204339)

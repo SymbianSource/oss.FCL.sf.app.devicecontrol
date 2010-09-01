@@ -30,10 +30,6 @@ CApplicationManagementUtility* CApplicationManagementUtility::NewL()
 
     return self;
     }
-TInt CApplicationManagementUtility::mHidden=0;
-HbDialog* CApplicationManagementUtility::mCurrDlg=0;
-TInt CApplicationManagementUtility::iSilentSession = 0;
-TFileName CApplicationManagementUtility::iFileName(KNullDesC);
 
 CApplicationManagementUtility* CApplicationManagementUtility::NewLC()
     {
@@ -85,13 +81,4 @@ void CApplicationManagementUtility::GetInstalledMidletParametersL(
     //do nothng
     RDEBUG( "CApplicationManagementUtility::GetInstalledMidletParametersL: end");
     }
-void CApplicationManagementUtility::SetFileName(const TFileName& aFileName)
-    {
-	iFileName = aFileName;
-    }
-void CApplicationManagementUtility::GetFileName(TFileName& aFileName)
-   {
-	aFileName = iFileName;
-   }
-	
 //  END OF FILE

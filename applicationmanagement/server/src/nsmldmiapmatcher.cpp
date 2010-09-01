@@ -15,10 +15,10 @@
  *
  */
 
-#include <utf.h>
-#include <smldmadapter.h>
 #include "nsmldmiapmatcher.h"
 
+#include <utf.h>
+#include <smldmadapter.h>
 
 // -----------------------------------------------------------------------------
 // CNSmlDMIAPMatcher* CNSmlDMIAPMatcher::NewL( MSmlDmCallback* aDmCallback )
@@ -153,7 +153,7 @@ HBufC8* CNSmlDMIAPMatcher::URIFromIAPIdL(TInt aIAPId)
 // -----------------------------------------------------------------------------
 // TInt CNSmlDMIAPMatcher::DesToInt(const TDesC& aLuid)
 // -----------------------------------------------------------------------------
-TInt CNSmlDMIAPMatcher::DesToInt(const TDesC8& aLuid)
+TInt CNSmlDMIAPMatcher::DesToInt(const TDesC8& aLuid) const
     {
     TLex8 lex(aLuid);
     TInt value = 0;

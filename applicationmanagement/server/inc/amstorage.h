@@ -18,11 +18,11 @@
 #ifndef __AMDSTORAGE_H__
 #define __AMDSTORAGE_H__
 
+#include "ApplicationManagementCommon.h"
 #include <e32base.h>
 #include <ssl.h>
-#include <s32mem.h>
-#include "ApplicationManagementCommon.h"
 
+#include <s32mem.h>
 class CRepository;
 
 namespace NApplicationManagement

@@ -1,0 +1,76 @@
+/*
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). 
+* All rights reserved.
+* This component and the accompanying materials are made available
+* under the terms of "Eclipse Public License v1.0"
+* which accompanies this distribution, and is available
+* at the URL "http://www.eclipse.org/legal/epl-v10.html".
+*
+* Initial Contributors:
+* Nokia Corporation - initial contribution.
+*
+* Contributors:
+*
+* Description:  Project specification file.
+*
+*/
+
+
+#include  <data_caging_paths.hrh>    // For RESOURCE_FILES_DIR
+// To get the MW_LAYER_SYSTEMINCLUDE-definition
+#include <platform_paths.hrh>
+
+CAPABILITY          CAP_ECOM_PLUGIN ReadDeviceData WriteDeviceData
+TARGET              devdiagvibrateplugin.dll
+TARGETTYPE          PLUGIN
+UID                 0x10009D8D 0x2000E586
+VENDORID            VID_DEFAULT
+
+
+SOURCEPATH ../src
+SOURCE    diagvibratepluginImplementationtable.cpp
+SOURCE    diagvibrateplugin.cpp
+SOURCE    diagvibratepluginengine.cpp
+
+//User include paths
+USERINCLUDE     ../inc
+USERINCLUDE     ../data // For *.rh
+USERINCLUDE     ../loc
+
+//System include paths
+SYSTEMINCLUDE   /epoc32/include/ecom
+// ADO & Platformization Changes
+
+
+// Default system include paths for middleware layer modules.
+APP_LAYER_SYSTEMINCLUDE
+
+SOURCEPATH      ../data
+
+START RESOURCE  devdiagvibrateplugin.rss
+TARGET          devdiagvibrateplugin.rsc
+TARGETPATH      ECOM_RESOURCE_DIR
+END
+
+START RESOURCE  devdiagvibratepluginrsc.rss
+HEADER
+TARGETPATH      RESOURCE_FILES_DIR
+LANGUAGE_IDS
+END
+
+LIBRARY   euser.lib
+LIBRARY   avkon.lib
+
+LIBRARY   commonengine.lib      
+LIBRARY   featmgr.lib           
+LIBRARY   flogger.lib           
+LIBRARY   diagframework.lib 
+LIBRARY   diagpluginbase.lib
+LIBRARY   centralrepository.lib // for CRepository
+LIBRARY   hwrmvibraclient.lib
+LIBRARY   profileengine.lib 
+LIBRARY   eikcoctl.lib
+LIBRARY   eikdlg.lib
+
+
+// End of File

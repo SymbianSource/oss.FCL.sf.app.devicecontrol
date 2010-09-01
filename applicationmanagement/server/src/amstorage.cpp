@@ -15,18 +15,17 @@
  *
  */
 
-
+#include "amstorage.h"
 #include <centralrepository.h>
+#include "AMDeploymentComponent.h"
+#include "debug.h"
 #include <s32mem.h>
+#include "amprivateCRKeys.h"
 #include <s32file.h>
 #include <e32des8.h>
 #ifndef __SERIES60_30__
 #include "AMAppHideUtil.h"
 #endif
-#include "debug.h"
-#include "amprivateCRKeys.h"
-#include "amstorage.h"
-#include "AMDeploymentComponent.h"
 
 using namespace NApplicationManagement;
 
