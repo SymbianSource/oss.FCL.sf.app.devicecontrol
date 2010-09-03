@@ -31,6 +31,9 @@ symbian: {
 }
 
 CONFIG += hb service
+
+RSS_RULES += "hidden = KAppIsHidden;"
+
 INCLUDEPATH += $$APP_LAYER_SYSTEMINCLUDE
 include(Cpqtsp.pri)
 LIBS+=-lxqservice -lxqserviceutil -lflogger

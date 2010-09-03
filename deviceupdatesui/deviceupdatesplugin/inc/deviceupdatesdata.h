@@ -26,8 +26,6 @@ _LIT( KDMUIName, "deviceupdates" );
 
 
 const TUid KUidSmlSyncApp = { 0x101F6DE5 };
-const TUint32 KNsmlDmUILaunch = 0x00000009;
-
 
 class DeviceUpdateData : public CpSettingFormEntryItemData
 {

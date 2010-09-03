@@ -39,7 +39,7 @@
 #include "dminforetrieval.h"
 #include "deviceupdatemoniterobserver.h"
 //_LIT( KSmlEOL,      "\n" );
-
+const TUid KControlPanelAppUid ={0x20025fd9};
 
 class HbDialog;
 class HbPushButton;

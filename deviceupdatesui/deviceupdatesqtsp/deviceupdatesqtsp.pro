@@ -37,6 +37,9 @@ symbian: INCLUDEPATH += /orbit/hb/include/hbservices \
 			   /orbit/hb/include/hbservices/private \
 			   /orbit/hb/include/hbcore \
 			   /orbit/hb/include/hbcore/private	
+			   
+RSS_RULES += "hidden = KAppIsHidden;"
+			   
 INCLUDEPATH += .
 INCLUDEPATH += $$APP_LAYER_SYSTEMINCLUDE			   
 

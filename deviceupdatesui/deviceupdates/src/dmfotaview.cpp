@@ -22,8 +22,11 @@
 #include <sysutil.h>
 #include <hbscrollarea.h>
 #include <etel.h>
+#include <eikenv.h>
 #include <featmgr.h>
 #include <etelmm.h>
+#include <apgtask.h>
+#include <coemain.h>
 #include <hbnotificationdialog.h>
 #include <centralrepository.h>
 #include <sysversioninfo.h>
@@ -115,6 +118,8 @@ bool DMFotaView::addFotaView()
     
     mSoftKeyBackAction = new HbAction(Hb::BackNaviAction ,this);
     mSoftKeyBackAction->setText("Back");
+    fotaPortraitView->setNavigationAction(mSoftKeyBackAction);
+	fotaLandscapeView->setNavigationAction(mSoftKeyBackAction);
     connect(mSoftKeyBackAction, SIGNAL(triggered()), this, SLOT(backtoMainWindow()));
         
     
@@ -547,8 +552,25 @@ inline RFotaEngineSession & DMFotaView::FotaEngineL()
 void DMFotaView::backtoMainWindow()
     {
     qDebug("DMFotaView::backtoMainWindow >>");
-        qApp->quit();
-        qDebug("DMFotaView::backtoMainWindow <<");
+    QString appName = qApp->applicationName();
+    QString cpAppTitle("Control panel");
+    mMainWindow->removeView(fotaPortraitView);
+    mMainWindow->removeView(fotaLandscapeView);
+    fotaPortraitView->deleteLater();
+    fotaLandscapeView->deleteLater();
+    fotaPortraitView = NULL;
+    fotaLandscapeView = NULL;
+    if (appName == cpAppTitle)
+        {
+        TApaTaskList taskList(CEikonEnv::Static()->WsSession());
+        TApaTask task = taskList.FindApp(KControlPanelAppUid);
+        if (task.Exists())
+            {
+            task.BringToForeground();
+            }
+        }
+    qApp->quit();
+    qDebug("DMFotaView::backtoMainWindow <<");
     }
 
 // -----------------------------------------------------------------------------

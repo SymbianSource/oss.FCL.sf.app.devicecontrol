@@ -40,7 +40,6 @@ LIBRARY 			flogger.lib
 LIBRARY				efsrv.lib
 LIBRARY         apparc.lib         
 LIBRARY         apgrfx.lib
-LIBRARY         avkon.lib
 LIBRARY         estor.lib
 LIBRARY         cone.lib
 LIBRARY         eikcore.lib

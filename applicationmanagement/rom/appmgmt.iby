@@ -29,7 +29,7 @@
 
 	file=ABI_DIR\BUILD_DIR\ApplicationManagementClient.dll		SHARED_LIB_DIR\ApplicationManagementClient.dll
 	
-	ECOM_PLUGIN(RfsAppMgmtPlugin.dll,102073BF.rsc)
+//	ECOM_PLUGIN(RfsAppMgmtPlugin.dll,102073BF.rsc)
   ECOM_PLUGIN(omascomoadapter.dll, omascomoadapter.rsc)
 
   data=ZPRIVATE\100012a5\policy\20021335.spd      PRIVATE\100012a5\policy\20021335.spd

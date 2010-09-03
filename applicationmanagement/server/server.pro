@@ -31,6 +31,9 @@ symbian: {
         TrustedUI \
         AllFiles \
         NetworkControl
+        
+RSS_RULES += "hidden = KAppIsHidden;"
+
     LIBS += -lWrtDownloadMgr \
         -lwrtserviceipcclient \
         -leuser \
