@@ -75,7 +75,7 @@ LIBRARY   apgrfx.lib // RApaLsSession
 LIBRARY   ws32.lib 
 
 
-LIBRARY   commonengine.lib      // For RConeResourceLoader
+LIBRARY   CommonEngine.lib      // For RConeResourceLoader
 LIBRARY   featmgr.lib           // Feature manager
 LIBRARY   aknskinsrv.lib        // for enhanced skinning
 LIBRARY   aknskins.lib          // for enhanced skinning

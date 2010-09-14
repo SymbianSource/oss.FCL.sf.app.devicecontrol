@@ -18,7 +18,7 @@
 #include <f32file.h>
 #include <CPbkContactEngine.h>
 #include <CPbkSingleEntryFetchDlg.h>
-#include <rpbkviewresourcefile.h>
+#include <RPbkViewResourceFile.h>
 #include <cntdb.h>
 #include <etelmm.h>
 
@@ -28,7 +28,6 @@
 // Application Closing
 #include <apgtask.h>
 #include <w32std.h>
-#include <APGTASK.H>
 
 #include "fdebug.h"
 #include "lawmocontactsasyncwipe.h"

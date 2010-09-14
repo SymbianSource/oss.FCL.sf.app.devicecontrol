@@ -52,7 +52,7 @@ SYSTEMINCLUDE           /epoc32/include/ecom
 
 LIBRARY                 euser.lib
 LIBRARY                 ecom.lib
-LIBRARY                 commonengine.lib
+LIBRARY                 CommonEngine.lib
 LIBRARY                 aknicon.lib
 LIBRARY                 egul.lib
 LIBRARY                 flogger.lib

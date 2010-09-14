@@ -22,7 +22,7 @@
 #include <e32base.h>
 #include <smldmadapter.h>
 #include <centralrepository.h>
-#include "lawmoclient.h"
+#include <lawmoclient.h>
 #include <dcmoconst.h>
 
 const TInt KMaxBufferLength = 256;

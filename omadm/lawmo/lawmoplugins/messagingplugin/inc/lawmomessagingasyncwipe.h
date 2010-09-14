@@ -28,7 +28,6 @@
 // Application Closing
 #include <apgtask.h>
 #include <w32std.h>
-#include <APGTASK.H>
 
 #define KMessagingAppUid 0x100058C5  // Messgaing App Uid
 

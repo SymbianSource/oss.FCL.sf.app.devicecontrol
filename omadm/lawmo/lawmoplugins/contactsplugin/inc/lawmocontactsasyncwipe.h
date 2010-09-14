@@ -24,7 +24,7 @@
 
 #include <CPbkContactEngine.h>
 #include <CPbkSingleEntryFetchDlg.h>
-#include <rpbkviewresourcefile.h>
+#include <RPbkViewResourceFile.h>
 #include <cntdb.h>
 #include "fdebug.h"
  

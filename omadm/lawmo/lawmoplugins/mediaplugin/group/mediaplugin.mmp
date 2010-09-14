@@ -44,7 +44,7 @@ end
 
 LIBRARY 			euser.lib ecom.lib efsrv.lib bafl.lib  etul.lib
 LIBRARY       		centralrepository.lib
-LIBRARY 			commonengine.lib               // Series 60 common components library
+LIBRARY 			CommonEngine.lib               // Series 60 common components library
 LIBRARY				cntmodel.lib flogger.lib
 LIBRARY			 	MetaDataUtility.lib
 LIBRARY			  	mdeclient.lib apmime.lib

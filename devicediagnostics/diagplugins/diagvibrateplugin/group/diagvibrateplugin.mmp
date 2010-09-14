@@ -61,14 +61,14 @@ END
 LIBRARY   euser.lib
 LIBRARY   avkon.lib
 
-LIBRARY   commonengine.lib      
+LIBRARY   CommonEngine.lib      
 LIBRARY   featmgr.lib           
 LIBRARY   flogger.lib           
 LIBRARY   diagframework.lib 
 LIBRARY   diagpluginbase.lib
 LIBRARY   centralrepository.lib // for CRepository
 LIBRARY   hwrmvibraclient.lib
-LIBRARY   profileengine.lib 
+LIBRARY   ProfileEngine.lib 
 LIBRARY   eikcoctl.lib
 LIBRARY   eikdlg.lib
 

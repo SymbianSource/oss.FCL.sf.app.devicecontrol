@@ -64,7 +64,7 @@ LIBRARY   avkon.lib
 LIBRARY   eikcoctl.lib
 LIBRARY   eikdlg.lib
 
-LIBRARY   commonengine.lib      // For StringLoader
+LIBRARY   CommonEngine.lib      // For StringLoader
 LIBRARY   diagpluginbase.lib
 LIBRARY   flogger.lib           // for RFileLogger
 LIBRARY   diagframework.lib 

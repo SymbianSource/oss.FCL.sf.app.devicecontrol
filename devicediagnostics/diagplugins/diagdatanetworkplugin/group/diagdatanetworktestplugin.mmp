@@ -72,7 +72,7 @@ LIBRARY   			eikdlg.lib	// ADO & Platformization Changes
 LIBRARY   centralrepository.lib // for CRepository
 LIBRARY   esock.lib             // for RConnection
 
-LIBRARY   commonengine.lib      // For StringLoader
+LIBRARY   CommonEngine.lib      // For StringLoader
 LIBRARY   diagpluginbase.lib
 LIBRARY   flogger.lib           // for RFileLogger
 LIBRARY   diagframework.lib     // for CDiagLogEventEraser

@@ -73,7 +73,7 @@ LIBRARY         avkon.lib
 LIBRARY	        aknnotify.lib
 LIBRARY         favouritesengine.lib
 LIBRARY         aknskins.lib
-LIBRARY         commonengine.lib
+LIBRARY         CommonEngine.lib
 LIBRARY         apengine.lib provisioningengine.lib eikctl.lib
 LIBRARY         efsrv.lib hash.lib apgrfx.lib
 LIBRARY         commdb.lib		// for commdb

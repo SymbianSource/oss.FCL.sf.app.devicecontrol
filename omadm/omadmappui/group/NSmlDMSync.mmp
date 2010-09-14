@@ -97,7 +97,7 @@ LIBRARY     avkon.lib
 LIBRARY     bafl.lib
 LIBRARY     cone.lib
 LIBRARY     commdb.lib
-LIBRARY     commonengine.lib
+LIBRARY     CommonEngine.lib
 LIBRARY     edbms.lib
 LIBRARY     efsrv.lib
 LIBRARY     eikctl.lib
@@ -109,7 +109,7 @@ LIBRARY     euser.lib
 LIBRARY     featmgr.lib
 LIBRARY     hlplch.lib      //help
 LIBRARY     ws32.lib
-LIBRARY     connectionuiutilities.lib
+LIBRARY     ConnectionUiUtilities.lib
 LIBRARY     sysutil.lib
 LIBRARY	    sysversioninfo.lib
 LIBRARY     etel.lib                        // RTelServer

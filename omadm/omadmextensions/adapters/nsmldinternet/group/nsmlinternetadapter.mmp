@@ -49,7 +49,7 @@ LIBRARY		inetprotutil.lib
 LIBRARY 	commsdat.lib
 LIBRARY 	cmmanager.lib
 LIBRARY 	cmmanagerdatabase.lib
-LIBRARY 	centralrepository.lib FeatMgr.lib
+LIBRARY 	centralrepository.lib featmgr.lib
 LIBRARY		policyengine.lib
 LIBRARY		nsmldmtreedbclient.lib
 

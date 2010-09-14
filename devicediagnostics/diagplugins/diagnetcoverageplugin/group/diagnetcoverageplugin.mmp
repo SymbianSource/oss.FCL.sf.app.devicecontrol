@@ -62,7 +62,7 @@ LIBRARY   			eikcoctl.lib // ADO & Platformization Changes
 LIBRARY             diagframework.lib  // ADO & Platformization Changes
 LIBRARY   			eikdlg.lib	// ADO & Platformization Changes
 LIBRARY             euser.lib
-LIBRARY             commonengine.lib      // For StringLoader
+LIBRARY             CommonEngine.lib      // For StringLoader
 LIBRARY             flogger.lib           // for LOGGER
 LIBRARY             diagpluginbase.lib
 LIBRARY             etel3rdparty.lib      // for CTelephony

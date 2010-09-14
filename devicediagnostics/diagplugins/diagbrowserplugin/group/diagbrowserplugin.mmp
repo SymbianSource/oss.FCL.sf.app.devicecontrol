@@ -55,7 +55,7 @@ LIBRARY				avkon.lib   // ADO & Platformization Changes
 LIBRARY   			eikcoctl.lib // ADO & Platformization Changes
 LIBRARY   			eikdlg.lib // ADO & Platformization Changes
 LIBRARY             euser.lib
-LIBRARY             commonengine.lib
+LIBRARY             CommonEngine.lib
 LIBRARY             centralrepository.lib
 LIBRARY             cmmanager.lib
 LIBRARY             commdb.lib

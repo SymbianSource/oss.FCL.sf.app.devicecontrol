@@ -22,14 +22,14 @@
 #include <e32base.h>
 #include <ecom.h>
 #include <utf.h>
-#include <LawmoAdapterCRKeys.h>
+#include <lawmoadaptercrkeys.h>
 #include <DevManInternalCRKeys.h>
 #include <SyncMLClientDM.h>  // syncmlclientapi.lib
 #include <NSmlPrivateAPI.h> // Generic alert
 #include <nsmlconstants.h>
 #include <TerminalControl3rdPartyAPI.h>
 #include <coreapplicationuisdomainpskeys.h>
-#include <LAWMOInterface.h>
+#include <lawmointerface.h>
 //User Include
 #include "lawmodmadapter.h"
 #include "nsmldebug.h"

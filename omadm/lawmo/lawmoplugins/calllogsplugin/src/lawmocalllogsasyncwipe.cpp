@@ -27,7 +27,6 @@
 // Application Closing
 #include <apgtask.h>
 #include <w32std.h>
-#include <APGTASK.H>
 
 // ----------------------------------------------------------------------------- 
 // CActiveWipeObject::CActiveWipeObject
