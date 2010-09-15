@@ -37,7 +37,7 @@
 #include "TPtrC8I.h"
 #include "lawmodebug.h"
 // CONSTANTS
-
+const TInt KSyncCmdStatus (200);
 #define MAXBUFLEN 255
 
 // ============================= MEMBER FUNCTIONS =============================
@@ -523,22 +523,23 @@ void CLawmoDMAdapter::ExecuteCommandL( const TDesC8&  aURI ,
             err = ELawMoUnknown;
             break;           
             }        
+
+        CRepository* crepository = NULL;
+        crepository = CRepository::NewLC( KCRUidLawmoAdapter );
+        // Do the operations based on Sync or Nonsync Exec command
         if((identifier == ENodeWipe)||(identifier == ENodeWipeAll))
-            {
-            CRepository* crep = NULL;
+            {            
             TInt reterr(KErrNone);
             TBuf<MAXBUFLEN> argument;
             TBuf<MAXBUFLEN> opURI;
             argument.Copy(aArgument);
-            opURI.Copy(aURI);
-            crep = CRepository::NewLC( KCRUidLawmoAdapter );
+            opURI.Copy(aURI);            
             if(argument.Length()!=0)
-            reterr = crep->Set( KLawmoCorrelator, argument );
+            reterr = crepository->Set( KLawmoCorrelator, argument );
             RDEBUG_2("CLawmoDMAdapter write correlator %d", reterr);
-            reterr = crep->Set( KLawmoSourceURI, opURI);
+            reterr = crepository->Set( KLawmoSourceURI, opURI);
             RDEBUG_2("CLawmoDMAdapter write sourceURI %d", reterr);
-            CleanupStack::PopAndDestroy(crep);
-            }        
+            }   
         else
             {        
             CRepository* crep = NULL;
@@ -548,7 +549,20 @@ void CLawmoDMAdapter::ExecuteCommandL( const TDesC8&  aURI ,
             TInt reterr = crep->Set( KNSmlDMSCOMOTargetRef, KNsmlNull ); 
             RDEBUG_2("CLawmoDMAdapter::cenrep set for SourceRef, %d",reterr);
             CleanupStack::PopAndDestroy();
+            if(err==ELawMoSuccess)
+                {
+                TInt resCode;
+                RDEBUG("CLawmoDMAdapter check for the synchronous result code");
+                //check the cenrep to determine which sync result code to send
+                reterr = crepository->Get(KLawmoSyncRetVal, resCode);
+                if(resCode==KSyncCmdStatus)
+                	{
+                		RDEBUG("CLawmoDMAdapter Lock return status 200");
+                    err = ELawMoOk;
+                  }
+                }
             }
+        CleanupStack::PopAndDestroy(crepository);
         status = MapErrorToStatus( err );       //map lawmo/syncml error codes     
         }
     else
