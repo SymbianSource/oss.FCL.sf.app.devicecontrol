@@ -272,7 +272,7 @@ void CSCOMOAdapterDb::ReadItemsL(RPointerArray<CAMDbItem>& aItemArray,
 
         dbitem->iRetryCount = view.ColInt(7);
 
-        aItemArray.Append(dbitem);
+        aItemArray.AppendL(dbitem);
         view.NextL();
         }
 

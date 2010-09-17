@@ -25,6 +25,9 @@ SYMBIAN_PLATFORMS = WINSCW \
 TARGET.UID2 = 0x100039CE
 TARGET.UID3 = 0x101F6DE5
 TARGET.CAPABILITY = CAP_APPLICATION 
+
+RSS_RULES += "hidden = KAppIsHidden;"
+
  LIBS +=  -lCommonEngine\
 	-lcentralrepository\ 
 	-lfeatmgr\ 

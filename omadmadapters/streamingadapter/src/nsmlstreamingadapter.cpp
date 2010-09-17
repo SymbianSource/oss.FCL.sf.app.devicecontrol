@@ -683,6 +683,7 @@ void CNSmlDmStreamingAdapter::UpdateLeafObjectL( const TDesC8& aURI,
         {
         DBG_ARGS8(_S8("CNSmlDmStreamingAdapter::UpdateLeafObjectL(): Error in IAPIdFromURIL %d"), aNap);
         iDmCallback->SetStatusL( aStatusRef, CSmlDmAdapter::EInvalidObject );
+        CleanupStack::PopAndDestroy(); // iapMatch
         return;
         }
         

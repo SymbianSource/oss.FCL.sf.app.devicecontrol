@@ -1604,7 +1604,7 @@ void CWPAPNapdef::SaveWlanDataL( TUint32 aIapId, CCommsDatabase& aCommsDb )
             if ( eap->iEAPSettings->iCertificatesPresent )
             	{
             	FLOG( _L( "[AccesspointAdapter] CWPAPNapdef::SaveWlanDataL Certificate was present." ) );
-            	eap->iEAPSettings->iCertificates.Append( eap->iCertificate );	
+            	eap->iEAPSettings->iCertificates.AppendL( eap->iCertificate );	
             	}                  
 
             // Save EAP list

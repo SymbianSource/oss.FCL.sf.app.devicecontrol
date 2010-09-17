@@ -1352,7 +1352,16 @@ void CNSmlWLanAdapter::AddLeafObjectL(const TDesC8& aURI,
                     "CNSmlWLanAdapter::AddLeafObject - Certificate buffer does not exist. Create it.");
             // The certificate buffer does not exist. Create a new one
             EapCertificateEntry *entry = new (ELeave) EapCertificateEntry;
-            iEAPBuffer[eapIndex]->iEAPSettings->iCertificates.Append(entry);
+            TRAPD(err, iEAPBuffer[eapIndex]->iEAPSettings->iCertificates.AppendL(entry));
+            if(err != KErrNone)
+                {
+                delete entry;
+                DBG_ARGS(_S16(
+                              "CNSmlWLanAdapter::AddLeafObjectL - ErrorCode <%D>"),
+                              err);
+                iCallBack->SetStatusL(aStatusRef, CSmlDmAdapter::EError);
+                return;
+                }
             iEAPBuffer[eapIndex]->iEAPSettings->iCertificatesPresent = ETrue;
 
             certIndex
@@ -3278,7 +3287,17 @@ void CNSmlWLanAdapter::AddNodeObjectL(const TDesC8& aURI,
         delete eapLuidBuf;
 
         EapCertificateEntry *entry = new (ELeave) EapCertificateEntry;
-        iEAPBuffer[index]->iEAPSettings->iCertificates.Append(entry);
+        TRAPD(err, iEAPBuffer[index]->iEAPSettings->iCertificates.AppendL(entry));
+        if(err != KErrNone)
+            {
+            delete entry;
+            DBG_ARGS(_S16(
+                         "CNSmlWLanAdapter::AddLeafObjectL - ErrorCode <%D>"),
+                         err);
+            iCallBack->SetStatusL(aStatusRef, CSmlDmAdapter::EError);
+            return;
+            }
+                    
         iEAPBuffer[index]->iEAPSettings->iCertificatesPresent = ETrue;
         iEAPBuffer[index]->iStatusRefArray.AppendL(aStatusRef);
 

@@ -295,7 +295,7 @@ void CAMDownloaddb::ReadItemsL(RPointerArray<CAMDbItem>& aItemArray,
         dbitem->iTargetURI= (view.ColDes8(4)).AllocL();
 
         dbitem->iapid = view.ColInt(5);
-        aItemArray.Append(dbitem);
+        aItemArray.AppendL(dbitem);
         CleanupStack::Pop(dbitem);
         view.NextL();
         }

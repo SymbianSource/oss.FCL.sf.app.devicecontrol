@@ -64,6 +64,11 @@ void CpMessage::saveSettingMessage()
     HbMessageBox *box = new HbMessageBox(hbTrId("txt_device_update_info_settings_are_already_saved"),HbMessageBox::MessageTypeQuestion);
     box->setAttribute(Qt::WA_DeleteOnClose);
     box->setTimeout(HbPopup::NoTimeout);
+    box->clearActions(); 
+		HbAction * action1 = new HbAction(hbTrId("txt_common_button_save"));
+		HbAction * action2 = new HbAction(hbTrId("txt_common_button_cancel"));	
+		box->addAction(action1);
+		box->addAction(action2);	
     box->open(this,SLOT(saveSettingDialogClosed(HbAction*)));
     }
 

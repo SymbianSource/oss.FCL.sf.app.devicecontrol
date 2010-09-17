@@ -24,7 +24,7 @@ using namespace NApplicationManagement;
 // ------------------------------------------------------------------------------------------------
 AMView::AMView()
     {
-    
+    Initilized = EFalse;
     }
 // ------------------------------------------------------------------------------------------------
 // AMView::~AMView()
@@ -38,6 +38,12 @@ AMView::~AMView()
 // ------------------------------------------------------------------------------------------------
 bool AMView::eventFilter(QObject *object, QEvent *event)
 {   
+    if( Initilized == EFalse )
+    	{
+    		emit applicationReady();
+    		Initilized = ETrue;
+    	}
+    	
     switch (event->type())
         {
         case QEvent::ApplicationActivate:

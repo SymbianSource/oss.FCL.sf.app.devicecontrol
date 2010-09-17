@@ -360,6 +360,7 @@ bool DMFotaView::addFotaView()
     
     iMoniter = CDeviceUpdateMoniter::NewL(this);
     //iMoniter->StartMoniter();
+    emit applicationReady();
     qDebug("DMFotaView::addFotaView <<");
     return ETrue;
     }

@@ -29,8 +29,16 @@ class AMView : public HbView
 public:
     AMView();
     ~AMView();
-    
+signals :
+	/**
+	 * applicationReady() - To emit the application ready signal for matti tool.
+   */
+   void applicationReady();
+public:       
     //Handles the incoming events
     bool eventFilter(QObject *object, QEvent *event);
+
+private:    
+    TBool Initilized;
     };
 #endif /* AMVIEW_H_ */

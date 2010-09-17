@@ -3,7 +3,7 @@
 *  Name        : CWPSaver.cpp
 *  Part of     : Provisioning / ProvisioningBC
 *  Description : Helper class for saving Provisioning settings. Provides a progress note.
-*  Version     : %version: 2 % << Don't touch! Updated by Synergy at check-out.
+*  Version     : %version: 3 % << Don't touch! Updated by Synergy at check-out.
 *
 *  Copyright © 2002-2006 Nokia.  All rights reserved.
 *  This material, including documentation and any related computer
@@ -54,7 +54,7 @@ void CWPSaver::PrepareLC()
     // Assume ownership of this.
     CleanupStack::PushL( this );
     iProgress = new HbProgressDialog(HbProgressDialog::WaitDialog);
-    iProgress->setText(hbTrId("txt_device_update_setlabel_saving_settings"));
+    iProgress->setText(hbTrId("txt_deviceupdate_dblist_config_set_val_saving"));
     iProgress->clearActions();   
     iProgress->show();
 

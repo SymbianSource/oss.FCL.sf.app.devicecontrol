@@ -52,7 +52,7 @@ CAMDownloadStore::~CAMDownloadStore()
 void CAMDownloadStore::AddDownloadL(CDeploymentComponent *aComponent)
     {
     CAMDwnldQTWrap *download = CAMDwnldQTWrap::NewL(iObserver, aComponent);
-    iDwnldStore.Append(download);
+    iDwnldStore.AppendL(download);
     StartDownload();
     }
 

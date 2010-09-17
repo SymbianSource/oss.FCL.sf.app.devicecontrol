@@ -279,8 +279,22 @@ TInt CAddBuffer::GetGroup( const TDesC8& aRoot, RPointerArray<CConnMoNodeElement
                 first = EFalse;
                 retval = 0;
                 }
-            aGroup->Append(iBuffer[i]);
-            iCache.Append(iBuffer[i]);
+            TInt err = KErrNone;
+            TRAP(err,aGroup->AppendL(iBuffer[i]));
+            if(err != KErrNone)
+                {
+				retval = err;
+                break;
+                }
+            TRAP(err,iCache.AppendL(iBuffer[i]));
+            if(err != KErrNone)
+                {
+                TInt indx = aGroup->Find(iBuffer[i]);
+                if(indx != KErrNotFound)
+                    aGroup->Remove(indx);
+				retval = err;
+                break;
+                }
             retval++;
             }
         }

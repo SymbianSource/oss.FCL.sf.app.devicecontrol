@@ -56,10 +56,12 @@ public:
     //HbDialog* createDialog() const;
     void displayNoteAndDisableButtons();
     void enableButtons();
-private:
-    void FormatList(QString val, QString str);
-    RFotaEngineSession& FotaEngineL();
-    void fotaSupportEnabled();
+    
+signals :
+	/**
+	 * applicationReady() - To emit the application ready signal for matti tool.
+   */
+   void applicationReady();
 public slots :
     void OnHelp();
     void OnExit();
@@ -70,6 +72,10 @@ public slots :
 	void ResumeUpdate();
 public:
 	void UpdateDMUI(TBool aVal);
+private:
+    void FormatList(QString val, QString str);
+    RFotaEngineSession& FotaEngineL();
+    void fotaSupportEnabled();
 private:
 	HbMainWindow* mMainWindow;
 	HbView* fotaPortraitView;

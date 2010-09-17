@@ -68,7 +68,6 @@ RSS_RULES += "hidden = KAppIsHidden;"
         -lfeatmgr \
         -lpolicyengine \
         -lflogger \ 
-        -lapengine \
         -lcommdb \
         -lapgrfx \
         -lws32 \

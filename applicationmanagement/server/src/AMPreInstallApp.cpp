@@ -193,7 +193,7 @@ void CAMPreInstallApp::ListPreInstalledAppL(const TDesC& installDocPath)
                         pkgDes.AppendNum(version.iMinor);
                         params->iVersion.Copy(pkgDes);
 
-                        iPreInstalledAppParams.Append(params);
+                        iPreInstalledAppParams.AppendL(params);
 
                         RDEBUG_2("Clist_PreInstallAppUi: ListPreInstalledApp: Installed App UID is : '0x%X'",appUid);
                         RDEBUG_2("Clist_PreInstallAppUi: ListPreInstalledApp: Installed App Name is: %S",&(sisRegistry->Name()));

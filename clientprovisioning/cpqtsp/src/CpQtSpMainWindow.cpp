@@ -92,7 +92,7 @@ void CpQtSpMainWindow::buildView()
     cont->setLayout(layout);
     area->setContentWidget(cont);    
     HbToolBar* toolBar = iView->toolBar();
-    HbAction* saveAction = new HbAction(hbTrId("txt_device_update_button_save"));     
+    HbAction* saveAction = new HbAction(hbTrId("txt_common_button_save"));     
     connect(saveAction, SIGNAL(triggered()), iView, SLOT(saveProvisoningMessage()));        
     HbAction* DeleteAction = new HbAction(hbTrId("txt_device_update_menu_delete"));
     connect(DeleteAction, SIGNAL(triggered()), iView, SLOT(deleteMessage()));

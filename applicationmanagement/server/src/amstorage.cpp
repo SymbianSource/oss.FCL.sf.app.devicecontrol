@@ -400,8 +400,17 @@ CDeploymentComponent *CDeliveryComponentStorage::NewComponentL(
         if (idx == KErrNotFound)
             {
             RDEBUG_2( "CDeliveryComponentStorage::NewComponentL - TCertInfoPckg NOT found 0x%X", reinterpret_cast<TUint>( p ) );
-            iCertificates.Append(p);
-            idx = iCertificates.Count() - 1;
+            TRAPD(err,iCertificates.AppendL(p));
+            if(err != KErrNone)
+                {
+                delete p;
+                p = NULL;
+				User::Leave( err );
+                }
+            else
+                {
+                idx = iCertificates.Count() - 1;
+                }
             }
         else
             {
@@ -423,8 +432,8 @@ CDeploymentComponent *CDeliveryComponentStorage::NewComponentL(
     newc->SetState(aState);
     newc->SetStatusNode(EIdle);
     UpdateL( *newc);
-    iComponents.Append(newc);
-    iComponentIds.Append(newc->InternalId() );
+    iComponents.AppendL(newc);
+    iComponentIds.AppendL(newc->InternalId() );
 RDEBUG_2( "CDeliveryComponentStorage::NewComponentL -Internal ID is  %d, ", newc->InternalId() );
     PersistStateL();
     CleanupStack::Pop(newc);
@@ -501,7 +510,7 @@ CDeploymentComponent &CDeliveryComponentStorage::ComponentL(
         TInt err(iRepository->Get(aInternalId, buf) );
         User::LeaveIfError(err) ;
         resp = LoadComponentL(aInternalId, buf) ;
-        iComponents.Append(resp);
+        iComponents.AppendL(resp);
         }
     if (resp == NULL)
         {

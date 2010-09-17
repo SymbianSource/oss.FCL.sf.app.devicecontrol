@@ -599,7 +599,7 @@ void DmAdvancedView::addOtherDetails()
         nwInfov1 = nwInfov1Pckg();
         NetworkBand(nwInfov1.iBandInfo, str);
         item = new QStandardItem();
-        val = hbTrId("txt_device_update_dblist_gsm_bands");
+        val = hbTrId("txt_deviceupdate_dblist_network_band_supported");
         liststr.clear();
         liststr << val;
         liststr << str;
@@ -631,7 +631,7 @@ void DmAdvancedView::addOtherDetails()
             if(nwInfov8.iHsupaAvailableIndicator) packetsrvc =3;
         }     
         liststr.clear();
-        val = hbTrId("txt_device_update_dblist_wcdma_uldl_data_rates");
+        val = hbTrId("txt_deviceupdate_dblist_data_service_supported");
         liststr << val;
         item = new QStandardItem();
         PacketService(packetsrvc, str);
@@ -643,7 +643,7 @@ void DmAdvancedView::addOtherDetails()
         
         liststr.clear();
         item = new QStandardItem();
-        val = hbTrId("txt_device_update_dblist_gsm_cipherings");
+        val = hbTrId("txt_deviceupdate_dblist_network_security_level");
         liststr << val;
         imobPhone.GetNetworkSecurityLevel(status,idispSecurity);
         User::WaitForRequest( status );
@@ -851,23 +851,23 @@ void DmAdvancedView::PacketService(TInt val, QString& string)
      switch (val)
          {
          case (0):
-                 string = hbTrId("txt_device_update_dblist_wcdma_uldl_data_val_l1");
+                 string = hbTrId("txt_deviceupdate_dblist_data_srvce_suppo_val_GPRS");
                  break;
          case (1):
-                 string = hbTrId("txt_device_update_dblist_wcdma_uldl_data_val_l2");
+                 string = hbTrId("txt_deviceupdate_dblist_data_srvce_suppo_val_HSDPA");
                  break;
          case (2):
-                 string = hbTrId("txt_device_update_dblist_wcdma_uldl_data_val_l3");
+                 string = hbTrId("txt_deviceupdate_dblist_data_srvce_suppo_val_HSUPA");
                  break;
          case (3):
-                 string = hbTrId("txt_device_update_dblist_wcdma_uldl_data_val_l4");
+                 string = hbTrId("txt_deviceupdate_dblist_data_srvce_suppo_val_EGPRS");
                  break;
          case (4):
-                 string = hbTrId("txt_device_update_dblist_gsm_cipherings_val_l4");
+                 string = hbTrId("txt_deviceupdate_dblist_ntwrk_secu_lvl_val_CDMA");
                  break;
          case (5):
          default :
-                 string = hbTrId("txt_device_update_dblist_wcdma_uldl_data_val_l5");
+                 string = hbTrId("txt_deviceupdate_dblist_data_srvce_suppo_val_Unknow");
                  break;
          }
      qDebug("OMADM servers view DmAdvancedView::PacketService <<");
@@ -880,17 +880,17 @@ void DmAdvancedView::NetworkCiphering(RMobilePhone::TMobilePhoneNetworkSecurity 
      switch (val)
          {
          case (RMobilePhone::ECipheringGSM):
-                 string = hbTrId("txt_device_update_dblist_gsm_cipherings_val_l2");
+                 string = hbTrId("txt_deviceupdate_dblist_ntwrk_secu_lvl_val_GSM");
                  break;
          case (RMobilePhone::ECipheringWCDMA):
-                 string = hbTrId("txt_device_update_dblist_gsm_cipherings_val_l3");
+                 string = hbTrId("txt_deviceupdate_dblist_ntwrk_secu_lvl_val_WCDMA");
                  break;
          case (RMobilePhone::ECipheringCDMA):
-                 string = hbTrId("txt_device_update_dblist_gsm_cipherings_val_l4");
+                 string = hbTrId("txt_deviceupdate_dblist_ntwrk_secu_lvl_val_CDMA");
                  break;
          case (RMobilePhone::ECipheringOff):
          default :
-                 string = hbTrId("txt_device_update_dblist_gsm_cipherings_val_l1");
+                 string = hbTrId("txt_deviceupdate_dblist_ntwrk_secu_lvl_val_none");
                  break;
          }
      qDebug("OMADM servers view DmAdvancedView::NetworkCiphering <<");
@@ -902,35 +902,35 @@ void DmAdvancedView::NetworkBand(RMobilePhone::TMobilePhoneNetworkBandInfo val, 
     switch (val)
         {
         case (RMobilePhone::E800BandA):
-                string = hbTrId("txt_device_update_dblist_gsm_bands_val_l2");
+                string = hbTrId("txt_deviceupdate_dblist_netwrk_bnd_spp_val__800BA");
                 break;
         case (RMobilePhone::E800BandB):
-                string = hbTrId("txt_device_update_dblist_gsm_bands_val_l3");
+                string = hbTrId("txt_deviceupdate_dblist_netwrk_bnd_spp_val__800BB");
                 break;
         case (RMobilePhone::E800BandC):
-                string = hbTrId("txt_device_update_dblist_gsm_bands_val_l4");
+                string = hbTrId("txt_deviceupdate_dblist_netwrk_bnd_spp_val__800BC");
                 break;
         case (RMobilePhone::E1900BandA):
-                string = hbTrId("txt_device_update_dblist_gsm_bands_val_l5");
+                string = hbTrId("txt_deviceupdate_dblist_netwrk_bnd_spp_val__1900BA");
                 break;
         case (RMobilePhone::E1900BandB):
-                string = hbTrId("txt_device_update_dblist_gsm_bands_val_l6");
+                string = hbTrId("txt_deviceupdate_dblist_netwrk_bnd_spp_val__1900BB");
                 break;
         case (RMobilePhone::E1900BandC):
-                string = hbTrId("txt_device_update_dblist_gsm_bands_val_l7");
+                string = hbTrId("txt_deviceupdate_dblist_netwrk_bnd_spp_val__1900BC");
                 break;
         case (RMobilePhone::E1900BandD):
-                string = hbTrId("txt_device_update_dblist_gsm_bands_val_l8");
+                string = hbTrId("txt_deviceupdate_dblist_netwrk_bnd_spp_val__1900BD");
                 break;
         case (RMobilePhone::E1900BandE):
-                string = hbTrId("txt_device_update_dblist_gsm_bands_val_l9");
+                string = hbTrId("txt_deviceupdate_dblist_netwrk_bnd_spp_val__1900BE");
                 break;
         case (RMobilePhone::E1900BandF):
-                string = hbTrId("txt_device_update_dblist_gsm_bands_val_l10");
+                string = hbTrId("txt_deviceupdate_dblist_netwrk_bnd_spp_val__1900BF");
                 break;
         case (RMobilePhone::EBandUnknown):
         default :
-                string = hbTrId("txt_device_update_dblist_gsm_bands_val_l1");
+                string = hbTrId("txt_deviceupdate_dblist_netwrk_bnd_spp_val_unknown");
                 break;
         }   
     qDebug("OMADM servers view DmAdvancedView::NetworkBand <<");
