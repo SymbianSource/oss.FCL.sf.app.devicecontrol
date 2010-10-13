@@ -36,8 +36,8 @@ START RESOURCE wlanctrldcmoadapter.rss
 TARGET wlanctrldcmoadapter.rsc
 END
 
-LIBRARY 		euser.lib ecom.lib featmgr.lib
-LIBRARY			efsrv.lib CommonEngine.lib
+LIBRARY 		euser.lib ECom.lib featmgr.lib
+LIBRARY			efsrv.lib commonengine.lib
 
 SOURCEPATH ../src
 SOURCE wlanctrldcmoadapterproxy.cpp wlanctrldcmoadapter.cpp

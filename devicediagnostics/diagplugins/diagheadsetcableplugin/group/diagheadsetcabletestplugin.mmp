@@ -61,7 +61,7 @@ END
 
 LIBRARY   euser.lib
 LIBRARY   avkon.lib
-LIBRARY   CommonEngine.lib      // For RConeResourceLoader
+LIBRARY   commonengine.lib      // For RConeResourceLoader
 LIBRARY   diagframework.lib
 LIBRARY   eikcoctl.lib
 LIBRARY   eikdlg.lib

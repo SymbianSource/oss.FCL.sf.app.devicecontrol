@@ -109,7 +109,7 @@ LIBRARY 		siscontroller.lib
 LIBRARY		imut.lib
 LIBRARY		downloadmgr.lib
 LIBRARY 	swinstcli.lib
-LIBRARY         DRMHelper.lib
+LIBRARY         drmhelper.lib
 LIBRARY         drmlicensemanager.lib
 LIBRARY         ezip.lib
 LIBRARY         platformenv.lib
@@ -120,7 +120,7 @@ LIBRARY         platformenv.lib
  LIBRARY				nsmldmtreedbhandler.lib
  LIBRARY  			syncmlclientapi.lib
  LIBRARY 				nsmldmmodule.lib
- LIBRARY 				nsmldmtreedbclient.lib connmon.lib CommonEngine.lib
+ LIBRARY 				nsmldmtreedbclient.lib connmon.lib commonengine.lib
  LIBRARY     		nsmltransporthandler.lib
 LIBRARY     		nsmltransport.lib cone.lib javaregistryclient.lib avkon.lib eikcore.lib  apparc.lib
 LIBRARY					apmime.lib

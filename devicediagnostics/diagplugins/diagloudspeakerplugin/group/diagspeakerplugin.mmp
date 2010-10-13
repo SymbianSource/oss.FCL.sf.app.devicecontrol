@@ -62,7 +62,7 @@ END
 LIBRARY   euser.lib
 LIBRARY   efsrv.lib
 LIBRARY   avkon.lib
-LIBRARY   CommonEngine.lib  // For RConeResourceLoader
+LIBRARY   commonengine.lib  // For RConeResourceLoader
 LIBRARY   flogger.lib       // for LOGGER
 LIBRARY   diagframework.lib 
 LIBRARY   diagpluginbase.lib
@@ -73,6 +73,6 @@ LIBRARY   eikdlg.lib
 
 LIBRARY   mediaclientaudio.lib    // for AudioRecorderUtility
 LIBRARY   centralrepository.lib   // for Central Repository
-LIBRARY   AudioOutputRouting.lib  // for CAudioOutput
+LIBRARY   audiooutputrouting.lib  // for CAudioOutput
 // End of File
 

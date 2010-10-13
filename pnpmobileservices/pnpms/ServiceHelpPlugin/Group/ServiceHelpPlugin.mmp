@@ -57,7 +57,7 @@ END                 //  ECOM resource definition
 LIBRARY             aknskins.lib // AknsUtils.h
 LIBRARY             avkon.lib 
 LIBRARY             bafl.lib
-LIBRARY             CommonEngine.lib // RConeResourceLoader
+LIBRARY             commonengine.lib // RConeResourceLoader
 LIBRARY             cone.lib
 LIBRARY             ecom.lib
 LIBRARY             efsrv.lib

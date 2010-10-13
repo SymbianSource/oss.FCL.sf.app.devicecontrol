@@ -62,7 +62,7 @@ END
 LIBRARY   euser.lib
 LIBRARY   avkon.lib
 
-LIBRARY   CommonEngine.lib      // For StringLoader
+LIBRARY   commonengine.lib      // For StringLoader
 LIBRARY   diagframework.lib
 LIBRARY   eikcoctl.lib
 LIBRARY   eikdlg.lib

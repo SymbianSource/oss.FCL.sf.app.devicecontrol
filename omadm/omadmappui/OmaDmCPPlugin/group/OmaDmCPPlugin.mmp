@@ -66,7 +66,7 @@ LIBRARY         cone.lib
 LIBRARY         eikcore.lib
 LIBRARY         eikcoctl.lib
 LIBRARY			    avkon.lib
-LIBRARY         CommonEngine.lib
+LIBRARY         commonengine.lib
 LIBRARY         bafl.lib
 
 // Required only for embedded app

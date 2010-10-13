@@ -570,16 +570,16 @@ RESOURCE DIALOG r_sml_wait_note
 
 //----------------------------------------------------
 //   
-//    r_settings_fotamenu
+//    r_settings_menu_bar
 //    Menubar and Menupane of the Settings view
 //
 //----------------------------------------------------
 //
-RESOURCE MENU_BAR r_settings_fotamenu
+RESOURCE MENU_BAR r_settings_menu_bar
     {
     titles = 
         { 
-        MENU_TITLE { menu_pane = r_settings_defaultserver; txt = ""; }
+        MENU_TITLE { menu_pane = r_settings_menu; txt = ""; }
         };
     }
 
@@ -600,29 +600,6 @@ RESOURCE MENU_PANE r_settings_menu
             txt = qtn_options_change; 
             flags = EEikMenuItemSpecific;
             },
-        MENU_ITEM 
-            {
-            command = EAknCmdHelp;
-            txt = qtn_options_help; 
-            },
-        MENU_ITEM 
-            { 
-            command = ENSmlSettExit; 
-            txt = qtn_options_exit;
-            }        
-        };
-    }
-//----------------------------------------------------
-//   
-//    r_settings_defaultmenu
-//    Settings view menu
-//
-//----------------------------------------------------
-//
-RESOURCE MENU_PANE r_settings_defaultserver
-    {
-    items =
-        {
         MENU_ITEM 
             {
             command = EAknCmdHelp;

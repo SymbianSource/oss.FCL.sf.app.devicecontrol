@@ -375,7 +375,7 @@ CNSmlDMFotaSettingsDialog::CNSmlDMFotaSettingsDialog()
 //
 void CNSmlDMFotaSettingsDialog::ConstructL()
     {
-    CAknDialog::ConstructL( R_SETTINGS_FOTAMENU );
+    CAknDialog::ConstructL( R_SETTINGS_PROFILEMENU );
 
     iDocument = (CNSmlDMSyncDocument*) iAvkonAppUi->Document();
     

@@ -59,7 +59,7 @@ LIBRARY   euser.lib
 LIBRARY   efsrv.lib
 LIBRARY	  avkon.lib				// ADO & Platformization Changes
 
-LIBRARY   CommonEngine.lib      // For RConeResourceLoader
+LIBRARY   commonengine.lib      // For RConeResourceLoader
 LIBRARY   featmgr.lib           // Feature manager
 LIBRARY   flogger.lib           // for LOGGER
 LIBRARY   diagframework.lib  	// ADO & Platformization Changes

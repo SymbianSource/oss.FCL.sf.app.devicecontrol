@@ -45,6 +45,6 @@ end
 LIBRARY 			euser.lib ecom.lib efsrv.lib bafl.lib  etul.lib
 LIBRARY       centralrepository.lib
 LIBRARY       platformenv.lib
-LIBRARY 			CommonEngine.lib               // Series 60 common components library
+LIBRARY 			commonengine.lib               // Series 60 common components library
 
 SMPSAFE

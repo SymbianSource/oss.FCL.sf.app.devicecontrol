@@ -87,7 +87,7 @@ LIBRARY           etel3rdparty.lib
 LIBRARY           diagresultsdatabase.lib
 LIBRARY           eiksrv.lib
 LIBRARY           drmserviceapi.lib
-LIBRARY           CommonEngine.lib  //String loader
+LIBRARY           commonengine.lib  //String loader
 LIBRARY           centralrepository.lib 
 LIBRARY           efsrv.lib 
 

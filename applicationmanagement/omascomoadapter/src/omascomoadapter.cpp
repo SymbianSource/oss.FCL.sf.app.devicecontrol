@@ -1755,13 +1755,12 @@ void CSCOMOAdapter::InstallL(TUint aLuidi, const TDesC8& aURI,
         iManagement.StateChangeComplete(aLuidi);
 
         DeactivateIfInactive(aLuidi, aTargetState);
-        aRet = EExecSuccess;
+        aRet = EOk;
         }
     else
         {
         RDEBUG_2( "CSCOMOAdapter::InstallL(): INSTALL FAILED '%d'" , err);
-        //MAPERROR( err, aRet, _L8("Install %d") );
-	  aRet = EExecInstallFailed;
+        MAPERROR( err, aRet, _L8("Install %d") );
         }
     }
 
@@ -1855,7 +1854,7 @@ void CSCOMOAdapter::ExecuteCommandL(const TDesC8& aURI, const TDesC8& aLUID,
         const TDesC8& aArgument, const TDesC8& /*aType*/, TInt aStatusRef)
     {
 
-#ifdef __TARM_SYMBIAN_CONVERGENCY	
+#ifdef __TARM_SYMBIAN_CONVERGENCY	//Done by Dipak
     TPtrC8 uriPtrc = NSmlDmURI::RemoveDotSlash(aURI);
 #else
     //nothing

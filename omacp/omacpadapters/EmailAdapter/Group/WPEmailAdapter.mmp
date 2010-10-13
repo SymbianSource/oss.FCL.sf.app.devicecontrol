@@ -66,7 +66,7 @@ LIBRARY         bafl.lib
 LIBRARY         apengine.lib commdb.lib
 LIBRARY         etel.lib                    // RTelServer
 LIBRARY         etelmm.lib                  // RMobilePhone
-LIBRARY					IMUMDA.lib
+LIBRARY		imumda.lib
 
 
 LIBRARY  pnp.lib

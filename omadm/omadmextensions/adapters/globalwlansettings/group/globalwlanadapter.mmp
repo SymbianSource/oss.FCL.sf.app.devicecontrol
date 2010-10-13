@@ -40,4 +40,4 @@ SOURCE globalwlanadapter.cpp
 LIBRARY		charconv.lib commdb.lib efsrv.lib ecom.lib euser.lib  
 LIBRARY		nsmldebug.lib sysutil.lib
 LIBRARY		inetprotutil.lib
-LIBRARY 	centralrepository.lib bafl.lib estor.lib edbms.lib featmgr.lib
+LIBRARY 	centralrepository.lib bafl.lib estor.lib edbms.lib FeatMgr.lib

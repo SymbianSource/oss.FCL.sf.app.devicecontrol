@@ -76,7 +76,7 @@ LIBRARY	        esock.lib           // for sockets
 LIBRARY	        etelmm.lib
 LIBRARY	        etel.lib
 LIBRARY	        inetprotutil.lib 
-LIBRARY	        CommonEngine.lib
+LIBRARY	        commonengine.lib
 LIBRARY	        centralrepository.lib
 LIBRARY	        apengine.lib        // for creating new Init Access
 LIBRARY	        sysutil.lib

@@ -65,7 +65,7 @@ LIBRARY					charconv.lib
 LIBRARY         sysutil.lib
 LIBRARY					edbms.lib
 LIBRARY         bafl.lib
-LIBRARY         CommonEngine.lib
+LIBRARY         commonengine.lib
 LIBRARY         imut.lib
 LIBRARY         apparc.lib
 LIBRARY         ws32.lib
