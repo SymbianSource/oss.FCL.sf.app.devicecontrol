@@ -157,6 +157,10 @@ enum {
 		EFotaUpdateDM
 };
 
+enum  {
+    EDMLaunchedFromDialer=0,
+    EDMLaunchedFromCP 
+    };
 
 #endif // NSMLDMDEF_H
 

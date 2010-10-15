@@ -147,6 +147,10 @@ void ServerSettingsView::backButtonClicked()
     if (netauthdata.compare(hbTrId("txt_deviceupdate_setlabel_network_auth_val_yes")))
         netauthval = true;
     //check server name , server id, host addr & usrname        
+    itemlist[0]=itemlist[0].simplified();
+    itemlist[1]=itemlist[1].simplified();
+    itemlist[3]=itemlist[3].simplified();
+    itemlist[4]=itemlist[4].simplified();
     if ((itemlist[0].length() > 0) && (itemlist[1].length() > 0)
             && (itemlist[3].length() > 0) && (itemlist[4].length() > 0))
         {
@@ -174,13 +178,14 @@ void ServerSettingsView::backButtonClicked()
                 }
             }
         if(valSet==1)
-            {
-        HbMessageBox *note = new HbMessageBox(HbMessageBox::MessageTypeInformation);
+            {                
+        HbMessageBox *note = new HbMessageBox(HbMessageBox::MessageTypeQuestion);
+        note->setStandardButtons(HbMessageBox::Yes | HbMessageBox::No);
+        note->setAttribute( Qt::WA_DeleteOnClose); 
         note->setText(hbTrId(
-                "txt_device_update_dialog_enter_mandatory_field_values"));
-        note->setAttribute( Qt::WA_DeleteOnClose);         
-        note->setTimeout(HbPopup::NoTimeout);
-        note->open();
+                  "txt_device_update_info_mandatory_fields_not_filled"));       
+        note->setTimeout(HbMessageBox::NoTimeout);
+        note->open(this,SLOT(onDialogClosed(int)));
             }
         else
             {
@@ -193,18 +198,28 @@ void ServerSettingsView::backButtonClicked()
         
         }        
     }
+void ServerSettingsView::onDialogClosed(int action)
+{
+    if (action == HbMessageBox::Yes)
+    {
+       iMainWindow->setCurrentView(serversView);
+    } 
+}
 
 void ServerSettingsView::checkServerIdvalue()
     {
     QString srvid = serverid->contentWidgetData(QString("text")).toString();
+    if(srvid != NULL)
+    {
     if(serversView->checkServerId(srvid))
         {
     serverid->setContentWidgetData(QString("text"), QString("")); 
     HbMessageBox *note= new HbMessageBox(HbMessageBox::MessageTypeInformation);
-           note->setText(hbTrId("txt_device_update_dialog_invalid_server_id")); 
+           note->setText(hbTrId("txt_device_update_title_duplicate_server_id"));
            note->setAttribute( Qt::WA_DeleteOnClose);                   
            note->setTimeout(HbPopup::NoTimeout);
            note->open();         
+        }
         }          
     }
 

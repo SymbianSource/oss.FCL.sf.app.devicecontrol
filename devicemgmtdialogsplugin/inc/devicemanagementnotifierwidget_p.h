@@ -50,6 +50,7 @@ public: //derived from HbDeviceDialogInterface
     void closeDeviceDialog(bool byClient);
     HbDialog *deviceDialogWidget() const;
     void dmDevdialogDismissed(ENotfierType notifiertype, int response);
+    void fotaDevdialogDismissed(int notifiertype, int response);
 
 signals:
         void deviceDialogClosed();

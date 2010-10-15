@@ -14,37 +14,26 @@
 * Description:  Device updates data for control panel
 *
 */
-
-#include <QtCore/QProcess>
-#include <QtCore/QDir>
-#include <QtCore/QLibraryInfo>
 #include <cpsettingformitemdata.h>
 #include <apgtask.h>
 #include "deviceupdatesdata.h"
-
-
+#include <xqserviceutil.h>
 DeviceUpdateData::DeviceUpdateData(CpItemDataHelper &itemDataHelper,
-													   const QString &text /*= QString()*/,
-													   const QString &description /*= QString()*/,
-													   const HbIcon &icon /*= HbIcon()*/,
-													   const HbDataFormModelItem *parent /*= 0*/)
+													   const QString &text,
+													   const QString &description,
+													   const HbIcon &icon,
+													   const HbDataFormModelItem *parent)
 													   : CpSettingFormEntryItemData(itemDataHelper,
 													   text,
 													   description,
 													   icon,
 													   parent)
 {
-	mproc = NULL;
 }
 
 DeviceUpdateData::~DeviceUpdateData()
 {
 	CloseDeviceUpdatesUi();
-	if (mproc)
-	{
-		delete mproc;
-		mproc = NULL;
-	}
 }
 
 // -----------------------------------------------------------------------------
@@ -52,10 +41,10 @@ DeviceUpdateData::~DeviceUpdateData()
 // -----------------------------------------------------------------------------
 //
 void DeviceUpdateData::LaunchDeviceUpdatesUi()
-	{	
-		
-		RWsSession ws;
-    User::LeaveIfError( ws.Connect() );
+	{
+    qDebug("DeviceUpdateData::LaunchDeviceUpdatesUi >>");
+    RWsSession ws;
+    qt_symbian_throwIfError( ws.Connect() );
     CleanupClosePushL( ws );
     // Find the task with uid
     TApaTaskList taskList(ws);
@@ -66,40 +55,83 @@ void DeviceUpdateData::LaunchDeviceUpdatesUi()
     }
     else
     {
- 				// Create DM UI Process
-    		if(!mproc)
-    			mproc = new QProcess();
-    		if(mproc->state() != QProcess::Running)
-    		{
-    			QString app = QLatin1String("deviceupdates");
-    			QStringList args;
-    			args<< QLatin1String("-cp");
-    			mproc->start(app, args);
-    			mproc->waitForStarted();
-    		}     
-    }
-    CleanupStack::PopAndDestroy();  // ws    		
+        qDebug("DeviceUpdateData::LaunchDeviceUpdatesUi >> embedding");
+        QScopedPointer<XQAiwRequest> requester (mRequestManager.create(KService,KInterface,KMethod,true)); //false for NON-EMBEDDED 
+        qDebug("DeviceUpdateData::LaunchDeviceUpdatesUi >> embed end");
+        connect(requester.data(), SIGNAL(requestOk(const QVariant&)), this, SLOT(handleOk(const QVariant&)));
+        connect(requester.data(), SIGNAL(requestError(int,const QString&)), this, SLOT(handleError(int,const QString&)));
+        if (!(requester.isNull())) 
+            {
+            m_currentRequest = requester.data();
+            requester->setSynchronous(false);
+            bool serviceRequestOk = requester->send();
+            if (serviceRequestOk)
+                {
+                m_currentRequest = requester.take();
+                }
+            else
+                {
+                // On a controlled error Qt Highway should call requestError,
+                // so clean scoped pointer here.
+                requester.take();
+                }
+            }  
+        }
+    CleanupStack::PopAndDestroy();  // ws    
+    qDebug("DeviceUpdateData::LaunchDeviceUpdatesUi >> end");	
 	}
 
 // ---------------------------------------------------------------------------------------------
-// DeviceUpdateData::CloseDmUi
+// DeviceUpdateData::CloseDeviceUpdatesUi
 // closes DM Ui
 // ---------------------------------------------------------------------------------------------	
 void DeviceUpdateData:: CloseDeviceUpdatesUi()
 {
-	if(( mproc )&&(mproc->state() == QProcess::Running))
-  	{
-    			mproc->close();
-    }
-
+    if(m_currentRequest)
+        {
+        delete m_currentRequest;
+        m_currentRequest = NULL;
+        }
 }	
 
+// ---------------------------------------------------------------------------------------------
+// DeviceUpdateData::onLaunchView
+// ---------------------------------------------------------------------------------------------
 void DeviceUpdateData::onLaunchView()
 {
 	LaunchDeviceUpdatesUi();
 }
 
+// ---------------------------------------------------------------------------------------------
+// DeviceUpdateData::createSettingView
+// ---------------------------------------------------------------------------------------------
 CpBaseSettingView *DeviceUpdateData::createSettingView() const
 {
-		return 0;
+		return NULL;
+}
+
+// ---------------------------------------------------------------------------------------------
+// DeviceUpdateData::handleOk
+// Handles when request completes successfully
+// ---------------------------------------------------------------------------------------------
+void DeviceUpdateData::handleOk(const QVariant &returnValue)
+{
+    if(m_currentRequest)
+        {
+        delete m_currentRequest;
+        m_currentRequest = NULL;
+        }
+}
+
+// ---------------------------------------------------------------------------------------------
+// DeviceUpdateData::handleError
+// Handles when request returns with an error
+// ---------------------------------------------------------------------------------------------
+void DeviceUpdateData::handleError(int error, const QString& errorMessage)
+{   
+    if(m_currentRequest)
+        {
+        delete m_currentRequest;
+        m_currentRequest = NULL;
+        }
 }

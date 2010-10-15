@@ -47,7 +47,7 @@ RSS_RULES += "hidden = KAppIsHidden;"
 		-lfotaengine	\
 		-leuser	\
 		-lflogger	\
-		-lxqutils  \
+        -lxqutils -lxqservice \
 		-lapgrfx \
 		-lcone
 	}
@@ -56,47 +56,52 @@ TARGET = deviceupdates
 DEPENDPATH += ./inc
 INCLUDEPATH += .
 INCLUDEPATH += $$APP_LAYER_SYSTEMINCLUDE
+SERVICE.FILE = ./resources/service_conf.xml
+SERVICE.OPTIONS = embeddable
+libFiles.sources = xqservice.dll
+libFiles.path = "!:\sys\bin"
+DEPLOYMENT += libFiles
 # Input
-HEADERS += ./inc/dminforetrieval.h \
-./inc/nsmldmdef.h\
-./inc/nsmldmsyncappengine.h \
-./inc/nsmldmsyncdebug.h \
-./inc/nsmldmsynchandler.h\
-./inc/nsmldmsyncinternalpskeys.h \
-./inc/nsmldmsyncprivatecrkeys.h \
-./inc/nsmldmsyncprofile.h \
-./inc/nsmldmsyncprofileitem.h \
-./inc/nsmldmsyncprofilelist.h \
-./inc/nsmldmsyncutil.h \
-./inc/nsmldmuidefines.h \
-./inc/serversettingsview.h\
-./inc/dmadvancedview.h\
-./inc/settingsdataformcustomitem.h\
-./inc/dmfotaview.h\
-./inc/nsmldmdbnotifier.h	\
-./inc/deviceupdatemoniter.h	\
-./inc/deviceupdatemoniterobserver.h	\
-./inc/DeviceUpdateDebug.h \
-./inc/customviewitem.h
-
-SOURCES += ./src/dmadvancedview.cpp \
-			./src/main.cpp \
-			./src/nsmldmsyncutil.cpp \
-			./src/nsmldmsyncprofilelist.cpp \
-			./src/nsmldmsyncprofileitem.cpp \
-			./src/nsmldmsyncprofile.cpp \
-			./src/nsmldmsyncappengine.cpp \
-			./src/nsmldmsynchandler.cpp \
-			./src/dminforetrieval.cpp\
-			./src/serversettingsview.cpp\
-			./src/settingsdataformcustomitem.cpp\
-			./src/dmfotaview.cpp \
-			./src/nsmldmdbnotifier.cpp	\
-			./src/deviceupdatemoniter.cpp \
-			./src/customviewitem.cpp
-			
+HEADERS += inc/dmserviceprovider.h \
+    ./inc/dminforetrieval.h \
+    ./inc/nsmldmdef.h \
+    ./inc/nsmldmsyncappengine.h \
+    ./inc/nsmldmsyncdebug.h \
+    ./inc/nsmldmsynchandler.h \
+    ./inc/nsmldmsyncinternalpskeys.h \
+    ./inc/nsmldmsyncprivatecrkeys.h \
+    ./inc/nsmldmsyncprofile.h \
+    ./inc/nsmldmsyncprofileitem.h \
+    ./inc/nsmldmsyncprofilelist.h \
+    ./inc/nsmldmsyncutil.h \
+    ./inc/nsmldmuidefines.h \
+    ./inc/serversettingsview.h \
+    ./inc/dmadvancedview.h \
+    ./inc/settingsdataformcustomitem.h \
+    ./inc/dmfotaview.h \
+    ./inc/nsmldmdbnotifier.h \
+    ./inc/deviceupdatemoniter.h \
+    ./inc/deviceupdatemoniterobserver.h \
+    ./inc/DeviceUpdateDebug.h \
+    ./inc/customviewitem.h
+SOURCES += src/dmserviceprovider.cpp \
+    ./src/dmadvancedview.cpp \
+    ./src/main.cpp \
+    ./src/nsmldmsyncutil.cpp \
+    ./src/nsmldmsyncprofilelist.cpp \
+    ./src/nsmldmsyncprofileitem.cpp \
+    ./src/nsmldmsyncprofile.cpp \
+    ./src/nsmldmsyncappengine.cpp \
+    ./src/nsmldmsynchandler.cpp \
+    ./src/dminforetrieval.cpp \
+    ./src/serversettingsview.cpp \
+    ./src/settingsdataformcustomitem.cpp \
+    ./src/dmfotaview.cpp \
+    ./src/nsmldmdbnotifier.cpp \
+    ./src/deviceupdatemoniter.cpp \
+    ./src/customviewitem.cpp
 RESOURCES += ./resources/deviceupdates.qrc
-CONFIG += hb
+CONFIG += hb service
 TRANSLATIONS += deviceupdates.ts
    
 

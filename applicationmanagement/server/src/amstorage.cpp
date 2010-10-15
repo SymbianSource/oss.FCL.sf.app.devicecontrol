@@ -170,6 +170,7 @@ void CDeliveryComponentStorage::ConstructL()
         RDEBUG_2( "CDeliveryComponentStorage::ConstructL() ERROR CentRep not initialized: Check deployment! %d", erx );
         User::Leave(erx);
         }
+     
     TInt err(iRepository->Get(KNextIdKey, iNextId) );
     if (err == KErrNotFound)
         {
@@ -181,6 +182,7 @@ void CDeliveryComponentStorage::ConstructL()
         User::LeaveIfError(err);
         }
     LoadComponentsL();
+    
     }
 
 void CDeliveryComponentStorage::LoadCertsL()

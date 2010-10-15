@@ -20,13 +20,15 @@
 #include    <f32file.h>
 #include    <CWPCharacteristic.h>
 #include    <CWPParameter.h>
-#include    <wpstreamingadapterresource.rsg>
 #include    <mpsettingsmodel.h>
 #include    <cmconnectionmethoddef.h>
 #include    <cmmanagerext.h>
 #include    "WPAdapterUtil.h"
 #include    "StreamingAdapter.h"
 #include    "ProvisioningDebug.h"
+#include <hbtextresolversymbian.h>
+_LIT( KStreamingResourceFileName, "deviceupdates_" );	
+_LIT( KStreamingResourceFilePath, "z:/resource/qt/translations/" );
 
 // CONSTANTS
 #if ( defined (__WINS__) || defined (__WINSCW) ) // this different on hw
@@ -84,13 +86,9 @@ CStreamingAdapter::CStreamingAdapter()
 void CStreamingAdapter::ConstructL()
     {
     FLOG( _L( "[Provisioning] CStreamingAdapter::ConstructL:" ) );
-    
-    TFileName fileName;
-    Dll::FileName( fileName );
-    iTitle = WPAdapterUtil::ReadHBufCL( fileName,
-                                        KAdapterName,
-                                        R_STREAMING_ADAPTER_TITLE );
-                                        
+    TBool result = HbTextResolverSymbian::Init(KStreamingResourceFileName, KStreamingResourceFilePath );
+    _LIT(KStreamingAdapter, "txt_device_update_dblist_streaming_settings");
+		iTitle = HbTextResolverSymbian::LoadL(KStreamingAdapter);	                                        
     FLOG( _L( "[Provisioning] CStreamingAdapter::ConstructL: Done" ) );
     }
 

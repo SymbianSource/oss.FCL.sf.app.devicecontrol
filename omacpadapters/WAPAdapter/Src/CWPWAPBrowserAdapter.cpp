@@ -29,9 +29,11 @@
 #include "WPWAPItemFactory.h"
 #include "WPWAPUtil.h"
 #include "WPWAPDebug.h"
-
+#include <hbtextresolversymbian.h>
 // CONSTANTS
 _LIT( KBrowserAppID, "w2" );
+_LIT( KBrowserResourceFileName, "deviceupdates_" );	
+_LIT( KBrowserResourceFilePath, "z:/resource/qt/translations/" );
 
 // ============================ MEMBER FUNCTIONS ===============================
 
@@ -54,11 +56,21 @@ void CWPWAPBrowserAdapter::ConstructL()
     {
     BaseConstructL();
 
-    iTitle = WPWAPUtil::ReadHBufCL( R_QTN_OP_HEAD_BROWSER );
-    iBookmarkTitle = WPWAPUtil::ReadHBufCL( R_QTN_SM_BOOKMARKS );
-    iDefaultName = WPWAPUtil::ReadHBufCL( R_QTN_SM_WAPAP_NAME );
-    iDefaultBookmarkName = WPWAPUtil::ReadHBufCL( R_QTN_SM_BOOKMARK_NAME );
-    }
+    TBool result = HbTextResolverSymbian::Init(KBrowserResourceFileName, KBrowserResourceFilePath );
+    
+    _LIT(KBrowserAdapter, "txt_device_update_dblist_browser_settings");
+    iTitle = HbTextResolverSymbian::LoadL(KBrowserAdapter);
+
+    _LIT(KBookmarkTitle, "txt_device_update_dblist_bookmark");
+    iBookmarkTitle = HbTextResolverSymbian::LoadL(KBookmarkTitle);
+    
+     _LIT(KDefaultName, "txt_device_update_dblist_wap_access_point");
+    iDefaultName = HbTextResolverSymbian::LoadL(KDefaultName);
+    
+     _LIT(KDefaultBookmarkName, "txt_device_update_dblist_wap_access_point");
+    iDefaultBookmarkName = HbTextResolverSymbian::LoadL(KDefaultBookmarkName);
+
+     }
 
 // -----------------------------------------------------------------------------
 // CWPWAPBrowserAdapter::NewL

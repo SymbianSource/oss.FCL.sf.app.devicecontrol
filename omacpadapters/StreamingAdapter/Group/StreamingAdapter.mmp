@@ -37,26 +37,21 @@ START RESOURCE 101F85CB.rss
 TARGET wpstreamingadapter.rsc
 END
 
-START RESOURCE WPStreamingAdapterResource.rss
-HEADER
-TARGET wpstreamingadapterresource.rsc
-TARGETPATH RESOURCE_FILES_DIR
-LANGUAGE_IDS
-END
-
-
 USERINCLUDE     .
 USERINCLUDE     ../Inc
 USERINCLUDE     ../../bld
 
 APP_LAYER_SYSTEMINCLUDE
 SYSTEMINCLUDE 	/epoc32/include/ecom
+SYSTEMINCLUDE 	/epoc32/include/mw/hb/hbwidgets
+SYSTEMINCLUDE 	/epoc32/include/mw/hb/hbcore
 
 LIBRARY         euser.lib
 LIBRARY         provisioningengine.lib
 LIBRARY         mpsettengine.lib
 LIBRARY         cmmanager.lib
 LIBRARY         commdb.lib
+LIBRARY       hbcore.lib hbwidgets.lib
 DEBUGLIBRARY    flogger.lib
 
 

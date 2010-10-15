@@ -214,7 +214,10 @@ void CWPWAPItemBase::CreateDbL()
     if( !iCmManager )
         {
         iCmManager = new RCmManagerExt;
-        iCmManager->OpenL();
+        if( !iCmManager )
+        	User::Leave( KErrNoMemory );
+        else	
+        	iCmManager->OpenL();        
         }
     }
 

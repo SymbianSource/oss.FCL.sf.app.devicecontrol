@@ -73,8 +73,9 @@ void CRfsAppMgmtPlugin::RestoreFactorySettingsL( const TRfsReason /*aType*/ )
     if( appManagement.Connect() == KErrNone )
         {
         RDEBUG("CRfsAppMgmtPlugin::RestoreFactorySettingsL(): Connected to AppMgmt ");
+        CleanupClosePushL(appManagement);
         appManagement.PerformRfsL();
-        appManagement.Close();
+        CleanupStack::PopAndDestroy(&appManagement);
         }
     else
         {

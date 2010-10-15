@@ -67,7 +67,9 @@ devicemanagementnotifierplugin::~devicemanagementnotifierplugin()
 bool devicemanagementnotifierplugin::accessAllowed(const QString &deviceDialogType,
     const QVariantMap &parameters, const QVariantMap &securityInfo) const
 {
-       
+    Q_UNUSED(deviceDialogType);
+    Q_UNUSED(parameters);
+    Q_UNUSED(securityInfo);
     // This plugin doesn't perform operations that may compromise security.
     // All clients are allowed to use.
     return true;
@@ -89,17 +91,18 @@ HbDeviceDialogInterface *devicemanagementnotifierplugin::createDeviceDialog(
             // Return specific object for showing appropriate dialog
             return new omacppinquerydialog(parameters);
             }
-           
-        if (dialogtype >= EFwDLNeedMoreMemory && dialogtype <= EFwUpdResumeUpdate)
-            {
-            // Return specific object for showing appropriate dialog
-            return new fotadevicedialogs(parameters);
-            }
+
+        //if (dialogtype >= EFwDLNeedMoreMemory && dialogtype <= EFwUpdResumeUpdate)
+        //{
+        // Return specific object for showing appropriate dialog
+        // return new fotadevicedialogs(parameters);
+        //}
 
         }
+
     return new devicemanagementnotifierwidget(parameters);
-        
-}
+    
+    }
 
 // Return information of device dialog the plugin creates
 bool devicemanagementnotifierplugin::deviceDialogInfo(const QString &deviceDialogType,

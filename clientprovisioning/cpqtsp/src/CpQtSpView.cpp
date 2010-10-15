@@ -79,10 +79,7 @@ CpQtSpView::~CpQtSpView()
 void CpQtSpView::corruptMessageDialog(HbAction *action)
 {
     HbMessageBox *dlg = static_cast<HbMessageBox*>(sender());
-    if(action == dlg->primaryAction())
-    {
     window->closeWindow();
-    }   
 }
 // ----------------------------------------------------------------------------
 // CpQtSpView::constructView

@@ -489,6 +489,10 @@ CApplicationManagementServer::~CApplicationManagementServer()
 
     delete iUtility;
     delete iAMServerDB;
+    if ( iArgu )
+    	delete iArgu;
+    if ( iResults )
+    	delete iResults;
 
     RProperty::Delete(KUidPSApplicationManagementKeys, KAMServerUIEnabled);
 
@@ -1007,7 +1011,8 @@ void CApplicationManagementServer::InstallL(
             if (m_Dlg)
                 m_Dlg->registerInstallRequest(aStatus);
             delete iArgu;
-            iArgu = NULL;
+            iArgu = NULL;            
+            CleanupStack::PushL(m_Dlg);
             iArgu = Usif::COpaqueNamedParams::NewL();
             iArgu->AddIntL(Usif::KSifInParam_InstallSilently, 1);
             TAMInstallOptions opts = aComponent.InstallOpts();
@@ -1021,13 +1026,14 @@ void CApplicationManagementServer::InstallL(
             delete iResults;
             iResults = NULL;
             iResults = Usif::COpaqueNamedParams::NewL();
-
+							
             RDEBUG_3( "CApplicationManagementServer::InstallL: Install '%S' sizeof opts: %d", &fn, sizeof (aComponent.InstallOpts()));
 		TRAPD( err ,iInstaller.Install( iInstallFile, *iArgu, *iResults, aStatus ) );
 
             RDEBUG_2( "CApplicationManagementServer::InstallL: status: %d", err);
             User::LeaveIfError(err);
             iInstallInProgress = ETrue;
+            CleanupStack::Pop(m_Dlg);
             }
         else
             {
@@ -1213,7 +1219,7 @@ void CApplicationManagementServer::RemoveInternalL(
                             = silentsession;
                     TRequestStatus s1 = KRequestPending;
                     AppMgmtNotifier* note = new AppMgmtNotifier(m_appName);
-                    
+                    CleanupStack::PushL(note);
                     // displaying uninstall confirm notes
                     if (!CApplicationManagementUtility::iSilentSession)
                         {
@@ -1237,6 +1243,7 @@ void CApplicationManagementServer::RemoveInternalL(
                                         true);
                                 
                             }
+                        CleanupStack::PushL(m_Dlg);
                         CDialogWait* wait1 = CDialogWait::NewL();           
                      
                         TRAP(err,UninstallL( aCompo, wait1->iStatus ));
@@ -1267,6 +1274,7 @@ void CApplicationManagementServer::RemoveInternalL(
                                 RDEBUG_2("CApplicationManagementServer: RemoveInternalL ERROR uninstall failed %d", s.Int() );
                                 }
                             }
+                        CleanupStack::Pop(m_Dlg);    
                         }
                     else
                         {
@@ -1274,7 +1282,7 @@ void CApplicationManagementServer::RemoveInternalL(
                         aCompo.SetStatusNode(EDelivered_RemoveFailed);
                         RDEBUG( "CApplicationManagementServer: RemoveInternalL User cancelled" );
                         }
-                    delete note;
+                    CleanupStack::PopAndDestroy(note);
                     }
                 else
                     {
@@ -3675,6 +3683,7 @@ void CApplicationManagementSession::StateChangeComponentIdsCountL(
     RDEBUG( "CApplicationManagementSession: StateChangeComponentIdsCountL" );
     RPointerArray<TPreInstalledAppParams> preInstalledAppParams;
     CAMPreInstallApp* preInstallApp = CAMPreInstallApp::NewL();
+    CleanupStack::PushL(preInstallApp) ;
     preInstallApp->GetPreInstalledAppsL(preInstalledAppParams);
     TInt count = 0;
     for (count = 0; count < preInstalledAppParams.Count(); count++)
@@ -3721,7 +3730,7 @@ void CApplicationManagementSession::StateChangeComponentIdsCountL(
                     *preInstallCompo);
             }
         }
-    delete preInstallApp;
+    CleanupStack::PopAndDestroy(preInstallApp);
     RComponentIdArray arr;
     Server().Storage()->GetStateChangeComponentIdsL(arr);
     TPckgBuf<TInt> buflen(arr.Count());

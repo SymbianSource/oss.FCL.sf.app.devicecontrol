@@ -2191,7 +2191,7 @@ void CAmAdapter::GetComponentDataL( const TDesC8& parent, const TDesC8& mapping,
 						}
 					else if ( dataType == EDCConRef )
 						{
-						CBufBase *b = CBufFlat::NewL(4);
+						CBufBase *b = CBufFlat::NewL(12);
 						CleanupStack::PushL( b );
 						SessionL().DeploymentComponentDataL( iluid, dataType, *b);
 						TPckgBuf<TInt> iap;
@@ -3628,7 +3628,7 @@ void CAmAdapter::CheckStateChangesL()
 			RDEBUG( "CAmAdapter::CheckStateChangesL(): Adding Trust Closing Session" );
 			iManagement.Close();
 			iSessionOpened = EFalse;
-			RApplicationManagement &session = SessionL();
+//			RApplicationManagement &session = SessionL(); // coverity Fix
 			RDEBUG( "CAmAdapter::CheckStateChangesL(): Adding Trust new session started" );
 		}
 	}

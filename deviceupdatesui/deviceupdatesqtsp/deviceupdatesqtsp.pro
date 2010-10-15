@@ -50,7 +50,9 @@ SOURCES += ./src/DmTelServiceHandler.cpp
 
 LIBS += -lhbcore \
         -lxqservice \
-        -lxqserviceutil
+        -lxqserviceutil \
+        -lapgrfx \ 
+	-lapparc -lcone 
 
 SERVICE.FILE += ./resources/service_conf.xml
 SERVICE.OPTIONS = embeddable

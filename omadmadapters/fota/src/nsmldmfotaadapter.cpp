@@ -285,7 +285,7 @@ void CNSmlDmFotaAdapter::DDFStructureL( MSmlDmDDFObject& aDDF )
     User::LeaveIfError( session.Connect() );
     CleanupClosePushL(session);
 
-    CBufBase* acl=CBufFlat::NewL(10);
+    CBufBase* acl=CBufFlat::NewL(12);
     CleanupStack::PushL( acl );
     TInt err = session.GetAclL( KNSmlDMFotaNode,*acl,EFalse );
 		if ( err == KErrNone)

@@ -127,12 +127,6 @@
                             <anchoritem dst="p:update" dstEdge="RIGHT" spacing="-11.22387un" src="" srcEdge="RIGHT"/>
                             <anchoritem dst="p:advanced" dstEdge="RIGHT" spacing="-11.07463un" src="" srcEdge="RIGHT"/>
                             <anchoritem dst="p:advanced" dstEdge="BOTTOM" spacing="-1.68655un" src="" srcEdge="BOTTOM"/>
-                            <anchoritem dst="label" dstEdge="LEFT" spacing="2.53731un" src="" srcEdge="LEFT"/>
-                            <anchoritem dst="label" dstEdge="TOP" spacing="18.20896un" src="" srcEdge="TOP"/>
-                            <anchoritem dst="label_1" dstEdge="LEFT" spacing="2.38806un" src="" srcEdge="LEFT"/>
-                            <anchoritem dst="label_1" dstEdge="TOP" spacing="22.98508un" src="" srcEdge="TOP"/>
-                            <anchoritem dst="label_2" dstEdge="LEFT" spacing="2.38806un" src="" srcEdge="LEFT"/>
-                            <anchoritem dst="label_2" dstEdge="TOP" spacing="29.7015un" src="" srcEdge="TOP"/>
                             <anchoritem dst="label_3" dstEdge="TOP" spacing="34.62687un" src="" srcEdge="TOP"/>
                             <anchoritem dst="label_3" dstEdge="RIGHT" spacing="-7.01492un" src="" srcEdge="RIGHT"/>
                             <anchoritem dst="label_4" dstEdge="TOP" spacing="42.2388un" src="" srcEdge="TOP"/>
@@ -151,6 +145,12 @@
                             <anchoritem dst="label_10" dstEdge="RIGHT" spacing="-7.01492un" src="" srcEdge="RIGHT"/>
                             <anchoritem dst="label_11" dstEdge="TOP" spacing="82.38806un" src="" srcEdge="TOP"/>
                             <anchoritem dst="label_11" dstEdge="RIGHT" spacing="-7.01492un" src="" srcEdge="RIGHT"/>
+                            <anchoritem dst="label" dstEdge="TOP" spacing="18.20896un" src="" srcEdge="TOP"/>
+                            <anchoritem dst="label" dstEdge="RIGHT" spacing="-7.01492un" src="" srcEdge="RIGHT"/>
+                            <anchoritem dst="label_1" dstEdge="TOP" spacing="22.98508un" src="" srcEdge="TOP"/>
+                            <anchoritem dst="label_1" dstEdge="RIGHT" spacing="-7.01492un" src="" srcEdge="RIGHT"/>
+                            <anchoritem dst="label_2" dstEdge="TOP" spacing="29.7015un" src="" srcEdge="TOP"/>
+                            <anchoritem dst="label_2" dstEdge="RIGHT" spacing="-7.01492un" src="" srcEdge="RIGHT"/>
                         </layout>
                     </widget>
                     <enums name="verticalScrollBarPolicy" value="ScrollBarAlwaysOn"/>

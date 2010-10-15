@@ -25,7 +25,6 @@
 #include <CWPAdapter.h>
 #include <CWPCharacteristic.h>
 #include <CWPParameter.h>
-#include <wpwapadapterresource.rsg>
 #include "CWPWAPItemBAse.h"
 #include "CWPWAPAdapterBase.h"
 #include "WPWAPDebug.h"

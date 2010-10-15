@@ -234,9 +234,8 @@ void CNSmlDMSyncHandler::SynchronizeCompletedL( TInt aError )
 	iSyncError = aError;    
     iCheckUpdate = EFalse;        	
 
-#ifndef NO_UPDATE 
-        CRepository* centrep = NULL;
-        TRAPD( err, centrep = CRepository::NewL( KCRUidNSmlDMSyncApp ) );
+    CRepository* centrep = NULL;
+    TRAPD( err, centrep = CRepository::NewL( KCRUidNSmlDMSyncApp ) );
 	TInt profileId;
 	centrep->Get( KNSmlDMDefaultFotaProfileKey, profileId );
 	//FLOG( "CNSmlDMSyncHandler::SynchronizeCompletedL profileId = %d", profileId );
@@ -270,8 +269,8 @@ void CNSmlDMSyncHandler::SynchronizeCompletedL( TInt aError )
         iDialog->setHeadingWidget(new HbLabel(hbTrId("txt_device_update_title_phone_uptodate")));
         iDialog->setContentWidget(new HbLabel(hbTrId("txt_device_update_dpopinfo_your_phone_is_already_u")));
         iPrimaryAction = new HbAction();
-        iPrimaryAction->setText(hbTrId("OK"));
-	    iDialog->setPrimaryAction(iPrimaryAction);
+        iPrimaryAction->setText(hbTrId("txt_common_button_ok_single_dialog"));
+	    iDialog->addAction(iPrimaryAction);
 	    iDialog->setTimeout(HbPopup::NoTimeout);
 	    iDialog->setDismissPolicy(HbPopup::NoDismiss);
 	    iDialog->show();
@@ -279,7 +278,6 @@ void CNSmlDMSyncHandler::SynchronizeCompletedL( TInt aError )
             }
 
         }  
-#endif
 
 	iUseFotaProgressNote = EFalse;
     iSyncJob.Close();

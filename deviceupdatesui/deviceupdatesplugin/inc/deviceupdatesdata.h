@@ -18,14 +18,19 @@
 #ifndef	DEVICEUPDATESDATA_H_
 #define	DEVICEUPDATESDATA_H_
 
-#include <QtCore/QProcess>
 #include <cpsettingformentryitemdata.h>
+#include <xqappmgr.h>
+#include <xqaiwrequest.h>
 
 _LIT( KDMUIProcess, "\\deviceupdates.exe" );
 _LIT( KDMUIName, "deviceupdates" );
 
 
 const TUid KUidSmlSyncApp = { 0x101F6DE5 };
+const TUint32 KNsmlDmUILaunch = 0x00000009;
+const QString KService("com.nokia.services.MDM"); 
+const QString KInterface("devicemanager"); 
+const QString KMethod("launchDM()");
 
 class DeviceUpdateData : public CpSettingFormEntryItemData
 {
@@ -35,17 +40,19 @@ public:
 												const QString &text = QString(),
 												const QString &description = QString(),
 												const HbIcon &icon = HbIcon(),
-												const HbDataFormModelItem *parent = 0);
+												const HbDataFormModelItem *parent = NULL);
     void LaunchDeviceUpdatesUi();
     void CloseDeviceUpdatesUi();
     virtual ~DeviceUpdateData();
 public slots:
 	void onLaunchView();
+	void handleOk(const QVariant &result);
+	void handleError(int errorCode, const QString& errorMessage);
 private:
 	virtual CpBaseSettingView *createSettingView() const;
 	
 private:
-		QProcess *mproc;
-
+        XQApplicationManager mRequestManager;
+        QPointer<XQAiwRequest> m_currentRequest;
 };
 #endif//	DEVICEUPDATESVIEW_H_

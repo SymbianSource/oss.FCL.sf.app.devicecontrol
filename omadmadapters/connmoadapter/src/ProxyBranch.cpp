@@ -147,12 +147,13 @@ CSmlDmAdapter::TError CProxyBranch::FetchLeafObjectL( const TDesC8& aURI,
                 conRef.Append( _L("NAP/") );
                 CUtils::AppendFirstURISeg( napChildList, conRef );
                 HBufC8* napLuid = iCallback->GetLuidAllocL( conRef );
+                CleanupStack::PushL(napLuid) ;
                 if ( cmId == CUtils::IntLUID( *napLuid ) )
                     {
                     status = CSmlDmAdapter::EOk;
                     aLeafObject.InsertL( 0, conRef );
                     }
-                delete napLuid;
+                CleanupStack::PopAndDestroy( napLuid );
                 conRef.Delete( 0, conRef.Length() );
                 }
             }

@@ -26,9 +26,11 @@ CDeviceUpdateMoniter* CDeviceUpdateMoniter::NewL (MDeviceMoniterObserver* aObser
     {
     FLOG(_L("CDeviceUpdateMoniter::NewL >>"));    
     CDeviceUpdateMoniter* h=new (ELeave)CDeviceUpdateMoniter;
+    CleanupStack::PushL( h );
     h->iObserver = aObserver;
     h->ConstructL();
     FLOG(_L("CDeviceUpdateMoniter::NewL <<"));
+    CleanupStack::Pop( h );
     return h;
     }
 

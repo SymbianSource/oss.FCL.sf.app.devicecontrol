@@ -11,7 +11,7 @@
  *
  * Contributors:
  *
- * Description:
+ * Description: Service Handler for dialer launch of DM
  *
  */
  
@@ -24,11 +24,20 @@
 
 _LIT( KDMUIProcess, "\\deviceupdates.exe" );
 
+enum  {
+    EDMLaunchedFromDialer=0,
+    EDMLaunchedFromCP 
+    };
+
+const TUid KControlPanelAppUid ={0x20025fd9};
+const TUid KPSUidNSmlDMSyncApp = {0x101f6de5};
+const TUint32 KDMLaunched = {0x0000000E};
+
 class DmTelServiceHandler : public XQServiceProvider
 {
     Q_OBJECT
 public:
-    DmTelServiceHandler(QObject *parent = 0);
+    DmTelServiceHandler(QObject *parent = NULL);
     ~DmTelServiceHandler();
 
 public slots:

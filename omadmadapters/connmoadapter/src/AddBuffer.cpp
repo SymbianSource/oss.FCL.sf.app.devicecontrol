@@ -112,14 +112,14 @@ void CAddBuffer::AddNodeToBufferL( const TDesC8& aUri,
     OstTraceExt1( TRACE_NORMAL, CADDBUFFER_ADDNODETOBUFFERL_ENTRY, "ENTRY: CAddBuffer::AddNodeToBufferL;aUri=%s", aUri );
     
     CConnMoNodeElement* newNode = new (ELeave) CConnMoNodeElement();
-    
+    CleanupStack::PushL( newNode );
     newNode->iUri.Copy( aUri );
     newNode->iParentLUID.Copy( aParentLUID );
     newNode->iStatusRef = aStatusRef;
     newNode->iProcessed = EFalse;
-    newNode->iLeaf = EFalse;
-    
+    newNode->iLeaf = EFalse;    
     iBuffer.AppendL( newNode );
+    CleanupStack::Pop(newNode);
     OstTrace0( TRACE_NORMAL, CADDBUFFER_ADDNODETOBUFFERL_EXIT, "EXIT: CAddBuffer::AddNodeToBufferL");
     }
 
@@ -134,15 +134,15 @@ void CAddBuffer::AddNodeToBufferL( const TDesC8& aUri,
     OstTraceExt1( TRACE_NORMAL, CADDBUFFER_ADDNODETOBUFFERL_LEAF_ENTRY, "ENTRY: CAddBuffer::AddNodeToBufferL;aUri=%s", aUri );
     
     CConnMoNodeElement* newNode = new (ELeave) CConnMoNodeElement();
-    
+    CleanupStack::PushL( newNode );
     newNode->iUri.Copy( aUri );
     newNode->iParentLUID.Copy( aLUID );
     newNode->iObject.Copy( aObject );
     newNode->iStatusRef = aStatusRef;
     newNode->iProcessed = EFalse;
-    newNode->iLeaf = ETrue;
-    
+    newNode->iLeaf = ETrue;    
     iBuffer.AppendL( newNode );
+    CleanupStack::Pop(newNode);
     OstTrace0( TRACE_NORMAL, CADDBUFFER_ADDNODETOBUFFERL_LEAF_EXIT, "EXIT: CAddBuffer::AddNodeToBufferL");
     }
 

@@ -26,7 +26,7 @@
 #include <hbinputeditorinterface.h>
 #include "devicemanagementnotifierwidget_p.h"
 
-class omacppinquerydialog : public devicemanagementnotifierwidget
+class omacppinquerydialog : public QObject, public HbDeviceDialogInterface
     {
 
 Q_OBJECT
@@ -37,16 +37,27 @@ public:
 public:
     void createcppinquery(const QVariantMap &parameters);
     HbDialog *deviceDialogWidget() const;
+    //derived from HbDeviceDialogInterface
+    bool setDeviceDialogParameters(const QVariantMap &parameters);
+    int deviceDialogError() const;
+    void closeDeviceDialog(bool byClient);
+    QObject *signalSender() const;
 
 public slots:
 
     void pintextChanged();
     void okSelected();
     void cancelSelected();
-    
+
+private:
+signals:
+    void deviceDialogClosed();
+    void deviceDialogData(QVariantMap data);
+
 private:
     HbLineEdit *mlineedit;
     HbAction *mactionok;
+    HbDialog *mDialog;
     };
     
 

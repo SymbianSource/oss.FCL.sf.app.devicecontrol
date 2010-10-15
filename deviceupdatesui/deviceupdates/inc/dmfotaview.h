@@ -37,9 +37,12 @@
 #include <nsmldmdef.h>
 #include <fotaengine.h>
 #include "dminforetrieval.h"
+#include "dmserviceprovider.h"
 #include "deviceupdatemoniterobserver.h"
 //_LIT( KSmlEOL,      "\n" );
-const TUid KControlPanelAppUid ={0x20025fd9};
+enum {
+    EQtHighwayLaunch = 6
+};
 
 class HbDialog;
 class HbPushButton;
@@ -50,10 +53,9 @@ class DMFotaView : public HbView, public MDeviceMoniterObserver
     {
     Q_OBJECT
 public:
-    DMFotaView(HbMainWindow *mainWindow);
+    DMFotaView(HbMainWindow *aMainWindow,DMServiceProvider* aService=NULL);
     virtual ~DMFotaView();
     bool addFotaView();
-    //HbDialog* createDialog() const;
     void displayNoteAndDisableButtons();
     void enableButtons();
     
@@ -66,42 +68,43 @@ public slots :
     void OnHelp();
     void OnExit();
 	void CheckforUpdate();
-	void AdvancedDeviceManager(bool launchadvanceview = true);	
+	void AdvancedDeviceManager(bool aLaunchadvanceview = true);	
 	void backtoMainWindow();
-	void readSection( Qt::Orientation orientation );
+	void readSection( Qt::Orientation aOrientation );
 	void ResumeUpdate();
 public:
 	void UpdateDMUI(TBool aVal);
 private:
-    void FormatList(QString val, QString str);
+    void FormatList(QString aVal, QString aStr);
     RFotaEngineSession& FotaEngineL();
     void fotaSupportEnabled();
 private:
 	HbMainWindow* mMainWindow;
-	HbView* fotaPortraitView;
-	HbView* fotaLandscapeView;
-	DmAdvancedView* profilesView;
+	HbView* mFotaPortraitView;
+	HbView* mFotaLandscapeView;
+	DmAdvancedView* mProfilesView;
 	HbAction    *mSoftKeyBackAction;
     RSyncMLSession iSession;
-    RSyncMLDevManProfile profile;
+    RSyncMLDevManProfile iProfile;
     RSyncMLDevManJob iSyncJob;
     QTranslator* mTranslator;
-    HbLabel *label,*label2,*label3,*label4;
-    QStringList list1,list2;
-    TInt i;   
-    DmInfo* mainDmInfo;
-    HbDocumentLoader loader,loader2;
-    HbPushButton *updateButton;
-    TInt fotaValue;
-    HbPushButton *advancedButton;
-    HbPushButton *updateButtonLandscape;
-    HbPushButton *advancedButtonLandscape;
+    HbLabel *mLabel,*mLabel2,*mLabel3,*mLabel4;
+    QStringList mList1,mList2;
+    TInt iCount;   
+    DMServiceProvider* mService;
+    DmInfo* iMainDmInfo;
+    HbDocumentLoader mLoader,mLoader2;
+    HbPushButton *mUpdateButton;
+    TInt iFotaValue;
+    HbPushButton *mAdvancedButton;
+    HbPushButton *mUpdateButtonLandscape;
+    HbPushButton *mAdvancedButtonLandscape;
     
     RFotaEngineSession iFotaEngine;
     RFotaEngineSession::TState iFotaState;
     
     CDeviceUpdateMoniter * iMoniter;
-    TBool Connected;
+    TBool iConnected;
     };
     
 

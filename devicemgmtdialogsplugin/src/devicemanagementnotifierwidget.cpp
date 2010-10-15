@@ -19,6 +19,7 @@
 #include <hbdialog.h>
 
 #include "devicemanagementnotifierwidget_p.h"
+#include <devicedialogconsts.h>
 
 
 // Constructor
@@ -83,3 +84,12 @@ void devicemanagementnotifierwidget::dmDevdialogDismissed(ENotfierType notifiert
     resultMap.insert("keypress", response);
     emit deviceDialogData(resultMap);    
     }	
+
+
+void devicemanagementnotifierwidget::fotaDevdialogDismissed(int notifiertype, int response)
+    {
+    QVariantMap resultMap;
+    resultMap.insert(keydialog,notifiertype);
+    resultMap.insert(returnkey, response);
+    emit deviceDialogData(resultMap);    
+    }

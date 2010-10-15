@@ -103,9 +103,15 @@ CWPBioControl::~CWPBioControl()
     if (iDevDialog)
         {
         delete iDevDialog;
+        iDevDialog = NULL;
         }
     delete ibootstrap;
     delete iWait;
+    if ( iMsg )
+    {
+    	delete iMsg;
+    	iMsg = NULL;
+    }
     }
 // ----------------------------------------------------------------------------
 // CWPBioControl ::RestoreMsgL

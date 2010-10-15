@@ -178,8 +178,10 @@ void CAMPreInstallApp::ListPreInstalledAppL(const TDesC& installDocPath)
 			{
 
 			RDEBUG("Clist_PreInstallAppUi: err == KErrNone");
+												CleanupStack::PushL(sisRegistry); 
                         TPreInstalledAppParams *params =
                                 new (ELeave) TPreInstalledAppParams;
+                        CleanupStack::PushL(params);   
                         params->iPreInstalledAppame.Copy(sisRegistry->Name());
                         params->iPreInstalledAppVendorName.Copy(
                                 sisRegistry->Vendor());
@@ -199,7 +201,8 @@ void CAMPreInstallApp::ListPreInstalledAppL(const TDesC& installDocPath)
                         RDEBUG_2("Clist_PreInstallAppUi: ListPreInstalledApp: Installed App Name is: %S",&(sisRegistry->Name()));
                         RDEBUG_2("Clist_PreInstallAppUi: ListPreInstalledApp: Installed App Vendor is: %S",&(sisRegistry->Vendor()));
                         RDEBUG_2("Clist_PreInstallAppUi: ListPreInstalledApp: Installed App UID is : '0x%X'",sisRegistry->Uid());
-                        delete sisRegistry;
+                        CleanupStack::PopAndDestroy(params);
+                        CleanupStack::PopAndDestroy(sisRegistry);
 			}
                         continue;
                         }

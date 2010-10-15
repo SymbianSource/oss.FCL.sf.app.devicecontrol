@@ -29,19 +29,50 @@
 // Initialization of member variables; Create Pin query
 // ----------------------------------------------------------------------------
 //
-omacppinquerydialog::omacppinquerydialog(const QVariantMap &parameters) :
-    devicemanagementnotifierwidget(parameters)
+omacppinquerydialog::omacppinquerydialog(const QVariantMap &parameters)
     {
     qDebug("omacppinquerydialog omacppinquerydialog() start");
+
+    // Do translation
+    QTranslator *translator = new QTranslator();
+    QString lang = QLocale::system().name();
+    QString path = "Z:/resource/qt/translations/";
+    bool fine = translator->load("deviceupdates_en.qm", path);
+    if (fine)
+        qApp->installTranslator(translator);
+
+    QTranslator *commontranslator = new QTranslator();
+
+    fine = commontranslator->load("common_" + lang, path);
+    if (fine)
+        qApp->installTranslator(commontranslator);
+
     mlineedit = 0;
     mactionok = 0;
+    mDialog = 0;
     createcppinquery(parameters);
     qDebug("omacppinquerydialog omacppinquerydialog() end");
     }
 
+
+// Set parameters
+bool omacppinquerydialog::setDeviceDialogParameters(
+    const QVariantMap &parameters)
+{
+    
+    return true;
+}
+
+// Get error
+int omacppinquerydialog::deviceDialogError() const
+{
+    
+    return 0;
+}
+
 HbDialog *omacppinquerydialog::deviceDialogWidget() const
     {
-    return const_cast<omacppinquerydialog*> (this);
+    return mDialog;
     }
 
 // ----------------------------------------------------------------------------
@@ -61,9 +92,10 @@ void omacppinquerydialog::createcppinquery(const QVariantMap &parameters)
         
         }
 
-    HbDialog *dialog = qobject_cast<HbDialog *> (loader.findWidget("dialog"));
-    dialog->setDismissPolicy(HbPopup::NoDismiss);
-    dialog->setTimeout(HbPopup::NoTimeout);
+    
+    mDialog = qobject_cast<HbDialog *> (loader.findWidget("dialog"));
+    mDialog->setDismissPolicy(HbPopup::NoDismiss);
+    mDialog->setTimeout(HbPopup::NoTimeout);
 
     int tries = -1;
 
@@ -88,12 +120,12 @@ void omacppinquerydialog::createcppinquery(const QVariantMap &parameters)
 
     label->setPlainText(labelstring);
 
-    mactionok = (HbAction *) dialog->actions().first();
+    mactionok = (HbAction *) mDialog->actions().first();
     QString softkeyok = hbTrId("txt_common_button_ok");
     mactionok->setText(softkeyok);
     mactionok->setEnabled(false);
 
-    HbAction *actioncancel = (HbAction *) dialog->actions().at(1);
+    HbAction *actioncancel = (HbAction *) mDialog->actions().at(1);
     QString softkeyCancel = hbTrId("txt_common_button_cancel");
     actioncancel->setText(softkeyCancel);
 
@@ -105,7 +137,7 @@ void omacppinquerydialog::createcppinquery(const QVariantMap &parameters)
     HbEditorInterface editorInterface(mlineedit);
     editorInterface.setMode(HbInputModeNumeric);
     editorInterface.setInputConstraints(HbEditorConstraintFixedInputMode);
-    dialog->setTimeout(HbPopup::NoTimeout);
+    mDialog->setTimeout(HbPopup::NoTimeout);
 
     bool bconnect = false;
     // Connection to the slot when PIN text is changed
@@ -120,9 +152,7 @@ void omacppinquerydialog::createcppinquery(const QVariantMap &parameters)
     QObject::connect(actioncancel, SIGNAL(triggered()), this,
             SLOT(cancelSelected()));
 
-    if (dialog)
-        dialog->show();
-        
+       
     
 
     qDebug("omacppinquerydialog createcppinquery() end");
@@ -201,6 +231,20 @@ void omacppinquerydialog::cancelSelected()
     LOGSTRING("omacppinquerydialog::cancelSelected() end");
     qDebug("omacppinquerydialog::cancelSelected() end");
     }
+
+// Close device dialog
+void omacppinquerydialog::closeDeviceDialog(bool byClient)
+    {
+    Q_UNUSED(byClient);
+    mDialog->close();
+    emit deviceDialogClosed();
+    }
+
+// Return signal source (container) for the dialog
+QObject *omacppinquerydialog::signalSender() const
+{
+    return const_cast<omacppinquerydialog*>(this);
+}
 
 //  End of File
 

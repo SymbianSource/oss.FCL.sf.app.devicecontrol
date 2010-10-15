@@ -76,6 +76,10 @@ const TUint32  KDmJobCancel = 0x00000012;
 //Sets by DM UI & used by IAD or others
 const TUint32 KDMIdle = 0x0000000C; 
 const TUint32 KSilentSession = 0x0000000D;
+
+//PubSub key used to store the information regarding whether DM has been launched 
+// by Control panel or not
+const TUint32 KDMLaunched = 0x0000000E;
 #endif // NSMLDMSYNCINTERNALPSKEYS_H
             
 // End of File

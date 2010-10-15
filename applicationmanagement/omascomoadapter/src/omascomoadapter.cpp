@@ -977,9 +977,10 @@ void CSCOMOAdapter::SendPendingGenericAlertL()
             
 
     		CNSmlDMAlertItem* item = new (ELeave) CNSmlDMAlertItem ;
-    		
+    		CleanupStack::PushL(item);
     		HBufC8 *data = HBufC8::NewL(1024);
-            
+        CleanupStack::PushL(data);    
+        	
             TPtr8 ptr = data->Des();
             //ptr.Append(KDataStart);
             ptr.Append(KResultCodeStart);
@@ -990,48 +991,43 @@ void CSCOMOAdapter::SendPendingGenericAlertL()
             ptr.Append(KIdentifierEnd);
             //ptr.Append(KDataEnd);
 
-            HBufC8 *sourceuri = genericalerts[i]->iSourceURI;
+        HBufC8 *sourceuri = genericalerts[i]->iSourceURI;
     		
     		item->iSource = sourceuri;
 
-			HBufC8 *targeturi = targetURIGet.AllocL();
-    		
+				HBufC8 *targeturi = targetURIGet.AllocL();
+    		CleanupStack::PushL(targeturi);  
     		item->iTarget = targeturi;
     		
     		HBufC8 *metatype = scomometatype.AllocL();
-    		            
+    		CleanupStack::PushL(metatype);            
     		item->iMetaType = metatype;
     		            
-    		HBufC8 *metaformat = scomometaformat.AllocL();         
-
+    		HBufC8 *metaformat = scomometaformat.AllocL();
+    		CleanupStack::PushL(metaformat);
     		item->iMetaFormat = metaformat;
 
     		HBufC8 *metamark = scomomark.AllocL();
-    		            
+    		CleanupStack::PushL(metamark);            
     		item->iMetaMark = metamark;
     
     		item->iData = data;
     
     		iItemArray.AppendL(*item);
             
-            TRAP_IGNORE(privateAPI.AddDMGenericAlertRequestL(              
-                    *genericalerts[i]->iCorrelator,iItemArray ));
+        TRAP_IGNORE(privateAPI.AddDMGenericAlertRequestL(              
+                    *genericalerts[i]->iCorrelator,iItemArray ));       
+            
+        CleanupStack::PopAndDestroy( metamark);            
+        CleanupStack::PopAndDestroy( metaformat);           
+        CleanupStack::PopAndDestroy( metatype);	            
+        CleanupStack::PopAndDestroy( targeturi);	
+        CleanupStack::PopAndDestroy( data);	
+        CleanupStack::PopAndDestroy( item);
                     
-                    
-            delete data;
-            
-            delete metamark;
-            
-            delete metaformat;
-            
-            delete metatype;
-            
-            delete targeturi;
-            delete item;
-                    
-            iItemArray.Reset();			
-			iItemArray.Close();
-            CleanupStack::PopAndDestroy( &privateAPI);
+        iItemArray.Reset();			
+				iItemArray.Close();
+        CleanupStack::PopAndDestroy( &privateAPI);
             }
         }
     genericalerts.ResetAndDestroy();
@@ -2598,7 +2594,7 @@ void CSCOMOAdapter::GetComponentDataL(const TDesC8& parent,
                                     else
                                         if (dataType == EDCConRef)
                                             {
-                                            CBufBase *b = CBufFlat::NewL(4);
+                                            CBufBase *b = CBufFlat::NewL(12);
                                             CleanupStack::PushL(b);
                                             SessionL().DeploymentComponentDataL(
                                                     iluid, dataType, *b);
@@ -4144,7 +4140,7 @@ void CSCOMOAdapter::CheckStateChangesL()
         RDEBUG( "CSCOMOAdapter::CheckStateChangesL(): Adding Trust Closing Session" );
         iManagement.Close();
         iSessionOpened = EFalse;
-        RApplicationManagement &session = SessionL();
+//        RApplicationManagement &session = SessionL(); // coverity Fix
         RDEBUG( "CSCOMOAdapter::CheckStateChangesL(): Adding Trust new session started" );
         }
     }

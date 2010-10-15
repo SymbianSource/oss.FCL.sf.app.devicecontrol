@@ -5200,8 +5200,7 @@ void CNSmlInternetAdapter::AddNodeObjectL(const TDesC8& aURI,
         TPtrC qDB = TPtrC(COMMDB_ID);
 
         //Check if URI is /AP/*/NAPDef/* then it should be check IAP ID in DB not IAPService
-        if ((iIAPId >= 0)
-                && ((aURI.Match(_L8("AP/*/NAPDef/*")) != KErrNotFound)
+        if (((aURI.Match(_L8("AP/*/NAPDef/*")) != KErrNotFound)
                         || (aURI.Match(_L8("AP/*/NAPDef/*/Bearer/*"))
                                 != KErrNotFound) || (aURI.Match(_L8("AP/*"))
                         != KErrNotFound) || (aURI.Match(_L8("AP/*/NAPDef"))

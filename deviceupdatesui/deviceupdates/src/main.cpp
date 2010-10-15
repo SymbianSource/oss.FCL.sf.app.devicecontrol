@@ -24,8 +24,6 @@
 int main(int argc, char *argv[])
 {
    HbApplication app(argc, argv);
-   //HbView* newview= new HbView();
-
    QTranslator *translator = new QTranslator();
    QString lang = QLocale::system().name();
    qDebug("OMADM Loading qm file");
@@ -48,7 +46,7 @@ int main(int argc, char *argv[])
    else
    		qDebug("omadm common translator loading failed");
    
-   if( argc == 2) // Launch via Control Panel
+   if( argc == EQtHighwayLaunch) // Launch via Control Panel
     {    	
     	QTranslator *cptranslator = new QTranslator();
     	fine = cptranslator->load("control_panel_" + lang, path);
@@ -64,11 +62,26 @@ int main(int argc, char *argv[])
     }  
 
     HbMainWindow window;
-
-    DMFotaView* view = new DMFotaView(&window);
+    DMServiceProvider* service=NULL;
+    DMFotaView* view =NULL;
+    
+    if(argc == EQtHighwayLaunch)
+        {
+        service=new DMServiceProvider();
+        view = new DMFotaView(&window,service);
+        }
+    else
+        {
+        view= new DMFotaView(&window);
+        }
     bool loadingok = view->addFotaView();
-
     window.show();
-    return app.exec();
+    TInt ret = app.exec();
+    if(argc==EQtHighwayLaunch)
+        {
+        delete service;
+        service = NULL;
+        }
+    return ret;
 }
 

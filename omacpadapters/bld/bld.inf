@@ -19,14 +19,10 @@ PRJ_PLATFORMS
 DEFAULT   
 PRJ_EXPORTS
 ../rom/ProvisioningAdapter.iby			CORE_APP_LAYER_IBY_EXPORT_PATH(provisioningAdapter.iby)
-../rom/ProvisioningAdapterResources.iby		LANGUAGE_APP_LAYER_IBY_EXPORT_PATH(provisioningAdapterresources.iby)
-
-../MbxNbrAdapter/loc/MailboxAdapter.loc		MW_LAYER_LOC_EXPORT_PATH(mailboxadapter.loc)
-../accesspointadapter/loc/WPAPAdapter.loc	MW_LAYER_LOC_EXPORT_PATH(WPAPAdapter.loc)
-../StreamingAdapter/loc/StreamingAdapter.loc	MW_LAYER_LOC_EXPORT_PATH(streamingadapter.loc)
 
 
 #include "../accesspointadapter/group/bld.inf"
 #include "../MbxNbrAdapter/Group/bld.inf"
 #include "../StreamingAdapter/Group/bld.inf"
 #include "../WAPAdapter/Group/bld.inf"
+#include "../cpdestinationnwadapter/group/bld.inf"

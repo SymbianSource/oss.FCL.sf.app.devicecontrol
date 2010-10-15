@@ -26,9 +26,6 @@ PRJ_EXPORTS
 //../rom/WPAPAdapter.iby	CORE_MW_LAYER_IBY_EXPORT_PATH(WPAPAdapter.iby) 
 //../rom/WPAPAdapterResources.iby	LANGUAGE_MW_LAYER_IBY_EXPORT_PATH(WPAPAdapterResources.iby) 
 
-// export localised loc file
-../loc/WPAPAdapter.loc        MW_LAYER_LOC_EXPORT_PATH(wpapadapter.loc)
-
 PRJ_MMPFILES
 WPAPAdapter.mmp
 

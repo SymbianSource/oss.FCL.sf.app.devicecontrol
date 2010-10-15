@@ -21,7 +21,6 @@
 #include <e32base.h>
 #include <CWPCharacteristic.h>
 #include <CWPParameter.h>
-#include <wpwapadapterresource.rsg>
 #include <CWPAdapter.h>
 #include "CWPWAPBookmarkItem.h"
 #include "WPWAPUtil.h"

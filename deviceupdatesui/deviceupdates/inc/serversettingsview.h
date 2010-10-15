@@ -52,6 +52,7 @@ private:
 public slots:
     void backButtonClicked();
     void checkServerIdvalue();    
+    void onDialogClosed(int action);   
     void accessPointItemChanged(int apindex);
     void portItemChanged(QString port);
 

@@ -880,7 +880,7 @@ TInt CWlanSettings::WriteSecondarySSIDL(TUint32 aWlanID,
             TInt enError = KErrNone;
             TInt lockError = KErrNone;
             TRAP(lockError, enError = PerformLockWLANTablesL(ETrue));
-            if (iSecondaryView != NULL)
+            if (apEnforce)
                 {
                 ((CCommsDbProtectTableView*) iSecondaryView)->ProtectRecord();
                 }

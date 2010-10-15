@@ -20,7 +20,7 @@
 
 int main(int argc, char **argv)
 {
-    HbApplication a( argc, argv );
+    QApplication a( argc, argv, false );
     DmTelServiceHandler srvcHndlr;
     return a.exec();
 }

@@ -45,17 +45,12 @@ START RESOURCE 101F84DC.rss
 TARGET wpwapadapter.rsc
 END
 
-START RESOURCE WPWAPAdapterResource.rss
-HEADER
-TARGET wpwapadapterresource.rsc
-TARGETPATH RESOURCE_FILES_DIR
-LANGUAGE_IDS
-END
-
 USERINCLUDE     ../Inc ../Group ../../bld
 
 APP_LAYER_SYSTEMINCLUDE
 SYSTEMINCLUDE 	/epoc32/include/ecom
+SYSTEMINCLUDE 	/epoc32/include/mw/hb/hbwidgets
+SYSTEMINCLUDE 	/epoc32/include/mw/hb/hbcore
 
 LIBRARY         euser.lib 
 LIBRARY         provisioningengine.lib
@@ -64,7 +59,7 @@ LIBRARY         cmmanager.lib
 LIBRARY         commdb.lib
 LIBRARY         CommonEngine.lib
 LIBRARY         centralrepository.lib
-
+LIBRARY       hbcore.lib hbwidgets.lib
 DEBUGLIBRARY    flogger.lib
 
 #ifdef __MESSAGING_API_V2__

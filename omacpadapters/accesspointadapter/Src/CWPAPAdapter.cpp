@@ -23,7 +23,6 @@
 
 #include <CWPCharacteristic.h>
 #include <commdb.h>
-#include <wpapadapterresource.rsg>
 #include <featmgr.h>					// Feature manager
 #include "WPAPUtil.h"
 #include "CWPAPAccesspointItem.h"
@@ -36,6 +35,11 @@
 #include <cmmanagerext.h>
 #include <cmconnectionmethodext.h>
 #include <WPAdapterUtil.h>
+#include <hbtextresolversymbian.h>
+
+_LIT( KAPResourceFileName, "deviceupdates_" );	
+_LIT( KAPResourceFilePath, "z:/resource/qt/translations/" );
+
 
 // ============================ MEMBER FUNCTIONS ===============================
 
@@ -61,8 +65,13 @@ void CWPAPAdapter::ConstructL()
 	{
 	FLOG( _L( "[AccesspointAdapter] CWPAPAdapter::ConstructL:" ) );
 	
-	iTitle = WPAPUtil::ReadHBufCL( R_QTN_SM_WML_ACCESSPOINTS );
-	iDefaultName = WPAPUtil::ReadHBufCL( R_QTN_SM_WAPAP_NAME );
+	TBool result = HbTextResolverSymbian::Init(KAPResourceFileName, KAPResourceFilePath );
+	
+  _LIT(KAPAdapter, "txt_device_update_dblist_access_points");
+	iTitle = HbTextResolverSymbian::LoadL(KAPAdapter);	                                        
+    
+  _LIT(KWAPDefaultAdapter, "txt_device_update_dblist_wap_access_point");
+	iDefaultName = HbTextResolverSymbian::LoadL(KWAPDefaultAdapter);
 
 	FeatureManager::InitializeLibL();
 	

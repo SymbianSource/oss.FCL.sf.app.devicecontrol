@@ -3029,7 +3029,7 @@ void CNSmlWLanAdapter::AddNodeObjectL(const TDesC8& aURI,
         {
         TBuf<KCommsDbSvrMaxFieldLength> serviceType;
         TUint32 serviceId(NULL);
-        TUint32 lValue;
+        TUint32 lValue = 0;
         CCommsDbTableView* napdefView = iDatabase.OpenViewMatchingUintLC(
                 TPtrC(IAP), TPtrC(COMMDB_ID), DesToInt(aParentLUID));
         TInt errorCode = napdefView->GotoFirstRecord();

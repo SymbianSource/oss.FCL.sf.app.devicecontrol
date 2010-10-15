@@ -180,7 +180,7 @@ void CDeploymentComponentData::LoadDataL() const
         if (err == KErrNone)
             {
             CleanupClosePushL(file); // 2
-            TInt fsize;
+            TInt fsize = 0;
             User::LeaveIfError(file.Size(fsize) );
             iData = HBufC8::NewL(fsize);
             TPtr8 ptr(iData->Des() );
@@ -396,7 +396,8 @@ TUid CDeploymentComponentData::ResolveUidL(RFs& aFs)
         // leave if can not open the original file
         User::LeaveIfError(originalFile.Open(aFs, ptr, EFileWrite) );
         RDEBUG("	-> done");
-
+				
+		CleanupClosePushL(originalFile);
         // First construct the temp path
         User::LeaveIfError(aFs.PrivatePath(decryptedTempFileName) );
         // set drive letter into the path
@@ -422,11 +423,10 @@ TUid CDeploymentComponentData::ResolveUidL(RFs& aFs)
         User::LeaveIfError(decryptedFile.Open(aFs, decryptedTempFileName,
                 EFileShareAny) );
         RDEBUG("	-> done");
+        CleanupClosePushL(decryptedFile);
         // parse the uid from the file
         ret = ParseUidFromSisFileL(decryptedFile);
 
-        // no use anymore for the decrypted file
-        decryptedFile.Close();
         // delete the temp file
         TInt err = aFs.Delete(decryptedTempFileName);
         if (err != KErrNone)
@@ -434,9 +434,9 @@ TUid CDeploymentComponentData::ResolveUidL(RFs& aFs)
             RDEBUG_2("**** ERROR, unable to delete temporary file: %S", &decryptedTempFileName );
             }
 
-        CleanupStack::PopAndDestroy(licenseMgr);
-        decryptedFile.Close();
-        originalFile.Close();
+        CleanupStack::PopAndDestroy(&decryptedFile);
+        CleanupStack::PopAndDestroy(licenseMgr);      
+        CleanupStack::PopAndDestroy(&originalFile);
         }
     else
         if (iMimeType == KSisxMimeType || iMimeType == KSisMimeType )

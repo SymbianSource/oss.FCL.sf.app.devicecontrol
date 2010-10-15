@@ -38,6 +38,8 @@ class syncmlnotifier;
 
 class devicemanagementnotifierwidget;
 class syncmlConnectNotifier;
+class fotadevicedialogs;
+
 class devicemanagementnotifierutils :public HbDialog  {
 
 Q_OBJECT
@@ -48,6 +50,7 @@ virtual ~devicemanagementnotifierutils();
 private:
 syncmlnotifier* notifier;
 syncmlConnectNotifier* connectDialog;
+fotadevicedialogs * fotadialog;
   
 };
 

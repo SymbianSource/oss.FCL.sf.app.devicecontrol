@@ -23,7 +23,6 @@
 #include "CWPAPNapdef.h"
 #include <CWPCharacteristic.h>
 #include <CWPParameter.h>
-#include <wpapadapterresource.rsg>
 #include <featmgr.h>
 #include <WPAdapterUtil.h>
 #include "CWPAPAccesspointItem.h"
@@ -612,16 +611,20 @@ void CWPAPNapdef::VisitL( CWPCharacteristic& aCharacteristic )
 			    if(aCharacteristic.Name().Compare( KEAP ) == 0)
 			        {
                     CEapTypeElement* newEap = new (ELeave) CEapTypeElement;
+                    CleanupStack::PushL( newEap );
                     newEap->iEAPSettings = new (ELeave) EAPSettings;
                	    newEap->iCertificate = new (ELeave) EapCertificateEntry;
                     iEapTypeArray.AppendL(newEap);
+                    CleanupStack::Pop(newEap);
 			        }
 			    else if(aCharacteristic.Name().Compare( SECSSID ) == 0)
 			        {
                     SECssID* newsecSSID = new (ELeave) SECssID;
+                    CleanupStack::PushL( newsecSSID );
                     newsecSSID->iSSSID = NULL;
                     newsecSSID->iSUSSID = NULL;
                     iSecSSID.AppendL(newsecSSID);
+                    CleanupStack::Pop(newsecSSID);
 			        }
     
 			    aCharacteristic.AcceptL( *this );

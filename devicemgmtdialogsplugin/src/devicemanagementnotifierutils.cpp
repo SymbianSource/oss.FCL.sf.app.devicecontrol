@@ -27,6 +27,8 @@
 #include "pnputillogger.h"
 #include "omacppinquerydialog.h"
 #include "devicemanagementnotifierwidget_p.h"
+#include "fotadevicedialogs.h"
+
  enum TSyncmlHbNotifierKeys 
 		{
 
@@ -46,6 +48,7 @@ devicemanagementnotifierutils::devicemanagementnotifierutils(devicemanagementnot
 	
 	QVariantMap::const_iterator i = parameters.constBegin();
     int notifiertolaunch = 0;
+    int dialogtype = 0;
 	while (i != parameters.constEnd())
         {
             if (i.key().toAscii() == "syncmlfw")
@@ -53,7 +56,15 @@ devicemanagementnotifierutils::devicemanagementnotifierutils(devicemanagementnot
 
             notifiertolaunch = i.value().toInt();
                // profileidenabled = true;
+                }
+            
+            if (i.key().toAscii() == keydialog)
+                {
+
+                dialogtype = i.value().toInt();
+               // profileidenabled = true;
                 }           
+
             ++i;
             }
     if(notifiertolaunch == 1000001 )// Connecting dialog
@@ -61,15 +72,24 @@ devicemanagementnotifierutils::devicemanagementnotifierutils(devicemanagementnot
     connectDialog = new syncmlConnectNotifier(ptr);
     	 connectDialog->launchDialog(parameters);
     	 notifier = NULL;
+    	 fotadialog = NULL;
         }
-        
+    else if (dialogtype >= EFwDLNeedMoreMemory && dialogtype <= EFwUpdResumeUpdate)
+        {
+        fotadialog = new fotadevicedialogs(ptr);
+        fotadialog->launchFotaDialog(parameters);
+        connectDialog = NULL;
+        notifier = NULL;
+        //return  fotadialog;
+        }
     else 
         {
     notifier = new syncmlnotifier(ptr);
        notifier->launchDialog(parameters);
        connectDialog = NULL;
+       fotadialog = NULL;
         }
-        }
+     }
 devicemanagementnotifierutils::~devicemanagementnotifierutils()
     {
     qDebug("devicemanagementnotifierutils::~devicemanagementnotifierutils");

@@ -20,7 +20,6 @@
 #include    <f32file.h>
 #include    <CWPCharacteristic.h>
 #include    <CWPParameter.h>
-#include    <wpmbxnbradapterresource.rsg>
 #include    <cvoicemailbox.h>
 #include 		<cvoicemailboxentry.h>
 #include    <commonphoneparser.h>
@@ -30,6 +29,7 @@
 #include    "WPAdapterUtil.h"
 #include    "MbxNbrAdapter.h"
 #include    "ProvisioningDebug.h"
+#include <hbtextresolversymbian.h>
 
 // CONSTANTS
 #if ( defined (__WINS__) || defined (__WINSCW) ) // this different on hw
@@ -44,6 +44,9 @@ _LIT( KVideoSupportType, "VIDEO_MBOX_SUPPORT" );
 _LIT( KVideoSupportTypeTrue, "TRUE" );
 _LIT( KVideoSupportTypeFalse, "FALSE" );
 _LIT( KMailboxAppId, "w9027" );        // From OMA provisioning registration document
+_LIT( KMailboxResourceFileName, "deviceupdates_" );	
+_LIT( KMailboxResourceFilePath, "z:/resource/qt/translations/" );
+
 const TInt KSettingsGranularity = 2;
 
 // ============================ MEMBER FUNCTIONS ===============================
@@ -68,13 +71,11 @@ void CMbxNbrAdapter::ConstructL()
     {
     FLOG( _L( "[Provisioning] CMbxNbrAdapter::ConstructL:" ) );
     
-    TFileName fileName;
-    Dll::FileName( fileName );
-    iTitle = WPAdapterUtil::ReadHBufCL( fileName,
-                                        KAdapterName,
-                                        R_MAILBOX_NUMBER_ADAPTER_TITLE );
-                                        
-    FLOG( _L( "[Provisioning] CMbxNbrAdapter::ConstructL: Done" ) );
+    TBool result = HbTextResolverSymbian::Init(KMailboxResourceFileName, KMailboxResourceFilePath );
+    _LIT(KMailboxAdapter, "txt_device_update_dblist_mailbox_settings");
+    iTitle = HbTextResolverSymbian::LoadL(KMailboxAdapter);	                                           
+   
+     FLOG( _L( "[Provisioning] CMbxNbrAdapter::ConstructL: Done " ));
     }
 
 // -----------------------------------------------------------------------------

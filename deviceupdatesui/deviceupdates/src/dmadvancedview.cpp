@@ -654,25 +654,19 @@ void DmAdvancedView::addOtherDetails()
         
         // WLAN MAC
         
-        TUint KPhoneWlanSeparator (':');
-        _LIT( KWLanMACDataFormat, "%02x");  
-        // Fetch WLAN MAC address
-        TBuf<KWlanMacAddrLength> address;
-        RProperty::Get( KPSUidWlan, KPSWlanMacAddress, address );   
-        // Format fetched address
-        TBuf<KWlanMacAddrLength> wlanMACAddress;        
-        for ( TInt i( 0 ); i < address.Length(); i++ )
-            {
-            // Set separator
-            if( i > 0 )
-                {
-                wlanMACAddress.Append( KPhoneWlanSeparator );
-                }
-            // Set data
-            TBuf<50> tmp;
-            tmp.Format( KWLanMACDataFormat, address[i] );
-            wlanMACAddress.Append( tmp );
-            } 
+		TBuf8<KWlanMacAddrLength> address;
+		// Fetch WLAN MAC address
+		RProperty::Get(KPSUidWlan,KPSWlanMacAddress,address);
+		TBuf<KWlanMacAddrLength> wlanMACAddress;
+		for ( TInt i = 0; i < address.Length(); i++ )
+			{     
+			TUint16 addbyte = address[i];
+			wlanMACAddress.AppendFormat(_L("%02X:"), addbyte);
+			}
+		if  ( wlanMACAddress.Length() ) // remove trailing ':'
+			{
+			wlanMACAddress.Delete(wlanMACAddress.Length()-1, 1);
+			}			
         liststr.clear();
         item = new QStandardItem();
         val = hbTrId("txt_device_update_dblist_wlan_mac_address");

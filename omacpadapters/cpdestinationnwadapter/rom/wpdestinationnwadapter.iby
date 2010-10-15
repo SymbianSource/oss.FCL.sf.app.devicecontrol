@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2002 Nokia Corporation and/or its subsidiary(-ies). 
+* Copyright (c) 2007 Nokia Corporation and/or its subsidiary(-ies). 
 * All rights reserved.
 * This component and the accompanying materials are made available
 * under the terms of "Eclipse Public License v1.0"
@@ -11,19 +11,16 @@
 *
 * Contributors:
 *
-* Description:  Resource file.
+* Description:   wpdestinationnwadapter iby file
 *
 */
 
 
-//  INCLUDES
-#include    <badef.rh>
-#include    <streamingadapter.loc>
+#ifndef WPDESTINATIONNWADAPTER_IBY
+#define WPDESTINATIONNWADAPTER_IBY
 
+#include <data_caging_paths_for_iby.hrh>
 
-RESOURCE LBUF r_streaming_adapter_title
-	{
-	txt = qtn_op_head_streaming;
-	}
+ECOM_PLUGIN( wpdestinationnwadapter.dll, 2000b4af.rsc )
 
-// End of file
+#endif // WPDESTINATIONNWADAPTER_IBY

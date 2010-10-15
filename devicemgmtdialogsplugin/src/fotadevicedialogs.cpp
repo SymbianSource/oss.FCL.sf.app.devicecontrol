@@ -15,13 +15,16 @@
 *
 */
 
-
+#include "devicemanagementnotifierutils.h"
 #include <hbdocumentloader.h>
 #include <hbdialog.h>
 #include <hblabel.h>
 #include <hbmessagebox.h>
 #include <hbaction.h>
 #include <e32property.h>
+//#include "syncmlnotifierparams.h"
+#include "fotadevicedialogs.h"
+
 #include <qdebug.h>
 #include <hblistview.h>
 #include <hbpushbutton.h>
@@ -39,10 +42,11 @@
 // ---------------------------------------------------------------------------
 //
 
-fotadevicedialogs::fotadevicedialogs(const QVariantMap &parameters)
+fotadevicedialogs::fotadevicedialogs(devicemanagementnotifierwidget* ptr)
 //:	devicemanagementnotifierwidget(parameters)
     {
     qDebug("devicemanagementnotifierutils fotadevicedialogs");
+    m_Ptr = ptr;
     QTranslator *translator = new QTranslator();
     QString lang = QLocale::system().name();
     QString path = "Z:/resource/qt/translations/";
@@ -58,7 +62,15 @@ fotadevicedialogs::fotadevicedialogs(const QVariantMap &parameters)
         qDebug("device dialog common translator loading failed");
 
     
-    launchFotaDialog(parameters);
+  
+    }
+
+
+fotadevicedialogs::~fotadevicedialogs()
+    {
+    if(m_dialog)
+        m_dialog->deleteLater();
+    
     }
 
 
@@ -76,13 +88,11 @@ void fotadevicedialogs::launchFotaDialog(const QVariantMap &parameters)
     qDebug("devicemanagementnotifierutils fotadevicedialogs launchDialog");    
     TFwUpdNoteTypes aType = EFwUpdDeviceBusy;
     
-    //QString temp = QString::fromUtf8(reinterpret_cast<const char*>(url.Ptr()), url.Length());
-    //TDesC8 * tempStr = KKeyDialog;
-    //const QString temp = QString::fromUtf8(reinterpret_cast<const char*>(tempStr.Ptr()), tempStr.Length());
     i = parameters.find(keydialog);
     if(i != parameters.end())
         aType = (TFwUpdNoteTypes)i.value().toInt();
     
+    m_DialogId = (TInt)aType; 
     
     if(aType == EFwUpdRebootNote)
     	{
@@ -91,13 +101,9 @@ void fotadevicedialogs::launchFotaDialog(const QVariantMap &parameters)
     	else if(aType == EFwUpdResumeDownload || aType == EFwUpdResumeUpdate)
         {
         createfotaconfirmationdialog(aType,parameters);
-        //createfotainformativedialog();
         }
-    else if(aType == EFwDLNeedMoreMemory || aType == EFwDLConnectionFailure || aType == EFwDLGeneralFailure || 
-    	 aType == EFwUpdNotEnoughBattery || aType == EFwUpdDeviceBusy || aType == EFwUpdSuccess || aType == EFwUpdNotCompatible
-    || aType == EFwDLNonResumableFailure)
+    else
         {
-        //createfotamessagedialog();
         createfotamessagedialog(aType,parameters);
         }
     }
@@ -111,7 +117,6 @@ void fotadevicedialogs::launchFotaDialog(const QVariantMap &parameters)
 void fotadevicedialogs::createfotainformativedialog(TFwUpdNoteTypes aType,const QVariantMap &parameters)
     {
     qDebug("createserveralertinformative start");
-		LOGSTRING("createserveralertinformative start");
     HbDocumentLoader loader;
     bool ok = false;
     loader.load(":/xml/resources/fotainformativedialog.docml", &ok);
@@ -119,7 +124,7 @@ void fotadevicedialogs::createfotainformativedialog(TFwUpdNoteTypes aType,const 
         {
         return;
         }
-    HbDialog *dialog = qobject_cast<HbDialog *> (loader.findWidget("dialog"));
+    m_dialog = qobject_cast<HbDialog *> (loader.findWidget("dialog"));
 
     HbLabel *content = qobject_cast<HbLabel *> (loader.findWidget(
             "lblContent"));
@@ -127,12 +132,12 @@ void fotadevicedialogs::createfotainformativedialog(TFwUpdNoteTypes aType,const 
     // No translations required
     //content->setPlainText("Testing");
 
-    dialog->setTimeout(3000);
+    m_dialog->setTimeout(3000);
 
-    if (dialog)
-        dialog->show();
+    if (m_dialog)
+        m_dialog->show();
 
-    QObject::connect(dialog, SIGNAL(aboutToClose()), this, SLOT(okSelected()));
+    QObject::connect(m_dialog, SIGNAL(aboutToClose()), this, SLOT(okSelected()));
 
 	qDebug("createserveralertinformative end");
 
@@ -148,7 +153,6 @@ void fotadevicedialogs::createfotainformativedialog(TFwUpdNoteTypes aType,const 
 void fotadevicedialogs::createfotaconfirmationdialog(TFwUpdNoteTypes aType,const QVariantMap &parameters)
     {
     qDebug("createserveralertinformative start");
-        LOGSTRING("createserveralertinformative start");
         
     QVariantMap::const_iterator i;
     HbDocumentLoader loader;
@@ -184,7 +188,7 @@ void fotadevicedialogs::createfotaconfirmationdialog(TFwUpdNoteTypes aType,const
             {
             return;
             }
-            dialog = qobject_cast<HbDialog *> (loader.findWidget("dialog"));
+            m_dialog = qobject_cast<HbDialog *> (loader.findWidget("dialog"));
             
             HbLabel *headingString = qobject_cast<HbLabel *> (loader.findWidget(
                                 "lblDialogHeading"));
@@ -211,18 +215,17 @@ void fotadevicedialogs::createfotaconfirmationdialog(TFwUpdNoteTypes aType,const
                 contentString->setPlainText(hbTrId("txt_device_update_info_the_last_update_incomplete_dwnld_kb")
                         .arg(param1).arg(param2).arg(sizeRounded));
                 }
-            //HbAction *primaryAction = dialog->primaryAction();
-            HbAction *primaryAction = (HbAction *) dialog->actions().first();
+
+            HbAction *primaryAction = (HbAction *) m_dialog->actions().first();
             primaryAction->setText(hbTrId("txt_common_button_continue_dialog"));
 
-            //HbAction *secondaryAction = dialog->secondaryAction();
-            HbAction *secondaryAction = (HbAction *) dialog->actions().at(1);
+            HbAction *secondaryAction = (HbAction *) m_dialog->actions().at(1);
             secondaryAction->setText(hbTrId("txt_device_update_button_resume_later"));
             if(!postpone)
                 secondaryAction->setEnabled(postpone);
 
-            dialog->setTimeout(HbPopup::NoTimeout);
-            dialog->setDismissPolicy(HbPopup::NoDismiss);
+            m_dialog->setTimeout(HbPopup::NoTimeout);
+            m_dialog->setDismissPolicy(HbPopup::NoDismiss);
 
             QObject::connect(primaryAction, SIGNAL(triggered()), this,
                     SLOT(fotaLSK()));
@@ -240,22 +243,20 @@ void fotadevicedialogs::createfotaconfirmationdialog(TFwUpdNoteTypes aType,const
                     return;
                     }
                 
-                dialog = qobject_cast<HbDialog *> (loader.findWidget("dialog"));
+                m_dialog = qobject_cast<HbDialog *> (loader.findWidget("dialog"));
                 
-                dialog->setTimeout(HbPopup::NoTimeout);
-                dialog->setDismissPolicy(HbPopup::NoDismiss);
+                m_dialog->setTimeout(HbPopup::NoTimeout);
+                m_dialog->setDismissPolicy(HbPopup::NoDismiss);
                 
                 HbLabel *headingString = qobject_cast<HbLabel *> (loader.findWidget(
                         "lblHeading"));
                 headingString->setPlainText(hbTrId("txt_device_update_title_device_update"));
                             
                 
-                //HbAction *primaryAction = dialog->primaryAction();
-                HbAction *primaryAction = (HbAction *) dialog->actions().first();
+                HbAction *primaryAction = (HbAction *) m_dialog->actions().first();
                 primaryAction->setText(hbTrId("txt_common_button_continue_dialog"));
                 
-                //HbAction *secondaryAction = dialog->secondaryAction();
-                HbAction *secondaryAction = (HbAction *) dialog->actions().at(1);
+                HbAction *secondaryAction = (HbAction *) m_dialog->actions().at(1);
                 secondaryAction->setText(hbTrId("txt_device_update_button_resume_later"));
                 if(!postpone)
                     secondaryAction->setEnabled(postpone);
@@ -292,7 +293,7 @@ void fotadevicedialogs::createfotaconfirmationdialog(TFwUpdNoteTypes aType,const
                                                                 "label_1"));
                 contentEmergency->setPlainText(hbTrId("txt_device_update_info_during_the_installation_the"));
 
-                dialog->setTimeout(HbPopup::NoTimeout);
+                m_dialog->setTimeout(HbPopup::NoTimeout);
 
                 QObject::connect(primaryAction, SIGNAL(triggered()), this,
                         SLOT(fotaLSK()));
@@ -307,8 +308,8 @@ void fotadevicedialogs::createfotaconfirmationdialog(TFwUpdNoteTypes aType,const
             }
         }
 
-    if (dialog)
-        dialog->show();
+    if (m_dialog)
+        m_dialog->show();
 
     qDebug("createserveralertinformative end");
 
@@ -324,7 +325,6 @@ void fotadevicedialogs::createfotamessagedialog(TFwUpdNoteTypes aType,const QVar
     {
     QVariantMap::const_iterator i;
     qDebug("createserveralertinformative start");
-        LOGSTRING("createserveralertinformative start");
     HbDocumentLoader loader;
     bool ok = false;
     loader.load(":/xml/resources/fotasoftkeydialog.docml", &ok);
@@ -332,7 +332,7 @@ void fotadevicedialogs::createfotamessagedialog(TFwUpdNoteTypes aType,const QVar
         {
         return;
         }
-    HbDialog *dialog = qobject_cast<HbDialog *> (loader.findWidget("dialog"));
+    m_dialog = qobject_cast<HbDialog *> (loader.findWidget("dialog"));
     
     HbLabel *headingString = qobject_cast<HbLabel *> (loader.findWidget(
             "lblHeaind"));
@@ -341,11 +341,10 @@ void fotadevicedialogs::createfotamessagedialog(TFwUpdNoteTypes aType,const QVar
     HbLabel *contentString = qobject_cast<HbLabel *> (loader.findWidget(
             "lblContent"));
             
-    dialog->setTimeout(HbPopup::NoTimeout);
-    dialog->setDismissPolicy(HbPopup::NoDismiss);
+    m_dialog->setTimeout(HbPopup::NoTimeout);
+    m_dialog->setDismissPolicy(HbPopup::NoDismiss);
     
-    //HbAction *primaryAction = dialog->primaryAction();
-    HbAction *primaryAction = (HbAction *) dialog->actions().first();
+    HbAction *primaryAction = (HbAction *) m_dialog->actions().first();
     primaryAction->setText(hbTrId("txt_common_button_ok_single_dialog"));
 
     QObject::connect(primaryAction, SIGNAL(triggered()), this,
@@ -416,8 +415,8 @@ void fotadevicedialogs::createfotamessagedialog(TFwUpdNoteTypes aType,const QVar
            }
         }
 
-    if (dialog)
-        dialog->show();
+    if (m_dialog)
+        m_dialog->show();
 
     qDebug("createserveralertinformative end");
 
@@ -432,9 +431,7 @@ void fotadevicedialogs::createfotamessagedialog(TFwUpdNoteTypes aType,const QVar
 void fotadevicedialogs::fotaLSK()
     {
     qDebug("ok selected");
-    QVariantMap resultMap;
-    resultMap.insert(returnkey, EHbLSK);
-    emit deviceDialogData(resultMap);
+    emit m_Ptr->fotaDevdialogDismissed(m_DialogId,EHbLSK);
     }
 
 
@@ -447,47 +444,5 @@ void fotadevicedialogs::fotaLSK()
 void fotadevicedialogs::fotaRSK()
     {
     qDebug("cancel selected");
-    QVariantMap resultMap;
-    resultMap.insert(returnkey, EHbRSK);
-    emit deviceDialogData(resultMap);
+    emit m_Ptr->fotaDevdialogDismissed(m_DialogId,EHbRSK);
     }
-
-
-
-// Set parameters
-bool fotadevicedialogs::setDeviceDialogParameters(
-    const QVariantMap &parameters)
-{
-    
-    return true;
-}
-
-// Get error
-int fotadevicedialogs::deviceDialogError() const
-{
-    
-    return 0;
-}
-
-
-// Close device dialog
-// ---------------------------------------------------------------------------
-// fotadevicedialogs::closeDeviceDialog
-// This slot is called when device dialog is closed due to errors.
-// ---------------------------------------------------------------------------
-//
-
-void fotadevicedialogs::closeDeviceDialog(bool byClient)
-{
-		qDebug("cancel selected");
-    emit deviceDialogClosed();
-}
-
-
-// Return display widget
-HbDialog *fotadevicedialogs::deviceDialogWidget() const
-{
-   
-    return const_cast<fotadevicedialogs*>(this);
-    //return const_cast<devicemanagementnotifierwidget*>(this);
-}

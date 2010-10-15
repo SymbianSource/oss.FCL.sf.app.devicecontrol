@@ -48,18 +48,12 @@ START RESOURCE 101F84D8.rss
 TARGET WPAPAdapter.rsc
 END
 
-START RESOURCE WPAPAdapterResource.rss
-HEADER
-TARGET WPAPAdapterResource.rsc
-TARGETPATH RESOURCE_FILES_DIR
-LANGUAGE_IDS
-END  
-
-
 USERINCLUDE     ../Inc
 USERINCLUDE     ../../bld
 MW_LAYER_SYSTEMINCLUDE
 SYSTEMINCLUDE 	/epoc32/include/ecom
+SYSTEMINCLUDE 	/epoc32/include/mw/hb/hbwidgets
+SYSTEMINCLUDE 	/epoc32/include/mw/hb/hbcore
 
 LIBRARY         euser.lib
 LIBRARY         ProvisioningEngine.lib
@@ -70,6 +64,7 @@ LIBRARY 	centralrepository.lib
 LIBRARY		cmmanager.lib
 LIBRARY		eaptools.lib
 
+LIBRARY       hbcore.lib hbwidgets.lib
 DEBUGLIBRARY    flogger.lib     // Only in debug builds
 
 // End of File

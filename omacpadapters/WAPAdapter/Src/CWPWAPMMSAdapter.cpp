@@ -23,13 +23,15 @@
 #include <CWPAdapter.h>
 #include <CWPCharacteristic.h>
 #include <CWPParameter.h>
-#include <wpwapadapterresource.rsg>
 #include "MWPWAPItemBase.h"
 #include "WPWAPUtil.h"
 #include "WPWAPItemFactory.h"
+#include <hbtextresolversymbian.h>
 
 // CONSTANTS
 _LIT( KMMSAppID, "w4" );
+_LIT( KMMSResourceFileName, "deviceupdates_" );	
+_LIT( KMMSResourceFilePath, "z:/resource/qt/translations/" );
 
 // ============================ MEMBER FUNCTIONS ===============================
 
@@ -51,9 +53,14 @@ CWPWAPMMSAdapter::CWPWAPMMSAdapter()
 void CWPWAPMMSAdapter::ConstructL()
     {
     BaseConstructL();
+    
+    TBool result = HbTextResolverSymbian::Init(KMMSResourceFileName, KMMSResourceFilePath);
+    _LIT(MMSAdapter, "txt_device_update_dblist_multimedia_access_pts");
+    iTitle = HbTextResolverSymbian::LoadL(MMSAdapter);	
+		
+    _LIT(MMSDefaultAdapter, "txt_device_update_dblist_wap_access_point");
+    iTitle = HbTextResolverSymbian::LoadL(MMSDefaultAdapter);
 
-    iTitle = WPWAPUtil::ReadHBufCL( R_QTN_SM_MMS_ACCESSPOINTS );
-    iDefaultName = WPWAPUtil::ReadHBufCL( R_QTN_SM_WAPAP_NAME );
     }
 
 // -----------------------------------------------------------------------------

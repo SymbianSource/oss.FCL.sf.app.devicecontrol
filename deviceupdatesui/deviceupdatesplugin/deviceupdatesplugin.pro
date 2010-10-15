@@ -30,7 +30,9 @@ CONFIG += hb plugin
 LIBS += -lcpframework \
 					-lcentralrepository \
 					-lws32 \
-					-lapgrfx
+					-lapgrfx \ 
+					-lapparc -lcone \
+					-lxqservice -lxqserviceutil -lxqutils 
 
 # Input
 HEADERS += deviceupdatesplugin.h \

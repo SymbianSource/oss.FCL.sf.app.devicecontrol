@@ -23,5 +23,6 @@ ECOM_PLUGIN(WPWAPAdapter.dll,101F84DC.rsc)
 ECOM_PLUGIN(WPStreamingAdapter.dll,101F85CB.rsc)
 ECOM_PLUGIN(WPAPAdapter.dll, WPAPAdapter.rsc)
 ECOM_PLUGIN(WPMbxNbrAdapter.dll,10207281.rsc)
+ECOM_PLUGIN( wpdestinationnwadapter.dll, 2000b4af.rsc )
 
 #endif
