@@ -130,6 +130,7 @@ class CWPBioControl: public CActive, MHbDeviceDialogObserver
         TInt iCompletionCode;
         CpMessage* iMsg;
         CpQtSp* iSp;
+        TBool iPreAuthenticated;
     };
 
 

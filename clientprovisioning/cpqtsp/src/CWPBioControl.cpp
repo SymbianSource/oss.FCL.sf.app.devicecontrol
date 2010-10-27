@@ -74,6 +74,7 @@ void CWPBioControl::ConstructL(CMsvSession* aSession,TMsvId aId,CpQtSp* sp)
     ibootstrap = NULL;
     iMsg = new(ELeave)CpMessage(this);
     iWait = new( ELeave ) CActiveSchedulerWait;
+    iPreAuthenticated = EFalse;
     FLOG( _L( "[ProvisioningBC] CWPBioControl::ConstructL: done" ) );
     }
 
@@ -134,7 +135,10 @@ void CWPBioControl::RestoreMsgL()
         //result = KErrMsgBioMessageNotValid;
         }
     FTRACE(RDebug::Print(_L("[ProvisioningBC] CWPBioControl::RestoreMsgL result (%d)"), result));
-    User::LeaveIfError( result );    
+    User::LeaveIfError( result );
+    
+    // Get the value of the authentication before authenticating the message
+    iPreAuthenticated = iMessage->Authenticated();
 	AuthenticateL( *iMessage );
 	CleanupStack::PopAndDestroy();
 	if(iAuth == KAUTENTICATIONCANCEL || iAuth == KAUTENTICATIONSUCCESS)
@@ -191,8 +195,8 @@ void CWPBioControl::updateAuthetication()
            User::LeaveIfError(err);
            }
 
-    TBool preAuthenticated( iMessage->Authenticated() );
-    if( !iEntry.ReadOnly() && preAuthenticated != iMessage->Authenticated() )
+    
+    if( !iEntry.ReadOnly() && iPreAuthenticated != iMessage->Authenticated() )
         {
         // If the entry can be written to, get its edit store and save
         // authentication flag. Failing is not dangerous, as the only

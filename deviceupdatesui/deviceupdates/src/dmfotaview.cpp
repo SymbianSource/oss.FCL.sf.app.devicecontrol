@@ -26,6 +26,7 @@
 #include <etelmm.h>
 #include <hbnotificationdialog.h>
 #include <centralrepository.h>
+#include <hbparameterlengthlimiter.h>
 #include <sysversioninfo.h>
 #include "nsmldmsyncprivatecrkeys.h"
 #include "dmadvancedview.h"
@@ -298,14 +299,12 @@ bool DMFotaView::addFotaView()
         TInt sizeKB = Size / 1024;
         if(sizeKB < 1024)
             {
-            val = hbTrId("txt_device_update_setlabel_the_last_update_1_2_kb").arg(name)
-                    .arg(ver).arg(sizeKB);
+            val=HbParameterLengthLimiter("txt_device_update_setlabel_the_last_update_1_2_kb").arg(name).arg(ver).arg(sizeKB);
             }
         else
             {
             TInt sizeMB = sizeKB / 1024;
-            val = hbTrId("txt_device_update_setlabel_the_last_update_1_2_mb").arg(name)
-                    .arg(ver).arg(sizeMB);
+            val=HbParameterLengthLimiter("txt_device_update_setlabel_the_last_update_1_2_mb").arg(name).arg(ver).arg(sizeMB);
             }
         mLabel->setPlainText(val);
         mLabel2->setPlainText(val);
@@ -658,14 +657,12 @@ void DMFotaView::UpdateDMUI(TBool aVal)
         	TInt sizeKB = Size / 1024;
 	        if(sizeKB < 1024)
 	            {
-	            val = hbTrId("txt_device_update_setlabel_the_last_update_1_2_kb").arg(name)
-	                    .arg(ver).arg(sizeKB);
+	            val=HbParameterLengthLimiter("txt_device_update_setlabel_the_last_update_1_2_kb").arg(name).arg(ver).arg(sizeKB);
 	            }
 	        else
 	            {
 	            TInt sizeMB = sizeKB / 1024;
-	            val = hbTrId("txt_device_update_setlabel_the_last_update_1_2_mb").arg(name)
-        	            .arg(ver).arg(sizeMB);
+	            val=HbParameterLengthLimiter("txt_device_update_setlabel_the_last_update_1_2_mb").arg(name).arg(ver).arg(sizeMB);
 	            }
 	        
 	        mLabel->setPlainText(val);
