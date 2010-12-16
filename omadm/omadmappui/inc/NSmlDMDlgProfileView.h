@@ -39,6 +39,9 @@ class CNSmlDMSyncAppEngine;
 class CNSmlDMProfileData;
 class CAknNavigationControlContainer;
 
+const TInt KDeleteRequired = 0;
+const TInt KDeleteNotRequired   = 1;
+
 typedef CArrayPtr<CNSmlDMProfileData> CNSmlDMSettingItemList;
 
 // CLASS DECLARATION
@@ -78,7 +81,8 @@ NONSHARABLE_CLASS (CNSmlDMDlgProfileView) : public CAknDialog,
         */
 		static CNSmlDMDlgProfileView* NewL( CNSmlDMSyncDocument* aDoc,
 		                                    TNSmlEditMode aMode,
-		                                    TInt aProfileId );
+		                                    TInt aProfileId,
+		                                    CNSmlDMSyncAppUi& aAppUi);
 
 		/**
 		* Destructor
@@ -96,7 +100,8 @@ NONSHARABLE_CLASS (CNSmlDMDlgProfileView) : public CAknDialog,
 		*/
 		CNSmlDMDlgProfileView( CNSmlDMSyncDocument* aDoc,
 		                       TNSmlEditMode aMode,
-		                       TInt aProfileId );
+		                       TInt aProfileId,
+		                       CNSmlDMSyncAppUi& aAppUi);
 	  
     public:
 		/**
@@ -464,6 +469,8 @@ NONSHARABLE_CLASS (CNSmlDMDlgProfileView) : public CAknDialog,
 		CAknNavigationControlContainer* iNaviPane;
 		TInt iResourceOffset;
 		TInt iConnUtilResourceOffset;
+		CNSmlDMSyncAppUi&            iAppView;
+		TBool iProfSaved;
     };
 
 // CLASS DECLARATION

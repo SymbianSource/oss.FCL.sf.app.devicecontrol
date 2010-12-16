@@ -58,14 +58,16 @@ _LIT(KDC_RESOURCE_FILES_DIR,"\\resource\\");
 //
 CNSmlDMDlgProfileView* CNSmlDMDlgProfileView::NewL( CNSmlDMSyncDocument* aDoc,
 		                                            TNSmlEditMode aMode,
-		                                            TInt aProfileId )
+		                                            TInt aProfileId,
+		                                            CNSmlDMSyncAppUi& aAppUi)
     {
     FLOG( "CNSmlDMDlgProfileView::NewL" );
 
     CNSmlDMDlgProfileView* self =
                             new ( ELeave ) CNSmlDMDlgProfileView( aDoc,
                                                                   aMode,
-                                                                  aProfileId );
+                                                                  aProfileId,
+                                                                  aAppUi);
     CleanupStack::PushL( self );
     self->ConstructL( R_SETTINGS_PROFILEMENU );
     CleanupStack::Pop();
@@ -80,14 +82,17 @@ CNSmlDMDlgProfileView* CNSmlDMDlgProfileView::NewL( CNSmlDMSyncDocument* aDoc,
 //
 CNSmlDMDlgProfileView::CNSmlDMDlgProfileView( CNSmlDMSyncDocument* aDoc,
                                               TNSmlEditMode aMode,
-                                              TInt aProfileId  )
+                                              TInt aProfileId,
+                                              CNSmlDMSyncAppUi& aAppUi)
                                             : iDoc( aDoc ),
                                               iEditMode( aMode ),
                                               iProfileId( aProfileId ),
                                               iResourceOffset(KErrNotFound),
-                                              iConnUtilResourceOffset(KErrNotFound)
+                                              iConnUtilResourceOffset(KErrNotFound),
+                                              iAppView(aAppUi)
 	{
 	FLOG( "[OMADM] CNSmlDMDlgProfileView::CNSmlDMDlgProfileView" );
+	iProfSaved = EFalse;
 	}
 
 // -----------------------------------------------------------------------------
@@ -105,6 +110,11 @@ CNSmlDMDlgProfileView::~CNSmlDMDlgProfileView()
         {
         CCoeEnv::Static()->DeleteResourceFile(iConnUtilResourceOffset);
         }
+    
+    if (( iEditMode == ESmlNewProfile ) && ( iProfSaved == EFalse))
+    	{
+        iDoc->AppEngine()->DeleteProfileL( iProfileId );
+      }
     if ( iNaviPane )
         {
         iNaviPane->Pop();
@@ -138,10 +148,12 @@ TBool CNSmlDMDlgProfileView::OkToExitL( TInt aButtonId )
         {
 		TBool closeDlg = ETrue;
 		TBool saveProfile = ETrue;
+    	iAppView.SetDestroyed(KDeleteNotRequired);
         //TInt index;
 		TInt retValue = CheckMandatoryFieldsL();
 		if ( retValue != KErrNotFound ) 
 			{
+			iAppView.SetDestroyed(KDeleteRequired);
             if(CheckUniqueFieldsL()== ENSmlServerId )
                 {
 			    STATIC_CAST( CNSmlDMSyncAppUi*,
@@ -152,7 +164,7 @@ TBool CNSmlDMDlgProfileView::OkToExitL( TInt aButtonId )
 			    }			
 		  else if(ShowConfirmationNoteL( R_NSML_SETTINGS_SAVE_ANYWAY ))
                 {
-			    
+		        iAppView.SetDestroyed(KDeleteNotRequired);
                 if ( iEditMode == ESmlCopyProfile  )
                     {
                     iDoc->MoveIndexToProfile( iProfileId );
@@ -174,6 +186,7 @@ TBool CNSmlDMDlgProfileView::OkToExitL( TInt aButtonId )
                     }
                 //For CP umcompleted message
                 saveProfile = EFalse;
+                iProfSaved = ETrue;
                 }
             else
                 {
@@ -187,11 +200,13 @@ TBool CNSmlDMDlgProfileView::OkToExitL( TInt aButtonId )
 		if ( saveProfile )
 			{
 			SaveProfileL();	
+			iProfSaved = ETrue;	
 			}
 		if ( closeDlg )
 			{
 			((CNSmlDMSyncAppUi*)iDoc->AppUi())->ChangeViewL( ETrue );
 			}
+		
 		return closeDlg;
 		}
 	return CAknDialog::OkToExitL( aButtonId );
@@ -258,6 +273,7 @@ void CNSmlDMDlgProfileView::ProcessCommandL( TInt aCommandId )
 				else if ( iEditMode == ESmlNewProfile )
                     {
                     iDoc->AppEngine()->DeleteProfileL( iProfileId );
+                    iProfSaved = ETrue;
                     }
 				}
 			TApaTaskList taskList(CEikonEnv::Static()->WsSession());
@@ -346,6 +362,7 @@ void CNSmlDMDlgProfileView::PreLayoutDynInitL()
 		}
     CreateProfileSettingsListL();
     SetSettingTitleL();
+    iAppView.SetDestroyed(KDeleteRequired);
     }
 
 // -----------------------------------------------------------------------------

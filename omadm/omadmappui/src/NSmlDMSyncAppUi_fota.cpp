@@ -109,7 +109,7 @@ void CNSmlDMSyncAppUi::ConstructL()
     
  
 	iDialogUp       = 0;
-	iDestroyed      = 1;
+	iDestroyed      = 0;
 
     FLOG( "[OMADM] CNSmlDMSyncAppUi::ConstructL() completed" );
     }
@@ -350,7 +350,8 @@ void CNSmlDMSyncAppUi::ShowEditProfileDialogL( TNSmlEditMode aMode,
     iAppView = CNSmlDMDlgProfileView::NewL( 
                                     iSyncDocument,
 	                                aMode,
-	                                profileId );
+	                                profileId,*this );
+    
 	  	                               
 	TRAPD( error, iAppView->ExecuteLD( R_NSML_SETTING_DIALOG ) );
 	if ( error != KErrNone )
@@ -1027,6 +1028,15 @@ TBool CNSmlDMSyncAppUi::IsUpdateAllowedL( CNSmlDMSyncProfile& aProfile )
     // Proceed checking update process.
     FLOG( "CNSmlDMSyncAppUi::IsUpdateAllowedL : End - ETrue" );
     return ETrue;
+    }
+
+// -----------------------------------------------------------------------------
+// CNSmlDMSyncAppUi::SetDestroyed
+// -----------------------------------------------------------------------------
+//
+void CNSmlDMSyncAppUi::SetDestroyed(TInt aValue)
+    {
+    iDestroyed      = aValue;
     }
 
 // End of File

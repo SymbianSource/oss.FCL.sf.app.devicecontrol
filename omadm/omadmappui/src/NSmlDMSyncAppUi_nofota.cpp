@@ -69,7 +69,7 @@ void CNSmlDMSyncAppUi::ConstructL()
     ActivateLocalViewL( iProfilesView->Id() );
 
 	iDialogUp       = 0;
-	iDestroyed      = 1;
+	iDestroyed      = 0;
 
     FLOG( "[OMADM] CNSmlDMSyncAppUi::ConstructL() completed" );
     }
@@ -284,7 +284,8 @@ void CNSmlDMSyncAppUi::ShowEditProfileDialogL( TNSmlEditMode aMode,
     iAppView = CNSmlDMDlgProfileView::NewL( 
                                     iSyncDocument,
 	                                aMode,
-	                                profileId );
+	                                profileId,*this );
+    
 	  	                               
 	TRAPD( error, iAppView->ExecuteLD( R_NSML_SETTING_DIALOG ) );
 	if ( error != KErrNone )
@@ -727,6 +728,15 @@ TBool CNSmlDMSyncAppUi::IsUpdateAllowedL( CNSmlDMSyncProfile& aProfile )
     {
     //Dummy Should not be used if fota disabled
     return ETrue;
+    }
+
+// -----------------------------------------------------------------------------
+// CNSmlDMSyncAppUi::SetDestroyed
+// -----------------------------------------------------------------------------
+//
+void CNSmlDMSyncAppUi::SetDestroyed(TInt aValue)
+    {
+    iDestroyed      = aValue;
     }
 
 // End of File

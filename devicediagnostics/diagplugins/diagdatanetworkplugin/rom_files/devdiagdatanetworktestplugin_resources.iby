@@ -20,8 +20,12 @@
 #ifndef DEVDIAGDATANETWORKTESTPLUGIN_RESOURCES_IBY
 #define DEVDIAGDATANETWORKTESTPLUGIN_RESOURCES_IBY
 
+#ifdef FF_DEVICE_DIAGNOSTICS_APP 
+
 #include <data_caging_paths_for_iby.hrh>
 
 data=\epoc32\data\Z\resource\devdiagdatanetworktestpluginrsc.rsc          resource\devdiagdatanetworktestpluginrsc.rsc
+
+#endif
 
 #endif // DEVDIAGDATANETWORKTESTPLUGIN_RESOURCES_IBY

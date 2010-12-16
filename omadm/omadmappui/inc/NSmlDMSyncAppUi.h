@@ -163,6 +163,12 @@ NONSHARABLE_CLASS (CNSmlDMSyncAppUi) : public CAknViewAppUi,
         {
         iViewTitle = aView;	
         }
+        /**
+        * Sets the destroyed flag to true.
+        * @param aValue, if 0 destroyed and 1 if not.
+        * @return None.
+        */
+        void SetDestroyed(TInt aValue);
 
 
     public: // Functions from base classes
